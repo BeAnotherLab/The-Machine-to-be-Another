@@ -1,0 +1,33 @@
+<install>
+    <name>ofxCLeye</name>
+	<version>1.0</version>
+	<author>Elliot Woods</author>
+	<url></url>
+
+	<add>
+
+		<!-- 	=====================================================================	-->
+		<!--	========================== add per project using this addon =========	-->
+		<!-- 	=====================================================================	-->
+
+		<src>
+			<folder name="addons/ofxCLeyes/src">						
+				<file>../../../addons/ofxCLeye/src/ofxCvBlob.h</file>
+				<file>../../../addons/ofxCLeye/src/ofxCvColorImage.cpp</file>
+			</folder>
+		</src>
+
+		<include>
+			<path>../../../addons/ofxCLeye/src</path>
+			<path>C:/Program Files/Code Laboratories/CL-Eye Platform SDK/Include</path>
+		</include>
+		
+
+		<link>
+			<lib os="win32" compiler="visualstudio">C:/Program Files/Code Laboratories/CL-Eye Platform SDK/Lib/CLEyeMulticam.lib</lib>
+		</link>
+		
+	</add>
+	
+	
+</install>
