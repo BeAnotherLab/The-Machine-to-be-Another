@@ -23,8 +23,7 @@ void testApp::setup(){
 	x_offset = 74;
 	y_offset = 164;
 	camWidth = 640;
-	camHeight = 480;	
-	symmetry = false;
+	camHeight = 480;		
 	layer_offset = camWidth*camHeight;
 	ofSetFullscreen(true);
 		
@@ -70,23 +69,27 @@ void testApp::setup(){
         endTimer = 1;
 	#endif
 
-	ofEnableAlphaBlending();
+	ofEnableAlphaBlending();	
+	screenSave.allocate(640,480,GL_RGB);
+	recording = false;
+	picture = false;
 }
 
 //--------------------------------------------------------------
 void testApp::update(){	
-	ofBackground(0,0,0);
+	ofBackground(0,0,0);	
+//	cout << "1/(ofGetElapsedTimef()-lastCaptureTime)  " << 1/(ofGetElapsedTimef()-lastCaptureTime) << "\n";	
+		
 	#if (CAMERA == CAMERA_WEBCAM)
 		vidGrabberLeft.update();			
 	#endif
-	
+
 	#if (CAMERA == CAMERA_OVR)        
 		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT),640,480,GL_RGB);
         right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT),640,480,GL_RGB);
     #endif
         
-	if(pSensor)
-	{
+	if(pSensor)	{
 		Quatf quaternion = FusionResult.GetOrientation();		
 		quaternion.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&yaw, &pitch, &roll);
 	}
@@ -117,7 +120,7 @@ void testApp::draw(){
 	ofPushMatrix();
 	    ofTranslate(365,224+y_offset, 0); //move to top left image corner		
 		#if (CAMERA == CAMERA_OVR)            
-				    left.draw(-camWidth/2,-camHeight/2);                                     
+			left.draw(-camWidth/2,-camHeight/2);                                     
         #endif		
 	ofPopMatrix();	
 	ofPushMatrix();	
@@ -231,6 +234,32 @@ void testApp::draw(){
 			}
     
 	#endif
+
+	if ((1/(ofGetElapsedTimef()-lastCaptureTime) < CAPTURE_FRAME_RATE) && recording) {
+	cout << "about to capture \n";		
+	cout << "(1/(ofGetElapsedTimef()-lastCaptureTime) " << 1/(ofGetElapsedTimef()-lastCaptureTime) << "\n";
+	//screen.grabScreen(83, 154, 480, 640);
+	screen.grabScreen(y_offset-camWidth/2,-x_offset-camHeight/2, camHeight, camWidth);
+	string fileName = "snapshot_" + ofToString(10000+lastCaptureTime)+".png";
+	screen.saveImage(fileName);
+	lastCaptureTime = ofGetElapsedTimef();
+}
+	
+	if (picture) {
+	cout << "about to capture \n";		
+	screen.grabScreen(83, 154, 480, 640);
+	//vidGrabberLeft.getPixels();
+	//ofSaveImage((ofPixels) vidGrabberLeft.getPixels(),"path");
+		
+	//screenSave.loadData(vidGrabberLeft.getPixels(), 640, 480, GL_RGB);
+	//screen.grabScreen(y_offset-camWidth/2,-x_offset-camHeight/2, camHeight, camWidth);
+	string fileName = "snapshot_" + ofToString(10000+lastCaptureTime)+".bmp";
+	screen.saveImage(fileName);
+	cout << "saved " << fileName.c_str();
+	lastCaptureTime = ofGetElapsedTimef();
+	picture = false;	
+}
+	
 }
 
 void testApp::clear()
@@ -265,8 +294,7 @@ void testApp::output()
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
-	
+void testApp::keyPressed(int key){	
 	
 	if (key == 'o' || key == 'O'){
 		layer_offset +=2;
@@ -318,8 +346,22 @@ void testApp::keyPressed(int key){
         #endif
    }
    
-    
-	cout << " ";
+	if (key == 'r') {
+		recording = !recording;
+
+		if (recording) {
+			lastCaptureTime = ofGetElapsedTimef();
+			cout << "recording started!" << "\n";
+		}
+		else {
+			cout << "recording stopped!" << "\n";
+		}		
+	}
+
+	if (key == 'p') {
+		picture = true;		
+	}
+
 }
 
 //--------------------------------------------------------------

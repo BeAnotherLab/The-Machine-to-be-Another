@@ -10,8 +10,8 @@
 #define CAMERA_WEBCAM 3
 
 //the version should be configured here
-#define VERSION VERSION_GENDER_SWAP
-//#define VERSION VERSION_MACHINE
+//#define VERSION VERSION_GENDER_SWAP
+#define VERSION VERSION_MACHINE
 
 //the camera type should be configured here
 //#define CAMERA CAMERA_OVR
@@ -20,6 +20,7 @@
 #define HOST "localhost"
 #define PORT 8015
 
+#define CAPTURE_FRAME_RATE 24
 
 #if (VERSION == VERSION_GENDER_SWAP)
 	# define LISTEN_PORT 8017
@@ -45,8 +46,7 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
 		void clear();
-		void output();
-    
+		void output();    
 		
 		ofxOscSender sender;
 	#if (VERSION == VERSION_GENDER_SWAP)
@@ -72,10 +72,15 @@ class testApp : public ofBaseApp{
 
 	int camWidth, camHeight;
 	int x_offset, y_offset;
-//	int y_offset;
-//	int x_offset = 10;
 	float pitch, yaw, roll;
     float pitch_cal, yaw_cal, roll_cal;
 	int layer_offset;
 	bool symmetry;
+
+	//screen capture
+	ofImage screen; 	
+	bool recording;
+	float lastCaptureTime;
+	bool picture;	
+	ofTexture screenSave;
 };
