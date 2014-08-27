@@ -503,5 +503,8 @@
     <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.h">
       <Filter>addons\ofxOsc\libs\oscpack\src\osc</Filter>
     </ClInclude>
+    <ClInclude Include="src\ofxImageSequenceRecorder.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

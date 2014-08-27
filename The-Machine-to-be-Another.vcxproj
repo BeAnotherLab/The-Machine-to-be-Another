@@ -123,6 +123,7 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ofxImageSequenceRecorder.h" />
     <ClInclude Include="src\testApp.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvBlob.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.h" />

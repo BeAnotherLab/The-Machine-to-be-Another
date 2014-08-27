@@ -29,7 +29,7 @@ void testApp::setup(){
 		
     #if (CAMERA == CAMERA_WEBCAM)
 		vidGrabberLeft.setVerbose(true);
-		vidGrabberLeft.setDeviceID(1);
+		vidGrabberLeft.setDeviceID(0);
 		vidGrabberLeft.setDesiredFrameRate(60);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);
 	#endif
@@ -70,9 +70,10 @@ void testApp::setup(){
 	#endif
 
 	ofEnableAlphaBlending();	
-	screenSave.allocate(640,480,GL_RGB);
-	recording = false;
-	picture = false;
+
+	recording = false;	
+	recorder.setPrefix(ofToDataPath("recording1/frame_")); // this directory must already exist
+    recorder.setFormat("jpg"); // png is really slow but high res, bmp is fast but big, jpg is just right
 }
 
 //--------------------------------------------------------------
@@ -81,7 +82,11 @@ void testApp::update(){
 //	cout << "1/(ofGetElapsedTimef()-lastCaptureTime)  " << 1/(ofGetElapsedTimef()-lastCaptureTime) << "\n";	
 		
 	#if (CAMERA == CAMERA_WEBCAM)
-		vidGrabberLeft.update();			
+		vidGrabberLeft.grabFrame();
+		if (vidGrabberLeft.isFrameNew() && recording) {
+			recorder.addFrame(vidGrabberLeft);   
+			vidGrabberLeft.update();			
+		}
 	#endif
 
 	#if (CAMERA == CAMERA_OVR)        
@@ -234,31 +239,12 @@ void testApp::draw(){
 			}
     
 	#endif
-
-	if ((1/(ofGetElapsedTimef()-lastCaptureTime) < CAPTURE_FRAME_RATE) && recording) {
-	cout << "about to capture \n";		
-	cout << "(1/(ofGetElapsedTimef()-lastCaptureTime) " << 1/(ofGetElapsedTimef()-lastCaptureTime) << "\n";
-	//screen.grabScreen(83, 154, 480, 640);
-	screen.grabScreen(y_offset-camWidth/2,-x_offset-camHeight/2, camHeight, camWidth);
-	string fileName = "snapshot_" + ofToString(10000+lastCaptureTime)+".png";
-	screen.saveImage(fileName);
-	lastCaptureTime = ofGetElapsedTimef();
-}
 	
-	if (picture) {
-	cout << "about to capture \n";		
-	screen.grabScreen(83, 154, 480, 640);
-	//vidGrabberLeft.getPixels();
-	//ofSaveImage((ofPixels) vidGrabberLeft.getPixels(),"path");
 		
-	//screenSave.loadData(vidGrabberLeft.getPixels(), 640, 480, GL_RGB);
-	//screen.grabScreen(y_offset-camWidth/2,-x_offset-camHeight/2, camHeight, camWidth);
-	string fileName = "snapshot_" + ofToString(10000+lastCaptureTime)+".bmp";
-	screen.saveImage(fileName);
-	cout << "saved " << fileName.c_str();
-	lastCaptureTime = ofGetElapsedTimef();
-	picture = false;	
-}
+    stringstream c;
+    c << "Recording: " << recording << "\nThread running: " << recorder.isThreadRunning() <<  "\nQueue Size: " << recorder.q.size() << "\n\nPress 'r' to toggle recording.\nPress 't' to toggle worker thread." << endl;
+    
+    ofDrawBitmapString(c.str(), 650, 10);
 	
 }
 
@@ -268,8 +254,8 @@ void testApp::clear()
         pHMD.Clear();
 	pManager.Clear();
   	#if (CAMERA == CAMERA_OVR)
-	        delete g_pOvrvision;
-    	#endif
+		delete g_pOvrvision;
+    #endif
 	System::Destroy();	
 }
 
@@ -327,40 +313,30 @@ void testApp::keyPressed(int key){
 		x_offset += 2;
 		//37
 		cout << x_offset;
-	}
-
-	if (key == 'p' || key == 'P'){
-		symmetry?symmetry=false:symmetry=true;
-	}
-    
+	}	    
    
-   if (key == ' '){
+   if (key == ' ') {
         #if (VERSION == VERSION_GENDER_SWAP)
        pitch_cal=pitch;
        yaw_cal=yaw;
        roll_cal=roll;
        rx_pitch_cal = rx_pitch;
        rx_yaw_cal = rx_yaw;
-       rx_roll_cal = rx_roll;
-       
+       rx_roll_cal = rx_roll;       
         #endif
    }
    
 	if (key == 'r') {
-		recording = !recording;
-
-		if (recording) {
-			lastCaptureTime = ofGetElapsedTimef();
-			cout << "recording started!" << "\n";
-		}
-		else {
-			cout << "recording stopped!" << "\n";
-		}		
-	}
-
-	if (key == 'p') {
-		picture = true;		
-	}
+        recording = !recording;
+    }
+    
+    if (key == 't') {
+        if(recorder.isThreadRunning()){
+            recorder.stopThread();
+        } else {
+            recorder.startThread(false, true);   
+        }
+    }
 
 }
 
@@ -381,15 +357,14 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-	        #if (VERSION == VERSION_GENDER_SWAP)
-       pitch_cal=pitch;
-       yaw_cal=yaw;
-       roll_cal=roll;
-       rx_pitch_cal = rx_pitch;
-       rx_yaw_cal = rx_yaw;
-       rx_roll_cal = rx_roll;
-       
-        #endif
+	#if (VERSION == VERSION_GENDER_SWAP)
+		pitch_cal=pitch;
+		yaw_cal=yaw;
+		roll_cal=roll;
+		rx_pitch_cal = rx_pitch;
+		rx_yaw_cal = rx_yaw;
+		rx_roll_cal = rx_roll;       
+    #endif
 }
 
 //--------------------------------------------------------------
@@ -470,3 +445,7 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 	cin.get();
 */
+
+void testApp::exit(){
+    recorder.waitForThread();
+}

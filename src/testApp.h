@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
+#include "ofxImageSequenceRecorder.h"
 
 #define VERSION_GENDER_SWAP 0
 #define VERSION_MACHINE 1
@@ -44,7 +45,7 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    
+		void exit();    
 		void clear();
 		void output();    
 		
@@ -77,10 +78,6 @@ class testApp : public ofBaseApp{
 	int layer_offset;
 	bool symmetry;
 
-	//screen capture
-	ofImage screen; 	
+	ofxImageSequenceRecorder recorder;    
 	bool recording;
-	float lastCaptureTime;
-	bool picture;	
-	ofTexture screenSave;
 };
