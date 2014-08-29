@@ -242,8 +242,9 @@ void testApp::draw(){
 	
 		
     stringstream c;
-    c << "Recording: " << recording << "\nThread running: " << recorder.isThreadRunning() <<  "\nQueue Size: " << recorder.q.size() << "\n\nPress 'r' to toggle recording.\nPress 't' to toggle worker thread." << endl;
-    
+	if (recording) {
+		c << "Recording" <<  "\nQueue Size: " << recorder.q.size() << endl;
+	}    
     ofDrawBitmapString(c.str(), 650, 10);
 	
 }
@@ -314,14 +315,15 @@ void testApp::keyPressed(int key){
    
 	if (key == 'r') {
         recording = !recording;
-    }
-    
-    if (key == 't') {
-        if(recorder.isThreadRunning()){
+		if(recorder.isThreadRunning()){
             recorder.stopThread();
         } else {
             recorder.startThread(false, true);   
         }
+    }
+    
+    if (key == 't') {
+        
     }
 
 }
