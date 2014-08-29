@@ -72,7 +72,7 @@ void testApp::setup(){
 	ofEnableAlphaBlending();	
 
 	recording = false;	
-	recorder.setPrefix(ofToDataPath("recording1/frame_")); // this directory must already exist
+	recorder.setPrefix(ofToDataPath("recording2/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); // png is really slow but high res, bmp is fast but big, jpg is just right
 }
 
@@ -85,7 +85,7 @@ void testApp::update(){
 		vidGrabberLeft.grabFrame();
 		if (vidGrabberLeft.isFrameNew() && recording) {
 			recorder.addFrame(vidGrabberLeft);   
-			vidGrabberLeft.update();			
+			//vidGrabberLeft.update();			
 		}
 	#endif
 
@@ -262,21 +262,7 @@ void testApp::clear()
 
 void testApp::output()
 {
-	if(pSensor)
-	{
-		//Quatf quaternion = FusionResult.GetOrientation();
-
-		//float roll;
-		//quaternion.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&yaw, &pitch, &roll);
-		/*
-		cout << " Yaw: " << RadToDegree(yaw) << 
-			", Pitch: " << RadToDegree(pitch) << 
-			", Roll: " << RadToDegree(roll) << endl;						
-			*/
-//		Sleep(50);
-
-	//	if (_kbhit()) exit();
-	}
+	
 }
 
 //--------------------------------------------------------------
