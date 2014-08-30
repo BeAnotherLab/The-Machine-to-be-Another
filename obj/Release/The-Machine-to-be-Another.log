@@ -1,12 +1,41 @@
-﻿Build started 8/30/2014 11:05:21 AM.
+﻿Build started 8/30/2014 4:23:49 PM.
      1>Project "C:\of_v0.7.4_vs2010_release\apps\myApps\The-Machine-to-be-Another\The-Machine-to-be-Another.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "obj\Release\theMachineToBeAnother.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Iovrvision /ILibOVR\Include /I..\..\..\libs\openFrameworks /I..\..\..\libs\openFrameworks\graphics /I..\..\..\libs\openFrameworks\app /I..\..\..\libs\openFrameworks\sound /I..\..\..\libs\openFrameworks\utils /I..\..\..\libs\openFrameworks\communication /I..\..\..\libs\openFrameworks\video /I..\..\..\libs\openFrameworks\types /I..\..\..\libs\openFrameworks\math /I..\..\..\libs\openFrameworks\3d /I..\..\..\libs\openFrameworks\gl /I..\..\..\libs\openFrameworks\events /I..\..\..\libs\glut\include /I..\..\..\libs\rtAudio\include /I..\..\..\libs\quicktime\include /I..\..\..\libs\freetype\include /I..\..\..\libs\freetype\include\freetype2 /I..\..\..\libs\freeImage\include /I..\..\..\libs\fmodex\include /I..\..\..\libs\videoInput\include /I..\..\..\libs\glew\include\ /I..\..\..\libs\glu\include /I..\..\..\libs\tess2\include /I..\..\..\libs\cairo\include\cairo /I..\..\..\libs\poco\include /I..\..\..\addons /I..\..\..\addons\ofxOpenCv\libs /I..\..\..\addons\ofxOpenCv\src /I..\..\..\addons\ofxOpenCv\libs\opencv /I..\..\..\addons\ofxOpenCv\libs\opencv\include /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2 /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts /I..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video /I..\..\..\addons\ofxOpenCv\libs\opencv\lib /I..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010 /I..\..\..\addons\ofxOsc\libs /I..\..\..\addons\ofxOsc\src /I..\..\..\addons\ofxOsc\libs\oscpack /I..\..\..\addons\ofxOsc\libs\oscpack\src /I..\..\..\addons\ofxOsc\libs\oscpack\src\ip /I..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix /I..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32 /I..\..\..\addons\ofxOsc\libs\oscpack\src\osc /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _CONSOLE /D POCO_STATIC /D CAIRO_WIN32_STATIC_BUILD /D DISABLE_SOME_FLOATING_POINT /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"obj\Release\\" /Fd"obj\Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\testApp.cpp
+         testApp.cpp
        Link:
-         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"bin\theMachineToBeAnother.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:ovrvision /LIBPATH:..\..\..\libs\glut\lib\vs2010 /LIBPATH:..\..\..\libs\rtAudio\lib\vs2010 /LIBPATH:..\..\..\libs\FreeImage\lib\vs2010 /LIBPATH:..\..\..\libs\freetype\lib\vs2010 /LIBPATH:..\..\..\libs\quicktime\lib\vs2010 /LIBPATH:..\..\..\libs\fmodex\lib\vs2010 /LIBPATH:..\..\..\libs\videoInput\lib\vs2010 /LIBPATH:..\..\..\libs\cairo\lib\vs2010 /LIBPATH:..\..\..\libs\glew\lib\vs2010 /LIBPATH:..\..\..\libs\glu\lib\vs2010 /LIBPATH:..\..\..\libs\Poco\lib\vs2010 /LIBPATH:..\..\..\libs\tess2\lib\vs2010 /LIBPATH:LibOVR\Lib\Win32 /LIBPATH:..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010 "cairo-static.lib" "pixman-1.lib" msimg32.lib OpenGL32.lib GLu32.lib kernel32.lib setupapi.lib Vfw32.lib comctl32.lib glut32.lib rtAudioD.lib videoInput.lib libfreetype.lib FreeImage.lib qtmlClient.lib dsound.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib glew32s.lib fmodex_vc.lib glu32.lib PocoFoundationmd.lib PocoNetmd.lib PocoUtilmd.lib PocoXMLmd.lib Ws2_32.lib tess2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libovr.lib Winmm.lib opencv_calib3d231.lib opencv_contrib231.lib ovrvision.lib opencv_core231.lib opencv_features2d231.lib opencv_flann231.lib opencv_gpu231.lib opencv_haartraining_engine.lib opencv_highgui231.lib opencv_imgproc231.lib opencv_legacy231.lib opencv_ml231.lib opencv_objdetect231.lib opencv_video231.lib zlib.lib /NODEFAULTLIB:PocoFoundationd.lib /NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:LIBC.lib /NODEFAULTLIB:LIBCMT /MANIFEST /ManifestFile:"obj\Release\theMachineToBeAnother.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"C:\of_v0.7.4_vs2010_release\apps\myApps\The-Machine-to-be-Another\bin\theMachineToBeAnother.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /TLBID:1 /DYNAMICBASE:NO /IMPLIB:"bin\theMachineToBeAnother.lib" /MACHINE:X86 obj\Release\main.obj
+         obj\Release\testApp.obj
+         obj\Release\ofxCvColorImage.obj
+         obj\Release\ofxCvContourFinder.obj
+         obj\Release\ofxCvFloatImage.obj
+         obj\Release\ofxCvGrayscaleImage.obj
+         obj\Release\ofxCvHaarFinder.obj
+         obj\Release\ofxCvImage.obj
+         obj\Release\ofxCvShortImage.obj
+         obj\Release\ofxOscBundle.obj
+         obj\Release\ofxOscMessage.obj
+         obj\Release\ofxOscReceiver.obj
+         obj\Release\ofxOscSender.obj
+         obj\Release\IpEndpointName.obj
+         obj\Release\NetworkingUtils.obj
+         obj\Release\UdpSocket.obj
+         obj\Release\NetworkingUtilsWin.obj
+         obj\Release\UdpSocketWin.obj
+         obj\Release\OscOutboundPacketStream.obj
+         obj\Release\OscPrintReceivedElements.obj
+         obj\Release\OscReceivedElements.obj
+         obj\Release\OscTypes.obj
+         C:\of_v0.7.4_vs2010_release\libs\openFrameworksCompiled\lib\vs2010\openframeworksLib.lib
+         libovr.lib(OVR_Log.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
+            Creating library bin\theMachineToBeAnother.lib and object bin\theMachineToBeAnother.exp
+         Generating code
+         Finished generating code
          The-Machine-to-be-Another.vcxproj -> C:\of_v0.7.4_vs2010_release\apps\myApps\The-Machine-to-be-Another\bin\theMachineToBeAnother.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"bin\theMachineToBeAnother.exe;#1" /manifest obj\Release\theMachineToBeAnother.exe.intermediate.manifest
        PostBuildEvent:
          Description: adding DLLs and creating data folder
          xcopy /e /i /y "C:\of_v0.7.4_vs2010_release\apps\myApps\The-Machine-to-be-Another\..\..\..\export\vs2010\*.dll" "C:\of_v0.7.4_vs2010_release\apps\myApps\The-Machine-to-be-Another\bin"
@@ -26,4 +55,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.54
+Time Elapsed 00:00:11.05

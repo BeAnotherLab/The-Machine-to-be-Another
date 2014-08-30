@@ -72,8 +72,8 @@ void testApp::setup(){
 	ofEnableAlphaBlending();	
 
 	recording = false;	
-	recorder.setPrefix(ofToDataPath("recording2/frame_")); // this directory must already exist
-    recorder.setFormat("jpg"); // png is really slow but high res, bmp is fast but big, jpg is just right
+	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
+    recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right
 }
 
 //--------------------------------------------------------------
@@ -239,12 +239,17 @@ void testApp::draw(){
 			}
     
 	#endif
-	
-		
-    stringstream c;
+			
+    stringstream c;		
 	if (recording) {
-		c << "Recording" <<  "\nQueue Size: " << recorder.q.size() << endl;
-	}    
+		c << "Recording" <<  " | Queue Size: " << recorder.q.size() << endl;
+	} else if (!recording && recorder.q.size() > 0) {
+		c << "Queue Size: " << recorder.q.size() << endl;
+	}
+	else if (recorder.q.size() == 0) {
+		recorder.stopThread();		
+	}
+	
     ofDrawBitmapString(c.str(), 650, 10);
 	
 }
@@ -315,16 +320,8 @@ void testApp::keyPressed(int key){
    
 	if (key == 'r') {
         recording = !recording;
-		if(recorder.isThreadRunning()){
-            recorder.stopThread();
-        } else {
-            recorder.startThread(false, true);   
-        }
-    }
-    
-    if (key == 't') {
-        
-    }
+        recorder.startThread(false, true);   
+    }    
 
 }
 
