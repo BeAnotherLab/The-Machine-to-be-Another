@@ -62,6 +62,7 @@ void testApp::setup(){
 		FusionResult.AttachToSensor(pSensor);
 	}	
 	sender.setup(HOST, PORT);
+
     
 	#if (VERSION == VERSION_GENDER_SWAP)
 		receiver.setup(LISTEN_PORT);
@@ -74,19 +75,43 @@ void testApp::setup(){
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right
+    
+    //SOUND PLAYER
+    sound0.loadSound("sounds/fab10.mp3");
+    sound1.loadSound("sounds/Welcome.mp3");
+	sound2.loadSound("sounds/Legs.mp3");
+	sound3.loadSound("sounds/Part2.mp3");
+    sound4.loadSound("sounds/Slowly.mp3");
+	sound5.loadSound("sounds/CloseEyes.mp3");
+	sound6.loadSound("sounds/Part3.mp3");
+    sound7.loadSound("sounds/Goodbye.mp3");
+    
+    sound0.play(); //INITIALIZE MUSIC ON STARTUP, COMMENT IN OR OUT
+    
+    //OSC CONTROLER
+    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
+    phoneOscReceiver.setup(PHONE_LISTENER_PORT);
+    phoneOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);
+    #endif
+    
+
 }
 
 //--------------------------------------------------------------
 void testApp::update(){	
 	ofBackground(0,0,0);	
-//	cout << "1/(ofGetElapsedTimef()-lastCaptureTime)  " << 1/(ofGetElapsedTimef()-lastCaptureTime) << "\n";	
+//	cout << "1/(ofGetElapsedTimef()-lastCaptureTime)  " << 1/(ofGetElapsedTimef()-lastCaptureTime) << "\n";
+    
+    soundPlayer();
+
 		
 	#if (CAMERA == CAMERA_WEBCAM)
-		vidGrabberLeft.grabFrame();
+//		vidGrabberLeft.grabFrame();
+        vidGrabberLeft.update();
 		if (vidGrabberLeft.isFrameNew() && recording) {
 			recorder.addFrame(vidGrabberLeft);   
-			//vidGrabberLeft.update();			
 		}
+    
 	#endif
 
 	#if (CAMERA == CAMERA_OVR)        
@@ -254,6 +279,140 @@ void testApp::draw(){
 	
 }
 
+void testApp::soundPlayer()
+{
+    int rxButton1, rxButton2, rxButton3, rxButton4, rxButton5, rxButton6, rxButton7;
+    bool somethingIsPlaying;
+    
+    // update the sound playing system:
+	ofSoundUpdate();
+    
+  
+    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
+        //OSC Receiver
+        while(phoneOscReceiver.hasWaitingMessages()){
+            ofxOscMessage msg;
+            phoneOscReceiver.getNextMessage(&msg);
+        
+            //had to add independent buttons for each separator
+            
+            if(msg.getAddress() == "/btn1")
+                rxButton1 = msg.getArgAsInt32(0);
+            
+            if(msg.getAddress() == "/btn2")
+                rxButton2 = msg.getArgAsInt32(0);
+        
+            if(msg.getAddress() == "/btn3")
+                rxButton3 = msg.getArgAsInt32(0);
+        
+            if(msg.getAddress() == "/btn4")
+            rxButton4 = msg.getArgAsInt32(0);
+        
+            if(msg.getAddress() == "/btn5")
+                rxButton5 = msg.getArgAsInt32(0);
+        
+            if(msg.getAddress() == "/btn6")
+            rxButton6 = msg.getArgAsInt32(0);
+        
+            if(msg.getAddress() == "/btn7")
+            rxButton7 = msg.getArgAsInt32(0);
+        
+    }
+        //OSC Sender
+        ofxOscMessage sendM;
+        sendM.setAddress("/nowPlaying");
+    
+    #endif
+    
+    
+    if (sound1.getIsPlaying() || sound2.getIsPlaying() || sound3.getIsPlaying() || sound4.getIsPlaying() || sound5.getIsPlaying() || sound6.getIsPlaying() || sound7.getIsPlaying()) {
+        somethingIsPlaying = true;
+    }
+    
+    else somethingIsPlaying = false;
+    
+    
+    //play tracks through OSC buttons
+    
+    if ((rxButton1 == 1 || currentKey == "1") && !somethingIsPlaying){
+		sound1.play();
+        
+        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
+            sendM.addStringArg("sound 1 is playing");
+            phoneOscSender.sendMessage(sendM);
+        #endif
+	}
+    
+    
+    else if ((rxButton2 == 1 || currentKey == "2") && !somethingIsPlaying){
+		sound2.play();
+        
+        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
+            sendM.addStringArg("sound 2 is playing");
+            phoneOscSender.sendMessage(sendM);
+        #endif
+	}
+    
+    else if ((rxButton3 == 1  || currentKey == "3") && !somethingIsPlaying){
+		sound3.play();
+        
+        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
+            sendM.addStringArg("sound 3 is playing");
+            phoneOscSender.sendMessage(sendM);
+        #endif
+    }
+    
+    else if ((rxButton4 == 1|| currentKey == "4") && !somethingIsPlaying){
+		sound4.play();
+        
+        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
+            sendM.addStringArg("sound 4 is playing");
+            phoneOscSender.sendMessage(sendM);
+        #endif
+    }
+    
+    else if ((rxButton5 == 1 || currentKey == "5") && !somethingIsPlaying){
+		sound5.play();
+        
+        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
+            sendM.addStringArg("sound 5 is playing");
+            phoneOscSender.sendMessage(sendM);
+        #endif
+    }
+    
+    else if ((rxButton6 == 1 || currentKey == "6") && !somethingIsPlaying){
+		sound6.play();
+        
+        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
+            sendM.addStringArg("sound 6 is playing");
+            phoneOscSender.sendMessage(sendM);
+        #endif
+    }
+    
+    else if ((rxButton7 == 1 || currentKey == "7") && !somethingIsPlaying){
+		sound7.play();
+       
+        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
+            sendM.addStringArg("sound 7 is playing");
+            phoneOscSender.sendMessage(sendM);
+        #endif
+    }
+    
+    
+    if (somethingIsPlaying)
+        sound0.setVolume(0.5);    //SIMPLE SIDECHAIN COMPRESSION
+    
+    else if (!somethingIsPlaying) {
+        sound0.setVolume(1);
+        
+        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
+            sendM.addStringArg("nothing is playing");
+            phoneOscSender.sendMessage(sendM);
+        #endif
+    }
+    
+}
+
 void testApp::clear()
 {
 	pSensor.Clear();
@@ -266,13 +425,14 @@ void testApp::clear()
 }
 
 
+
 void testApp::output()
 {
 	
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){	
+void testApp::keyPressed(int key){
 	
 	if (key == 'o' || key == 'O'){
 		layer_offset +=2;
@@ -321,7 +481,9 @@ void testApp::keyPressed(int key){
 	if (key == 'r') {
         recording = !recording;
         recorder.startThread(false, true);   
-    }    
+    }
+    
+    currentKey = key;
 
 }
 
