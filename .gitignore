@@ -35,7 +35,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -59,7 +60,6 @@ x64/
 x86/
 build/
 bld/
-[Bb]in/
 [Oo]bj/
 # Roslyn cache directories
 *.ide/
