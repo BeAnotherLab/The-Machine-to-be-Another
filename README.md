@@ -25,5 +25,7 @@ TODO
 There are many things in progress, but three fundamental tasks that should be done in the near future:
 
 1) Add the servomotor control natively in OpenFrameworks.
+
 2) Create a GUI for selecting the version, camera and adding IPs and ports.
+
 3) Creating a black screen that may be faded in and out via OSC from a smartPhone.
