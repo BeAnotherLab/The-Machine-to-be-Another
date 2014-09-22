@@ -12,8 +12,8 @@ Getting Started
 The project was tested with Openframeworks 0.7.4 on Windows 7 + VS 2010 and Maverick + XCode
 
 1. Download the openframeworks 0.7.4 toolkit and unzip it
-2. Using the git console execute```git clone https://github.com/BeAnotherLab/The-Machine-to-be-Another``` inside the openframeworks_folder/apps/myapps. If you download the project as a zip file using the github web interface remove the "-master" extension from the name of the folder.
-3. TODO: Download the required addons inside the folder openframeworks_folder/addons by running the clone_addons script or manually by.. TODO
+2. Using the git console execute```git clone https://github.com/BeAnotherLab/The-Machine-to-be-Another``` inside the ```openframeworks_folder/apps/myapps```. If you download the project as a zip file using the github web interface remove the "-master" extension from the name of the folder.
+3. TODO: Download the required addons inside the folder ```openframeworks_folder/addons``` by running the clone_addons script or manually by.. TODO
 4. Open the project from Visual Studio or XCode and compile.
 
 
