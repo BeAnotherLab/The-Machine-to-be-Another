@@ -22,7 +22,7 @@ void testApp::setup(){
 	ofSetFullscreen(true);
 		
 	vidGrabber.setVerbose(true);
-	vidGrabber.setDeviceID(0);
+	vidGrabber.setDeviceID(1);
 	vidGrabber.setDesiredFrameRate(60);
 	vidGrabber.initGrabber(camWidth,camHeight);	
 	
@@ -78,8 +78,7 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){	
-	ofBackground(0,0,0);	    
-    soundPlayer();
+	ofBackground(0,0,0);	        
 		
 	vidGrabber.update();
 		if (vidGrabber.isFrameNew() && recording) {
@@ -220,6 +219,7 @@ void testApp::draw(){
 	
     ofDrawBitmapString(c.str(), 650, 10);
 	
+	soundPlayer();
 }
 
 void testApp::soundPlayer()
@@ -236,10 +236,10 @@ void testApp::soundPlayer()
             phoneOscReceiver.getNextMessage(&msg);
                     
 			for (int i=0; i<8; i++) {				
-				char str[5];
-				sprintf(str, "/btn %d", i);
+				stringstream a;
+				a << "/btn" << i << endl;				
 				//check if button was pressed on phone
-				if(msg.getAddress() ==  str) rxButtons[i] = msg.getArgAsInt32(0);
+				if(msg.getAddress() == a.str()) rxButtons[i] = msg.getArgAsInt32(0);
 			}
 	    }
         //OSC Sender
@@ -248,34 +248,43 @@ void testApp::soundPlayer()
     #endif
 	
 	somethingIsPlaying = false;  
-	for (int i=0; i<8; i++) {
-		if (sounds[i].getIsPlaying());
-		somethingIsPlaying = true;
+	stringstream isplaying;
+	isplaying << "hello" << endl;
+
+	for (int i=1; i<8; i++) {
+		isplaying << "is playing : " << i << " " << sounds[i].getIsPlaying() << endl;
+		if (sounds[i].getIsPlaying()) somethingIsPlaying = true;
 	}   
+
+	ofDrawBitmapString(isplaying.str(), 10, 80);
               
     //play tracks through OSC buttons
-	for (int i=0; i<8; i++) {
-		char str[2];
-		sprintf(str, "%d", i);
+	for (int i=0; i<8; i++) {		
+		stringstream val, cur, test;
+		val << i << endl;
+		cur << currentKey << endl;										
+		test << "currentKey" << currentKey << endl;
+		ofDrawBitmapString(test.str(), 20, 60);
 
 		//play sound i if button i was pressed on phone or on keyboard
-		if((rxButtons[i] == 1 || currentKey == str) && !somethingIsPlaying) sounds[i].play();
-		    
-        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
-			char str[18];
-			sprintf(str, "sound %d is playing", i);
+		if ((rxButtons[i] == 1 || cur.str() == val.str()) && !somethingIsPlaying){						
+			sounds[i].play();				
+			stringstream play;
+			play << "sound " << i << " is playing" << endl;
+			ofDrawBitmapString(play.str(), 10, 30);			
+		}
+
+		#if (OSC_CONTROL_STATUS == OSC_STATUS_ON)			
             sendM.addStringArg(str);
             phoneOscSender.sendMessage(sendM);
         #endif
 	}    
     
+	//SIMPLE SIDECHAIN COMPRESSION    
+    if (somethingIsPlaying) sounds[0].setVolume(0.5);        
     
-    if (somethingIsPlaying)
-        sounds[0].setVolume(0.5);    //SIMPLE SIDECHAIN COMPRESSION
-    
-    else if (!somethingIsPlaying) {
-        sounds[0].setVolume(1);
-        
+	else if (!somethingIsPlaying) {
+        sounds[0].setVolume(1);        
         #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
             sendM.addStringArg("nothing is playing");
             phoneOscSender.sendMessage(sendM);
@@ -308,7 +317,7 @@ void testApp::keyPressed(int key){
 
 	if (key == 'i' || key == 'I'){
 		layer_offset -=2;
-		cout << layer_offset;		
+		cout << layer_offset << endl;		
 	}
 
 	if (key == 'w' || key == 'w'){
@@ -350,8 +359,7 @@ void testApp::keyPressed(int key){
         recorder.startThread(false, true);   
     }
     
-    currentKey = key;
-
+	currentKey = key;    
 }
 
 //--------------------------------------------------------------
@@ -400,65 +408,6 @@ void testApp::gotMessage(ofMessage msg){
 void testApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
-
-/*		int totalPixels = camWidth*camHeight;
-		unsigned char * pixels = vidGrabber.getPixels();
-		for (int layer=0; layer<3; layer++){
-			layer_offset=camWidth*camHeight*layer;
-			for (int x=0; x<camWidth/2; x++){
-				for (int y=0; y<camHeight; y++){
-					pixels[(y*camWidth+x)+layer_offset] = pixels[(y*camWidth+(camWidth-x))+layer_offset];
-				}			
-			}*/
-		//}
-	//}
-
-/*	cout << "----- Oculus Console -----" << endl;
-
-	if (pHMD)
-	{
-		cout << " [x] HMD Found" << endl;
-	}
-	else
-	{
-		cout << " [ ] HMD Not Found" << endl;
-	}
-
-	if (pSensor)
-	{
-		cout << " [x] Sensor Found" << endl;
-	}
-	else
-	{
-		cout << " [ ] Sensor Not Found" << endl;
-	}
-
-	cout << "--------------------------" << endl;
-
-	if (InfoLoaded)
-        {
-		cout << " DisplayDeviceName: " << Info.DisplayDeviceName << endl;
-		cout << " ProductName: " << Info.ProductName << endl;
-		cout << " Manufacturer: " << Info.Manufacturer << endl;
-		cout << " Version: " << Info.Version << endl;
-		cout << " HResolution: " << Info.HResolution<< endl;
-		cout << " VResolution: " << Info.VResolution<< endl;
-		cout << " HScreenSize: " << Info.HScreenSize<< endl;
-		cout << " VScreenSize: " << Info.VScreenSize<< endl;
-		cout << " VScreenCenter: " << Info.VScreenCenter<< endl;
-		cout << " EyeToScreenDistance: " << Info.EyeToScreenDistance << endl;
-		cout << " LensSeparationDistance: " << Info.LensSeparationDistance << endl;
-		cout << " InterpupillaryDistance: " << Info.InterpupillaryDistance << endl;
-		cout << " DistortionK[0]: " << Info.DistortionK[0] << endl;
-		cout << " DistortionK[1]: " << Info.DistortionK[1] << endl;
-		cout << " DistortionK[2]: " << Info.DistortionK[2] << endl;
-		cout << "--------------------------" << endl;
-        }
-
-	cout << endl << " Press ENTER to continue" << endl;
-
-	cin.get();
-*/
 
 void testApp::exit(){
     recorder.waitForThread();

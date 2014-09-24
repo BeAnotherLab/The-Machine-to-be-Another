@@ -72,7 +72,7 @@ class testApp : public ofBaseApp{
 	int layer_offset;
 	bool symmetry;
             
-    string currentKey;
+    char currentKey;
 
 	ofSoundPlayer sounds[8];
 	int rxButtons[8];
