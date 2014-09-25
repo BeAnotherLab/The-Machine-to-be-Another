@@ -52,23 +52,11 @@ class testApp : public ofBaseApp{
         ofxOscReceiver phoneOscReceiver;
         ofxOscSender   phoneOscSender;
     #endif
-
-	ofxOscSender senderComputer;
-	ofxOscReceiver receiver;
-	float rx_pitch, rx_yaw, rx_roll;
-    float rx_pitch_cal, rx_yaw_cal, rx_roll_cal;
-    float startTime_Sync;
-    float startTime_NoSync;
-	float rx_pitch_limited;
-    float rx_yaw_limited;
-    float endTimer;
             
-    ofVideoGrabber vidGrabber;
-    
+    ofVideoGrabber vidGrabber;    
 	int camWidth, camHeight;
 	int x_offset, y_offset;
 	float pitch, yaw, roll;
-    float pitch_cal, yaw_cal, roll_cal;
 	int layer_offset;
 	bool symmetry;
             

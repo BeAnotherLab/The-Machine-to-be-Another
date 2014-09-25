@@ -1,4 +1,4 @@
-﻿Build started 9/24/2014 2:45:02 AM.
+﻿Build started 9/26/2014 1:19:55 AM.
      1>Project "C:\of_v0.7.4_vs2010_release\apps\myApps\The-Machine-to-be-Another\The-Machine-to-be-Another.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "obj\Release\theMachineToBeAnother.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -55,4 +55,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:10.09
+Time Elapsed 00:00:20.75
