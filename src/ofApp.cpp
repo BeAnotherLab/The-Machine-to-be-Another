@@ -1,5 +1,6 @@
 #include "ofApp.h"
 #include "OVR.h"
+
 using namespace OVR;
 using namespace std;
 OVR::Ptr<OVR::DeviceManager>	pManager;
@@ -26,8 +27,8 @@ void ofApp::setup(){
 	vidGrabber.setDesiredFrameRate(60);
 	vidGrabber.initGrabber(camWidth,camHeight);	
 	
-	ofSetVerticalSync(true);
-	
+	ofSetVerticalSync(true);		
+
 	System::Init();
 	pitch = 0;
 	yaw = 0;
@@ -56,30 +57,13 @@ void ofApp::setup(){
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right
     
-    //SOUND PLAYER	
-    sounds[0].loadSound("sounds/fab10.mp3");
-    sounds[1].loadSound("sounds/Welcome.mp3");
-	sounds[2].loadSound("sounds/Legs.mp3");
-	sounds[3].loadSound("sounds/Part2.mp3");
-    sounds[4].loadSound("sounds/Slowly.mp3");
-	sounds[5].loadSound("sounds/CloseEyes.mp3");
-	sounds[6].loadSound("sounds/Part3.mp3");
-    sounds[7].loadSound("sounds/Goodbye.mp3");    
-    sounds[0].play(); //INITIALIZE MUSIC ON STARTUP, COMMENT IN OR OUT
-    
-    //OSC CONTROLER
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-		phoneOscReceiver.setup(PHONE_LISTENER_PORT);
-		phoneOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);
-    #endif    
-
 	//init rxbuttons value
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){	
 	ofBackground(0,0,0);	    
-    soundPlayer();
+    player.loop();
 		
 	vidGrabber.update();
 		if (vidGrabber.isFrameNew() && recording) {
@@ -100,27 +84,26 @@ void ofApp::draw(){
 	m.setAddress("/ori");	
 	m.addFloatArg(roll-roll_cal);
 	m.addFloatArg(pitch-pitch_cal);
-	m.addFloatArg(yaw-yaw_cal);
-	
+	m.addFloatArg(yaw-yaw_cal);	
 	sender.sendMessage(m);    
+
 	ofSetHexColor(0xffffff);			
 	//duplicate video stream. You can also draw videograbbers from 2 different cameras. WASD to adjust the position of image.
 	ofPushMatrix();		
 		ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre
 		ofRotate(90, 0, 0, 1);//rotate from centre				
-			vidGrabber.draw(y_offset-camWidth/2,-x_offset-camHeight/2);//move back by the centre offset
+			vidGrabber.draw(y_offset-camWidth/2,-x_offset-camHeight/2);
 			vidGrabber.draw(y_offset-camWidth/2,x_offset-880);		
 	ofPopMatrix();		
 		
-	senderComputer.sendMessage(m);   
 	float timer_NoSync = ofGetElapsedTimef() - startTime_Sync;
 	float timer_Sync = ofGetElapsedTimef() - startTime_NoSync;
     
-	/*//    Values mapped to -1 to 1
-		Yaw goes from -pi to pi
-		Pitch goes from -pi/2 to pi    //2*/
+	//Values mapped to -1 to 1 		
+	//Yaw goes from -pi to pi 			
 	float yaw_mappedTo1 = ((yaw+3.141592)/(3.141592))-1;
 	float yaw_cal_mappedTo1 = ((yaw_cal+3.141592)/(3.141592))-1;
+	//Pitch goes from -pi/2 to pi
 	float pitch_mappedTo1 = pitch/(3.141592/2);
 	float pitch_cal_mappedTo1 = pitch_cal/(3.141592/2);
     
@@ -128,10 +111,10 @@ void ofApp::draw(){
 	ofVec2f vec(yaw_mappedTo1-yaw_cal_mappedTo1,pitch_mappedTo1-pitch_cal_mappedTo1);
 	ofVec2f rx_vec(((rx_yaw+3.141592)/(3.141592)-1), rx_pitch/(3.141592/2));
    
-	// float distance = (abs(vec.length() - rx_vec.length()));
+	//float distance = (abs(vec.length() - rx_vec.length()));
 	float distance = vec.distance(rx_vec);
     
-	//OSC
+	//receive other's headtracking
 	while(receiver.hasWaitingMessages()){
 		ofxOscMessage rx_msg;
 		receiver.getNextMessage(&rx_msg);
@@ -141,7 +124,7 @@ void ofApp::draw(){
 			rx_pitch = rx_msg.getArgAsFloat(1);
 			rx_yaw = rx_msg.getArgAsFloat(2);                  
 			///PRINT IF RECEIVED (RX) MESSAGES
-			// ofDrawBitmapString("Connection ON",10,10);
+			//ofDrawBitmapString("Connection ON",10,10);
           
 			}
         
@@ -222,67 +205,6 @@ void ofApp::draw(){
 	
 }
 
-void ofApp::soundPlayer()
-{    
-    bool somethingIsPlaying;
-    
-    // update the sound playing system:
-	ofSoundUpdate();    
-  
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-        //OSC Receiver
-        while(phoneOscReceiver.hasWaitingMessages()){
-            ofxOscMessage msg;
-            phoneOscReceiver.getNextMessage(&msg);
-                    
-			for (int i=0; i<8; i++) {				
-				char str[5];
-				sprintf(str, "/btn %d", i);
-				//check if button was pressed on phone
-				if(msg.getAddress() ==  str) rxButtons[i] = msg.getArgAsInt32(0);
-			}
-	    }
-        //OSC Sender
-        ofxOscMessage sendM;
-        sendM.setAddress("/nowPlaying");    
-    #endif
-	
-	somethingIsPlaying = false;  
-	for (int i=0; i<8; i++) {
-		if (sounds[i].getIsPlaying());
-		somethingIsPlaying = true;
-	}   
-              
-    //play tracks through OSC buttons
-	for (int i=0; i<8; i++) {
-		char str[2];
-		sprintf(str, "%d", i);
-
-		//play sound i if button i was pressed on phone or on keyboard
-		if((rxButtons[i] == 1 || currentKey == str) && !somethingIsPlaying) sounds[i].play();
-		    
-        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
-			char str[18];
-			sprintf(str, "sound %d is playing", i);
-            sendM.addStringArg(str);
-            phoneOscSender.sendMessage(sendM);
-        #endif
-	}    
-    
-    
-    if (somethingIsPlaying)
-        sounds[0].setVolume(0.5);    //SIMPLE SIDECHAIN COMPRESSION
-    
-    else if (!somethingIsPlaying) {
-        sounds[0].setVolume(1);
-        
-        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
-            sendM.addStringArg("nothing is playing");
-            phoneOscSender.sendMessage(sendM);
-        #endif
-    }    
-}
-
 void ofApp::clear()
 {
 	pSensor.Clear();
@@ -354,20 +276,6 @@ void ofApp::keyPressed(int key){
 
 }
 
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
@@ -381,24 +289,8 @@ void ofApp::mousePressed(int x, int y, int button){
     #endif
 }
 
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
+void ofApp::exit(){
+    recorder.waitForThread();
 }
 
 /*		int totalPixels = camWidth*camHeight;
@@ -460,6 +352,42 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 	cin.get();
 */
 
-void ofApp::exit(){
-    recorder.waitForThread();
+
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key){
+
 }
+
+//--------------------------------------------------------------
+void ofApp::mouseMoved(int x, int y ){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseDragged(int x, int y, int button){
+
+}
+
+
+//--------------------------------------------------------------
+void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::windowResized(int w, int h){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::gotMessage(ofMessage msg){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
+
+}
+
+
