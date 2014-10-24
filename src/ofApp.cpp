@@ -23,7 +23,7 @@ void ofApp::setup(){
 		
 	vidGrabber.setVerbose(true);
 	vidGrabber.setDeviceID(1);
-	vidGrabber.setDesiredFrameRate(60);
+	vidGrabber.setDesiredFrameRate(120);
 	vidGrabber.initGrabber(camWidth,camHeight);	
 	
 	ofSetVerticalSync(true);
