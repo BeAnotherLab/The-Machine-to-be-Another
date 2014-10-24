@@ -9,7 +9,7 @@ The communication between computers, between OpenFrameworks and PureData, and be
 =========================
 Getting Started
 =========================
-The project was tested with Openframeworks 0.7.4 on Windows 7 + VS 2010 and Maverick + XCode
+The project was tested with Openframeworks 0.8.4 on Windows 7&8 + VS Express 3012 and Maverick + XCode
 
 1. Download the openframeworks 0.7.4 toolkit and unzip it
 2. Using the git console execute```git clone https://github.com/BeAnotherLab/The-Machine-to-be-Another``` inside the ```openframeworks_folder/apps/myapps```. If you download the project as a zip file using the github web interface remove the "-master" extension from the name of the folder.
@@ -33,7 +33,10 @@ TODOs
 If you wish to contribute, then please consider the following :
 
 1) Add the servomotor control natively in OpenFrameworks.
-2) Create a GUI for selecting the version, camera and adding IPs and ports.
-3) Creating a black screen that may be faded in and out via OSC from a smartPhone.
+2) Use ofxXmlSettings for settings such as experiment type, camera choice, Ip adresses etc
+3) Create a GUI for selecting the version, camera and adding IPs and ports.
+4) Creating a black screen that may be faded in and out via OSC from a smartPhone.
+5) Barrel Shader to adapt to different lenses
+6) Separating machine, sound player and headtracking in container classes
 
 Check the corresponding issues
