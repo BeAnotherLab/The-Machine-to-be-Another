@@ -1,5 +1,6 @@
 #include "ofApp.h"
 #include "OVR.h"
+
 using namespace OVR;
 using namespace std;
 OVR::Ptr<OVR::DeviceManager>	pManager;
@@ -18,8 +19,6 @@ void ofApp::setup(){
 	y_offset = 164;
 	camWidth = 640;
 	camHeight = 480;		
-	ofSetFullscreen(true);		
-	
 	vidGrabber.setVerbose(true);
 	vidGrabber.setDeviceID(0);
 	vidGrabber.setDesiredFrameRate(120);
@@ -64,28 +63,14 @@ void ofApp::setup(){
 	}	
 	sender.setup(HOST, PORT);
     
+	receiver.setup(LISTEN_PORT);
+    senderComputer.setup(IP_COMPUTER, SENDER_PORT);
+    endTimer = 1;	
 
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right
     
-    //SOUND PLAYER	
-    sounds[0].loadSound("sounds/fab10.mp3");
-    sounds[1].loadSound("sounds/Welcome.mp3");
-	sounds[2].loadSound("sounds/Legs.mp3");
-	sounds[3].loadSound("sounds/Part2.mp3");
-    sounds[4].loadSound("sounds/Slowly.mp3");
-	sounds[5].loadSound("sounds/CloseEyes.mp3");
-	sounds[6].loadSound("sounds/Part3.mp3");
-    sounds[7].loadSound("sounds/Goodbye.mp3");    
-    sounds[0].play(); //INITIALIZE MUSIC ON STARTUP, COMMENT IN OR OUT
-    
-    //OSC CONTROLER
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-		phoneOscReceiver.setup(PHONE_LISTENER_PORT);
-		phoneOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);
-    #endif    
-
 	//init rxbuttons value
 }
 
@@ -104,10 +89,10 @@ void ofApp::update(){
 	//send angles value over OSC to control the servos
 	ofxOscMessage m;
 	m.setAddress("/ori");	
-	m.addFloatArg(roll);//-roll_cal);
-	m.addFloatArg(pitch);//-pitch_cal);
-	m.addFloatArg(yaw);//-yaw_cal);	
-	sender.sendMessage(m); //send headtracking to pure data
+	m.addFloatArg(roll-roll_cal);
+	m.addFloatArg(pitch-pitch_cal);
+	m.addFloatArg(yaw-yaw_cal);	
+	sender.sendMessage(m);    
 
 }
 
@@ -137,10 +122,104 @@ void ofApp::draw(){
 	ofPushMatrix();		
 		ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre
 		ofRotate(90, 0, 0, 1);//rotate from centre				
-			vidGrabber.draw(y_offset-camWidth/2,-x_offset-camHeight/2);//move back by the centre offset
+			vidGrabber.draw(y_offset-camWidth/2,-x_offset-camHeight/2);
 			vidGrabber.draw(y_offset-camWidth/2,x_offset-880);		
 	ofPopMatrix();		
-	
+		
+	float timer_NoSync = ofGetElapsedTimef() - startTime_Sync;
+	float timer_Sync = ofGetElapsedTimef() - startTime_NoSync;
+    
+	//Values mapped to -1 to 1 		
+	//Yaw goes from -pi to pi 			
+	float yaw_mappedTo1 = ((yaw+3.141592)/(3.141592))-1;
+	float yaw_cal_mappedTo1 = ((yaw_cal+3.141592)/(3.141592))-1;
+	//Pitch goes from -pi/2 to pi
+	float pitch_mappedTo1 = pitch/(3.141592/2);
+	float pitch_cal_mappedTo1 = pitch_cal/(3.141592/2);
+    
+	//Vectors of each users view point.
+	ofVec2f vec(yaw_mappedTo1-yaw_cal_mappedTo1,pitch_mappedTo1-pitch_cal_mappedTo1);
+	ofVec2f rx_vec(((rx_yaw+3.141592)/(3.141592)-1), rx_pitch/(3.141592/2));
+   
+	//float distance = (abs(vec.length() - rx_vec.length()));
+	float distance = vec.distance(rx_vec);
+    
+	//receive other's headtracking
+	while(receiver.hasWaitingMessages()){
+		ofxOscMessage rx_msg;
+		receiver.getNextMessage(&rx_msg);
+		
+		if(rx_msg.getAddress() == "/ori") {
+			rx_roll = rx_msg.getArgAsFloat(0);
+			rx_pitch = rx_msg.getArgAsFloat(1);
+			rx_yaw = rx_msg.getArgAsFloat(2);                  
+			///PRINT IF RECEIVED (RX) MESSAGES
+			//ofDrawBitmapString("Connection ON",10,10);
+          
+			}
+        
+		}
+    
+	   // ofDrawBitmapString("distance "+ ofToString(distance),10,40);
+		// cout << " DistortionK[2]: " << Info.DistortionK[2] << endl;
+    
+		//if the users are looking too far appart
+		if (distance > 0.07) {        
+			startTime_NoSync = ofGetElapsedTimef();        
+			//if (rx_pitch > -0.7 && rx_pitch < 0.88  && rx_yaw > -2.35 && rx_yaw < 2.35) {
+        
+				rx_pitch_limited = rx_pitch;
+				rx_yaw_limited = rx_yaw;
+            
+				//headtrack of the other computer (RECEIVE headtracking and draw)
+			   // ofSetColor(255,0,0);
+			   // ofCircle(x_offset+camWidth/2-100*(rx_yaw_limited),y_offset+camHeight/2-300*(rx_pitch_limited),5);
+			   // ofCircle(-x_offset+960-100*(rx_yaw_limited),y_offset+camHeight/2-300*(rx_pitch_limited),5);
+        
+				//headtrack of this computer (1st person headtracking and draw)
+			   // ofSetColor(0,255,0);
+			   // ofNoFill();
+			   // ofCircle(x_offset+camWidth/2-100*(yaw-yaw_cal),y_offset+camHeight/2-300*(pitch-pitch_cal),12);
+			   // ofCircle(-x_offset+960-100*(yaw-yaw_cal),y_offset+camHeight/2-300*(pitch-pitch_cal),12);
+			   // ofFill();
+		   // }
+        
+			//else {
+				//headtrack of the other computer (RECEIVE headtracking and draw)
+				ofSetColor(255,0,0);
+				ofCircle(x_offset+camWidth/2-200*(rx_yaw_limited),y_offset+camHeight/2-300*(rx_pitch_limited),5);
+				ofCircle(-x_offset+960-200*(rx_yaw_limited),y_offset+camHeight/2-300*(rx_pitch_limited),5);
+            
+				//headtrack of this computer (1st person headtracking and draw)
+				ofSetColor(0,255,0);
+				ofNoFill();
+				ofCircle(x_offset+camWidth/2-200*(yaw-yaw_cal),y_offset+camHeight/2-300*(pitch-pitch_cal),12);
+				ofCircle(-x_offset+960-200*(yaw-yaw_cal),y_offset+camHeight/2-300*(pitch-pitch_cal),12);
+				ofFill();
+			//    }
+        
+			///COMMENT THIS IF TO SHOW "OUT OF SYNC MESSAGE" CONSTANTLY
+			//     if  (timer_NoSync < endTimer) {
+			ofSetColor(255,0,0);
+			ofDrawBitmapString("Out of sync",(camWidth/2+x_offset)-40, camHeight/2+y_offset );
+			ofDrawBitmapString("Out of sync",(camWidth*1.5-x_offset)-40,camHeight/2+y_offset);
+			//     }
+        
+			}
+    
+    
+		//if the users are looking close enough
+    
+		else {
+       
+			startTime_Sync = ofGetElapsedTimef();
+				if (timer_Sync < endTimer) {
+					ofSetColor(0,0,255);
+					ofDrawBitmapString("Synchronized",(camWidth/2+x_offset)-45, camHeight/2+y_offset);
+					ofDrawBitmapString("Synchronized",(camWidth*1.5-x_offset)-45,camHeight/2+y_offset);
+				}
+			}    	
+			
     stringstream c;		
 
 	if (recording) {
@@ -154,78 +233,6 @@ void ofApp::draw(){
 	
     ofDrawBitmapString(c.str(), 650, 10);
 	
-	soundPlayer();
-}
-
-void ofApp::soundPlayer()
-{    
-    bool somethingIsPlaying;
-    
-    // update the sound playing system:
-	ofSoundUpdate();    
-  
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-        //OSC Receiver
-        while(phoneOscReceiver.hasWaitingMessages()){
-            ofxOscMessage msg;
-            phoneOscReceiver.getNextMessage(&msg);
-                    
-			for (int i=0; i<8; i++) {				
-				stringstream a;
-				a << "/btn" << i << endl;				
-				//check if button was pressed on phone
-				if(msg.getAddress() == a.str()) rxButtons[i] = msg.getArgAsInt32(0);
-			}
-	    }
-        //OSC Sender
-        ofxOscMessage sendM;
-        sendM.setAddress("/nowPlaying");    
-    #endif
-	
-	somethingIsPlaying = false;  
-	stringstream isplaying;
-	//isplaying << "hello" << endl;
-
-	for (int i=1; i<8; i++) {
-		//isplaying << "is playing : " << i << " " << sounds[i].getIsPlaying() << endl;
-		if (sounds[i].getIsPlaying()) somethingIsPlaying = true;
-	}   
-
-	ofDrawBitmapString(isplaying.str(), 10, 80);
-              
-    //play tracks through OSC buttons
-	for (int i=0; i<8; i++) {		
-		stringstream val, cur, test;
-		val << i << endl;
-		cur << currentKey << endl;					
-		/*
-		test << "currentKey" << currentKey << endl;
-		ofDrawBitmapString(test.str(), 20, 60);
-		*/
-		//play sound i if button i was pressed on phone or on keyboard
-		if ((rxButtons[i] == 1 || cur.str() == val.str()) && !somethingIsPlaying){						
-			sounds[i].play();				
-			stringstream play;
-			play << "sound " << i << " is playing" << endl;
-			ofDrawBitmapString(play.str(), 10, 30);			
-		}
-
-		#if (OSC_CONTROL_STATUS == OSC_STATUS_ON)			
-            sendM.addStringArg(str);
-            phoneOscSender.sendMessage(sendM);
-        #endif
-	}    
-    
-	//SIMPLE SIDECHAIN COMPRESSION    
-    if (somethingIsPlaying) sounds[0].setVolume(0.5);        
-    
-	else if (!somethingIsPlaying) {
-        sounds[0].setVolume(1);        
-        #if (OSC_CONTROL_STATUS == OSC_STATUS_ON)
-            sendM.addStringArg("nothing is playing");
-            phoneOscSender.sendMessage(sendM);
-        #endif
-    }    
 }
 
 void ofApp::clear()
@@ -253,7 +260,7 @@ void ofApp::keyPressed(int key){
 
 	if (key == 'i' || key == 'I'){
 		layer_offset -=2;
-		cout << layer_offset << endl;		
+		cout << layer_offset;		
 	}
 
 	if (key == 'w' || key == 'w'){
@@ -280,7 +287,14 @@ void ofApp::keyPressed(int key){
 	}	    
    
    if (key == ' ') {
-        
+        #if (VERSION == VERSION_GENDER_SWAP)
+       pitch_cal=pitch;
+       yaw_cal=yaw;
+       roll_cal=roll;
+       rx_pitch_cal = rx_pitch;
+       rx_yaw_cal = rx_yaw;
+       rx_roll_cal = rx_roll;       
+        #endif
    }
    
 	if (key == 'r') {
@@ -288,8 +302,87 @@ void ofApp::keyPressed(int key){
         recorder.startThread(false, true);   
     }
     
-	currentKey = key;    
+    currentKey = key;
+
 }
+
+
+//--------------------------------------------------------------
+void ofApp::mousePressed(int x, int y, int button){
+	#if (VERSION == VERSION_GENDER_SWAP)
+		pitch_cal=pitch;
+		yaw_cal=yaw;
+		roll_cal=roll;
+		rx_pitch_cal = rx_pitch;
+		rx_yaw_cal = rx_yaw;
+		rx_roll_cal = rx_roll;       
+    #endif
+}
+
+void ofApp::exit(){
+    recorder.waitForThread();
+}
+
+/*		int totalPixels = camWidth*camHeight;
+		unsigned char * pixels = vidGrabber.getPixels();
+		for (int layer=0; layer<3; layer++){
+			layer_offset=camWidth*camHeight*layer;
+			for (int x=0; x<camWidth/2; x++){
+				for (int y=0; y<camHeight; y++){
+					pixels[(y*camWidth+x)+layer_offset] = pixels[(y*camWidth+(camWidth-x))+layer_offset];
+				}			
+			}*/
+		//}
+	//}
+
+/*	cout << "----- Oculus Console -----" << endl;
+
+	if (pHMD)
+	{
+		cout << " [x] HMD Found" << endl;
+	}
+	else
+	{
+		cout << " [ ] HMD Not Found" << endl;
+	}
+
+	if (pSensor)
+	{
+		cout << " [x] Sensor Found" << endl;
+	}
+	else
+	{
+		cout << " [ ] Sensor Not Found" << endl;
+	}
+
+	cout << "--------------------------" << endl;
+
+	if (InfoLoaded)
+        {
+		cout << " DisplayDeviceName: " << Info.DisplayDeviceName << endl;
+		cout << " ProductName: " << Info.ProductName << endl;
+		cout << " Manufacturer: " << Info.Manufacturer << endl;
+		cout << " Version: " << Info.Version << endl;
+		cout << " HResolution: " << Info.HResolution<< endl;
+		cout << " VResolution: " << Info.VResolution<< endl;
+		cout << " HScreenSize: " << Info.HScreenSize<< endl;
+		cout << " VScreenSize: " << Info.VScreenSize<< endl;
+		cout << " VScreenCenter: " << Info.VScreenCenter<< endl;
+		cout << " EyeToScreenDistance: " << Info.EyeToScreenDistance << endl;
+		cout << " LensSeparationDistance: " << Info.LensSeparationDistance << endl;
+		cout << " InterpupillaryDistance: " << Info.InterpupillaryDistance << endl;
+		cout << " DistortionK[0]: " << Info.DistortionK[0] << endl;
+		cout << " DistortionK[1]: " << Info.DistortionK[1] << endl;
+		cout << " DistortionK[2]: " << Info.DistortionK[2] << endl;
+		cout << "--------------------------" << endl;
+        }
+
+	cout << endl << " Press ENTER to continue" << endl;
+
+	cin.get();
+*/
+
+
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
@@ -306,10 +399,6 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 }
 
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-	
-}
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
@@ -331,6 +420,4 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
-void ofApp::exit(){
-    recorder.waitForThread();
-}
+
