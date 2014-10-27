@@ -1,6 +1,6 @@
 #include "soundPlayer.h"
 
-soundPlayer::soundPlayer(string s)
+void soundPlayer::loadSounds(string s)
 {
 	//load sounds
 	//string s("fab10 Welcome Legs Part2 Slowly CloseEyes Part3 Goodbye");
@@ -30,13 +30,12 @@ soundPlayer::soundPlayer(string s)
 
 }
 
-
-
 void soundPlayer::loop() 
 {
 
 }
-
+/*
 soundPlayer::~soundPlayer(void)
 {
 }
+*/

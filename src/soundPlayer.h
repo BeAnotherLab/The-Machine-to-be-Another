@@ -21,9 +21,9 @@ public:
 	vector<ofSoundPlayer> sounds;	
 	stringstream sound_names;
 	vector<int> rxButtons;	
-
-	soundPlayer(string s);
-	~soundPlayer(void);
+	void loadSounds(string s);
+	//soundPlayer();
+	//~soundPlayer(void);
 
 	void loop();
 };
