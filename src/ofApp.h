@@ -32,6 +32,7 @@ class ofApp : public ofBaseApp{
 	void draw();
     
     void soundPlayer();
+    void oscManager();
 
 	void keyPressed  (int key);
 	void keyReleased(int key);
@@ -48,7 +49,7 @@ class ofApp : public ofBaseApp{
 		
 	ofxOscSender sender;
     
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
+    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON) //for some reason it cannot initialize when OSC_CONTROL_OFF... something weird with the Pixel format that doesn't make any sense
         ofxOscReceiver phoneOscReceiver;
         ofxOscSender   phoneOscSender;
     #endif
@@ -62,8 +63,11 @@ class ofApp : public ofBaseApp{
             
     char currentKey;
 
-	ofSoundPlayer sounds[8];
-	int rxButtons[8];
+	ofSoundPlayer sounds[12];
+	int rxButtons[12];
+    bool somethingIsPlaying;
+    
+    bool screenToggle;
 
 	ofxImageSequenceRecorder recorder;
 	bool recording;    
