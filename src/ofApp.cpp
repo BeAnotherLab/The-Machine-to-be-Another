@@ -18,20 +18,36 @@ void ofApp::setup(){
 	y_offset = 164;
 	camWidth = 640;
 	camHeight = 480;		
-	layer_offset = camWidth*camHeight;
-	ofSetFullscreen(true);
-		
+	ofSetFullscreen(true);		
+	
 	vidGrabber.setVerbose(true);
-	vidGrabber.setDeviceID(1);
+	vidGrabber.setDeviceID(0);
 	vidGrabber.setDesiredFrameRate(120);
 	vidGrabber.initGrabber(camWidth,camHeight);	
 	
 	ofSetVerticalSync(true);
 	
+	tex.setTextureWrap(GL_REPEAT, GL_REPEAT);
+
 	System::Init();
 	pitch = 0;
 	yaw = 0;
 	roll = 0;
+	    
+    //There are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses
+    K0 = 1.0;
+    K1 = 5.74;
+    K2 = 0.27;
+    K3 = 0.0;
+    _x = 0.0f;
+    _y = 0.0f;
+    _w = 1.0f;
+    _h = 1.0f;
+    as = 640.0f/800.0f;
+	DistortionXCenterOffset = 90;
+	    
+    ofEnableNormalizedTexCoords();    
+    hmdWarpShader.load("shaders/HmdWarpExp");
 
 	//init oculus headtracking
 	pManager = *DeviceManager::Create();
@@ -74,23 +90,17 @@ void ofApp::setup(){
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){	
-	ofBackground(0,0,0);	        
-		
+void ofApp::update(){		
 	vidGrabber.update();
-		if (vidGrabber.isFrameNew() && recording) {
-			recorder.addFrame(vidGrabber);   
-		}    		
+	if (vidGrabber.isFrameNew() && recording) {
+		recorder.addFrame(vidGrabber);   
+	}    		
         
 	if(pSensor)	{
 		Quatf quaternion = FusionResult.GetOrientation();		
 		quaternion.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&yaw, &pitch, &roll);
 	}	
-}
 
-//--------------------------------------------------------------
-void ofApp::draw(){   
-	//output();
 	//send angles value over OSC to control the servos
 	ofxOscMessage m;
 	m.setAddress("/ori");	
@@ -99,7 +109,30 @@ void ofApp::draw(){
 	m.addFloatArg(yaw);//-yaw_cal);	
 	sender.sendMessage(m); //send headtracking to pure data
 
+}
+
+//--------------------------------------------------------------
+void ofApp::draw(){   
+	ofBackground(0,0,0);	        		
 	ofSetHexColor(0xffffff);			
+	/*
+	hmdWarpShader.begin();
+	hmdWarpShader.setUniformTexture("tex", vidGrabber.getTextureReference(), 0);
+    hmdWarpShader.setUniform2f("LensCenter", DistortionXCenterOffset, 0 );
+    hmdWarpShader.setUniform2f("ScreenCenter", _x + _w*1.0f, _y + _h*1.0f );
+    hmdWarpShader.setUniform2f("Scale", (_w/1.0f) * 1.0f, (_h/1.0f) * 1.0f * as );
+    hmdWarpShader.setUniform2f("ScaleIn", (1.0f/_w), (1.0f/_h) / as );
+    hmdWarpShader.setUniform4f("HmdWarpParam", K0, K1, K2, K3 );
+
+	glBegin(GL_QUADS);
+    glTexCoord2f(1,0); glVertex3f(0,0,0);
+    glTexCoord2f(0,0); glVertex3f(640,0,0);
+    glTexCoord2f(0,1); glVertex3f(640,800,0);
+    glTexCoord2f(1,1); glVertex3f(0,800,0);
+    glEnd();
+	hmdWarpShader.end();
+
+	*/
 	//duplicate video stream. You can also draw videograbbers from 2 different cameras. WASD to adjust the position of image.
 	ofPushMatrix();		
 		ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre

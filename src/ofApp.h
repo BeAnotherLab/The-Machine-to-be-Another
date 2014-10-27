@@ -53,7 +53,11 @@ class ofApp : public ofBaseApp{
         ofxOscSender   phoneOscSender;
     #endif
             
-    ofVideoGrabber vidGrabber;    
+    ofVideoGrabber vidGrabber;    	
+    ofTexture tex;
+
+	float K0,K1,K2,K3,_x,_y,_w,_h,as,DistortionXCenterOffset;
+
 	int camWidth, camHeight;
 	int x_offset, y_offset;
 	float pitch, yaw, roll;
@@ -67,4 +71,6 @@ class ofApp : public ofBaseApp{
 
 	ofxImageSequenceRecorder recorder;
 	bool recording;    
+
+	ofShader hmdWarpShader;
 };
