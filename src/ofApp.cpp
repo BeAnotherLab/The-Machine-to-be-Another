@@ -20,13 +20,14 @@ void ofApp::setup(){
 	camWidth = 640;
 	camHeight = 480;		
 	vidGrabber.setVerbose(true);
-	vidGrabber.setDeviceID(0);
+	vidGrabber.setDeviceID(1);
 	vidGrabber.setDesiredFrameRate(120);
-	vidGrabber.initGrabber(camWidth,camHeight);	
-	
+	vidGrabber.initGrabber(camWidth,camHeight);		
+	vidGrabber.setAnchorPercent(0.5,0.5);
+	ofSetFullscreen(true);
 	ofSetVerticalSync(true);
 	
-	tex.setTextureWrap(GL_REPEAT, GL_REPEAT);
+//	tex.setTextureWrap(GL_REPEAT, GL_REPEAT);
 
 	System::Init();
 	pitch = 0;
@@ -42,10 +43,10 @@ void ofApp::setup(){
     _y = 0.0f;
     _w = 1.0f;
     _h = 1.0f;
-    as = 640.0f/800.0f;
-	DistortionXCenterOffset = 90;
+    as = 640.0f/480.0f;
+	DistortionXCenterOffset = 0;
 	    
-    ofEnableNormalizedTexCoords();    
+    //ofEnableNormalizedTexCoords();    
     hmdWarpShader.load("shaders/HmdWarpExp");
 
 	//init oculus headtracking
@@ -98,9 +99,20 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){   
-	ofBackground(0,0,0);	        		
+	ofBackground(185);	        		
 	ofSetHexColor(0xffffff);			
+		
+	ofFbo fbo = *(new ofFbo());
+	fbo.allocate(480,640);
+	fbo.begin();
+		ofRotate(90, 0, 0, 1);//rotate from centre							
+		vidGrabber.draw(0,0);
+	fbo.end();
+
 	/*
+	_w = -0.5 + (float)mouseX/(float)ofGetWidth();
+	_h = -0.5 + (float)mouseY/(float)ofGetHeight();
+	*/
 	hmdWarpShader.begin();
 	hmdWarpShader.setUniformTexture("tex", vidGrabber.getTextureReference(), 0);
     hmdWarpShader.setUniform2f("LensCenter", DistortionXCenterOffset, 0 );
@@ -108,23 +120,25 @@ void ofApp::draw(){
     hmdWarpShader.setUniform2f("Scale", (_w/1.0f) * 1.0f, (_h/1.0f) * 1.0f * as );
     hmdWarpShader.setUniform2f("ScaleIn", (1.0f/_w), (1.0f/_h) / as );
     hmdWarpShader.setUniform4f("HmdWarpParam", K0, K1, K2, K3 );
-
+	/*
 	glBegin(GL_QUADS);
     glTexCoord2f(1,0); glVertex3f(0,0,0);
     glTexCoord2f(0,0); glVertex3f(640,0,0);
     glTexCoord2f(0,1); glVertex3f(640,800,0);
     glTexCoord2f(1,1); glVertex3f(0,800,0);
-    glEnd();
-	hmdWarpShader.end();
+    glEnd();*/	
 
-	*/
-	//duplicate video stream. You can also draw videograbbers from 2 different cameras. WASD to adjust the position of image.
-	ofPushMatrix();		
-		ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre
-		ofRotate(90, 0, 0, 1);//rotate from centre				
-			vidGrabber.draw(y_offset-camWidth/2,-x_offset-camHeight/2);
-			vidGrabber.draw(y_offset-camWidth/2,x_offset-880);		
+	ofPushMatrix();				
+		//ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre
+		//ofRotate(90, 0, 0, 1);//rotate from centre							
+	//		vidGrabber.draw(camWidth/2+y_offset,camHeight/2-x_offset);		
+//			vidGrabber.draw(mouseX,mouseY);
+	fbo.draw(mouseX, mouseY);
 	ofPopMatrix();		
+		
+
+	//vidGrabber.draw(y_offset-camWidth/2,x_offset-880);		
+
 		
 	float timer_NoSync = ofGetElapsedTimef() - startTime_Sync;
 	float timer_Sync = ofGetElapsedTimef() - startTime_NoSync;
@@ -232,7 +246,8 @@ void ofApp::draw(){
 	}
 	
     ofDrawBitmapString(c.str(), 650, 10);
-	
+
+
 }
 
 void ofApp::clear()
