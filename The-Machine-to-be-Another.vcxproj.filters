@@ -70,6 +70,9 @@
     <ClCompile Include="src\soundPlayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\machine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -510,6 +513,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\soundPlayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\machine.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

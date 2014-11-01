@@ -1,17 +1,15 @@
 #pragma once
 #include "ofMain.h"
-#include "ofxOsc.h"
 #include "ofxImageSequenceRecorder.h"
 #include "soundPlayer.h"
+#include "machine.h"
 
 #define HOST "localhost"
 #define PORT 8015
-
-#define CAPTURE_FRAME_RATE 24
-
 #define LISTEN_PORT 8017
 #define SENDER_PORT 8016
-#define IP_COMPUTER "10.0.0.4"
+#define HOST "192.168.0.1"
+#define CAPTURE_FRAME_RATE 24
 
 class ofApp : public ofBaseApp{
 
@@ -31,40 +29,10 @@ class ofApp : public ofBaseApp{
 	void gotMessage(ofMessage msg);
 	void exit();    
 	void clear();
-	void output();    
-		
-	//send headtracking to pure data
-	ofxOscSender sender;    
+	void output();    		
 
-	//send headtracking to other gender swap computer
-	ofxOscSender senderComputer;
-	ofxOscReceiver receiver;
+	machine machine;
 
-	float rx_pitch, rx_yaw, rx_roll;
-    float rx_pitch_cal, rx_yaw_cal, rx_roll_cal;
-    float startTime_Sync;
-    float startTime_NoSync;
-	float rx_pitch_limited;
-    float rx_yaw_limited;
-    float endTimer;
-            
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-        ofxOscReceiver phoneOscReceiver;
-        ofxOscSender   phoneOscSender;
-    #endif
-            
-    ofVideoGrabber vidGrabber;    	
-    ofTexture tex;
-
-	float K0,K1,K2,K3,_x,_y,_w,_h,as,DistortionXCenterOffset;
-
-	int camWidth, camHeight;
-	int x_offset, y_offset;
-	float pitch, yaw, roll;
-    float pitch_cal, yaw_cal, roll_cal;
-	int layer_offset;
-	bool symmetry;
-            
     string currentKey;
 	
 	ofxImageSequenceRecorder recorder;
@@ -72,7 +40,9 @@ class ofApp : public ofBaseApp{
 
 	//sound player controlled by osc
 	soundPlayer player;
+		
+	//send headtracking to other gender swap computer or to pure data
+	ofxOscReceiver phoneOscReceiver, receiver;
+	ofxOscSender   phoneOscSender, sender;    
 
-
-	ofShader hmdWarpShader;
 };

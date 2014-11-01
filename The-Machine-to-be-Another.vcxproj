@@ -100,6 +100,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\machine.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.cpp" />
@@ -125,6 +126,7 @@
     <ClCompile Include="src\soundPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\machine.h" />
     <ClInclude Include="src\ofxImageSequenceRecorder.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvBlob.h" />
