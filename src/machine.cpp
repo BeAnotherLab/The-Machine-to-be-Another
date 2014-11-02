@@ -4,8 +4,8 @@ void machine::setup()
 {
 	x_offset = 74;
 	y_offset = 164;
-	camWidth = 800;
-	camHeight = 640;		
+	camWidth = 640;
+	camHeight = 480;		
 	vidGrabber.setVerbose(true);
 	vidGrabber.setDeviceID(1);
 	vidGrabber.setDesiredFrameRate(120);
@@ -48,39 +48,11 @@ void machine::drawVideo() {
 
 void machine::drawOverlay(){
 	ofVec2f mine = ofVec2f(pitch,yaw);
-	ofVec2f their = ofVec2f(rx_pitch,rx_yaw);
-
-	if (mine.distance(their)>0.7) {        
-		time_no_sync = ofGetElapsedTimef();        		        		    
-		ofSetColor(255,0,0);
-		ofCircle(x_offset+camWidth/2-200*(rx_yaw),y_offset+camHeight/2-300*(rx_pitch),5);
-		ofCircle(-x_offset+960-200*(rx_yaw),y_offset+camHeight/2-300*(rx_pitch),5);
-            
-		//headtrack of this computer (1st person headtracking and draw)
-		ofSetColor(0,255,0);
-		ofNoFill();
-		ofCircle(x_offset+camWidth/2-200*(yaw),y_offset+camHeight/2-300*(pitch),12);
-		ofCircle(-x_offset+960-200*(yaw),y_offset+camHeight/2-300*(pitch),12);
-		ofFill();
-
-		///COMMENT THIS IF TO SHOW "OUT OF SYNC MESSAGE" CONSTANTLY
-		     if  (time_no_sync < endTimer) {
-		ofSetColor(255,0,0);
-		ofDrawBitmapString("Out of sync",(camWidth/2+x_offset)-40, camHeight/2+y_offset );
-		ofDrawBitmapString("Out of sync",(camWidth*1.5-x_offset)-40,camHeight/2+y_offset);
-		     }
-        
-	}
-        
-	//if the users are looking close enough    
-	else {       
-		time_sync = ofGetElapsedTimef();
-			if (ofGetElapsedTimef() < endTimer) {
-				ofSetColor(0,0,255);
-				ofDrawBitmapString("Synchronized",(camWidth/2+x_offset)-45, camHeight/2+y_offset);
-				ofDrawBitmapString("Synchronized",(camWidth*1.5-x_offset)-45,camHeight/2+y_offset);
-				}
-		}    	
+	ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
+	ofVec2f distance = their - mine;
+	
+	ofCircle(x_offset+camWidth/2-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5);
+	ofCircle(-x_offset+960-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5);    		
 }
 
 void machine::calibrate() {

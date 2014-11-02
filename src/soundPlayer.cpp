@@ -17,6 +17,7 @@ void soundPlayer::loadSounds(string s)
 		ofSoundPlayer so = *new ofSoundPlayer();
 		sounds.push_back(so);		
 		sounds.at(count).loadSound("sounds/"+sub+".mp3");					
+		cout << "loading " << "sounds/"+sub+".mp3" << endl;
     } while (iss);
 		//sounds[i].loadSound(sound_names.
 		

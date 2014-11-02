@@ -34,8 +34,8 @@ void ofApp::setup(){
 		FusionResult.AttachToSensor(pSensor);
 	}	
 
-	sender.setup(HOST, SENDER_PORT);    
-	receiver.setup(LISTEN_PORT);    
+	sender.setup(HOST, PORT);    
+	receiver.setup(PORT);    
 
 	machine.setup();
 
@@ -72,7 +72,8 @@ void ofApp::update(){
 			machine.rx_pitch = rx_msg.getArgAsFloat(1);
 			machine.rx_yaw = rx_msg.getArgAsFloat(2);                  
 			///PRINT IF RECEIVED (RX) MESSAGES
-			ofDrawBitmapString("Connection ON",10,10);          
+			ofDrawBitmapString("Connection ON",10,10); 
+			cout << "message" << endl;
 		}
 	}	
 
@@ -87,7 +88,6 @@ void ofApp::update(){
 	}
 	ofDrawBitmapString(c.str(), 650, 10);
 
-	cout << "yaw " << machine.yaw << endl;
 }
 
 //--------------------------------------------------------------
