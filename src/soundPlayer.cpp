@@ -3,7 +3,7 @@
 void soundPlayer::loadSounds(string s)
 {
 	//load sounds
-	cout << "sounds" << s << endl;
+	cout << "sounds : " << s << endl;
     istringstream iss(s);
 	count = 0;
     do
