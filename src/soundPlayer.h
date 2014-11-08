@@ -15,15 +15,19 @@ class soundPlayer
 {
 public:
 	int count; //the number of sounds deduced by the input string
-	ofxOscReceiver phoneOscReceiver;
+	
 	ofxOscSender phoneOscSender;
 
-	vector<ofSoundPlayer> sounds;	
+	vector<ofSoundPlayer> sounds; 
 	stringstream sound_names;
 	vector<int> rxButtons;	
-	void loadSounds(string s);
+	bool something_is_playing;
+	void loadSounds(string s); //list sounds in /data/bin/sounds to be loaded 
+	void playSound(int id);	
+	void update();
+
 	//soundPlayer();
 	//~soundPlayer(void);
 
-	void loop();
+	
 };

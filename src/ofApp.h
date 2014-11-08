@@ -28,8 +28,10 @@ class ofApp : public ofBaseApp{
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	void exit();    
-	void clear();
-	void output();    		
+	void clear();	
+	void oscControl();
+	void record();
+	void initOculus();
 
 	machine machine;
 
@@ -37,11 +39,9 @@ class ofApp : public ofBaseApp{
 	
 	ofxImageSequenceRecorder recorder;
 	bool recording;    
-
-	//sound player controlled by osc
+	
 	soundPlayer player;
-		
-	//send headtracking to other gender swap computer or to pure data
+			
 	ofxOscReceiver phoneOscReceiver, receiver;
 	ofxOscSender   phoneOscSender, sender;    
 

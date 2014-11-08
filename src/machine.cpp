@@ -2,6 +2,7 @@
 
 void machine::setup()
 {
+	//tested with PS3Eye camera.	
 	x_offset = 74;
 	y_offset = 164;
 	camWidth = 640;
@@ -17,7 +18,7 @@ void machine::setup()
 	yaw = 0;
 	roll = 0;
 	    
-    //There are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses
+    //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses
     K0 = 1.0;
     K1 = 5.74;
     K2 = 0.27;

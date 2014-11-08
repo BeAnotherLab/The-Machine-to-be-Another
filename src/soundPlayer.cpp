@@ -3,37 +3,60 @@
 void soundPlayer::loadSounds(string s)
 {
 	//load sounds
-	//string s("fab10 Welcome Legs Part2 Slowly CloseEyes Part3 Goodbye");
-	
 	cout << "sounds" << s << endl;
     istringstream iss(s);
 	count = 0;
     do
-    {
-		count++;
+    {		
         string sub;
         iss >> sub;
         cout << "Substring: " << sub << endl;
 		ofSoundPlayer so = *new ofSoundPlayer();
 		sounds.push_back(so);		
-		sounds.at(count).loadSound("sounds/"+sub+".mp3");					
+		stringstream load;
+		load << "sounds/" << sub << ".mp3";
+		sounds.at(count).loadSound(load.str());					
 		cout << "loading " << "sounds/"+sub+".mp3" << endl;
-    } while (iss);
-		//sounds[i].loadSound(sound_names.
-		
-	sounds.at(0).play(); //Initialize music on startup
-		
-    //OSC CONTROLER
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-		phoneOscReceiver.setup(PHONE_LISTENER_PORT);
-		phoneOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);
-    #endif    
+		count++;
+    } while (iss);				
 
+	sounds.at(0).play(); //Initialize music on startup
+		    
+	phoneOscSender.setup("192.168.178.27", 8015);    
 }
 
-void soundPlayer::loop() 
-{
+void soundPlayer::playSound(int id) {
+	//play sound i if button i was pressed on phone or on keyboard
+		if (!something_is_playing && !sounds.at(id).getIsPlaying()){						
+			sounds.at(id).play();				
+			stringstream play;
+			play << "sound " << id << " is playing" << endl;
 
+			ofxOscMessage sendM;
+			sendM.setAddress("/1/label2");
+            sendM.addStringArg(play.str());
+            phoneOscSender.sendMessage(sendM);
+			}			
+}
+
+void soundPlayer::update() {	
+    // update the sound playing system:
+	ofSoundUpdate();
+	
+	something_is_playing = false;  
+	stringstream is_playing;	
+
+	//set something_is_playing
+	for (int i=1; i<8; i++) {
+		if (sounds.at(i).getIsPlaying()) something_is_playing = true;
+	}   		
+    
+	if (!something_is_playing) {		
+        sounds[0].setVolume(1);        
+        ofxOscMessage message;
+		message.addStringArg("nothing is playing");
+        phoneOscSender.sendMessage(message);
+    }       
 }
 /*
 soundPlayer::~soundPlayer(void)

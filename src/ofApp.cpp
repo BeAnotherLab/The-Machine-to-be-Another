@@ -12,14 +12,88 @@ bool							InfoLoaded;
 #include <iostream>
 
 //--------------------------------------------------------------
-void ofApp::setup(){	
-	//tested with PS3Eye camera.
-	
+void ofApp::setup(){		
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
-    recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right
-    	
-	//init oculus rift
+    recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    	
+	initOculus();
+	sender.setup(HOST, PORT);    
+	receiver.setup(PORT);    	
+	player.loadSounds("fab10 Welcome Legs Part2 Slowly CloseEyes Part3 Goodbye");
+	machine.setup();
+}
+
+//--------------------------------------------------------------
+void ofApp::update(){				    
+	if(pSensor)	{
+		Quatf quaternion = FusionResult.GetOrientation();		
+		quaternion.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&machine.yaw, &machine.pitch, &machine.roll);
+	}	
+	machine.update();
+	player.update();
+	oscControl();
+	record();		
+}
+
+//--------------------------------------------------------------
+void ofApp::draw(){   
+	ofBackground(185);	        		
+	ofSetHexColor(0xffffff);									    
+	machine.drawVideo();
+	machine.drawOverlay();    
+}
+
+
+void ofApp::oscControl() {
+
+	//send calibrated angles value over OSC.
+	ofxOscMessage m;
+	m.setAddress("/ori");	
+	m.addFloatArg(machine.roll-machine.roll_cal);
+	m.addFloatArg(machine.pitch-machine.pitch_cal);
+	m.addFloatArg(machine.yaw-machine.yaw_cal);	
+	sender.sendMessage(m);     	
+    
+	//receive other's headtracking
+	while (receiver.hasWaitingMessages()) {
+		ofxOscMessage rx_msg;
+		receiver.getNextMessage(&rx_msg);				
+        if (rx_msg.getAddress() == "/ori") {
+			machine.rx_roll = rx_msg.getArgAsFloat(0);
+			machine.rx_pitch = rx_msg.getArgAsFloat(1);
+			machine.rx_yaw = rx_msg.getArgAsFloat(2);                  
+		}
+		for (int i=0; i<player.count; i++) {
+			stringstream a;
+			a << "/btn" << i;
+			if (rx_msg.getAddress() == a.str()) player.playSound(i); //play sound at i
+		}
+	}
+	
+	
+
+}
+
+void ofApp::record() {
+	stringstream c;		
+
+	if (machine.vidGrabber.isFrameNew() && recording) {
+		recorder.addFrame(machine.vidGrabber);   
+	}    		
+    
+	if (recording) {
+		c << "Recording" <<  " | Queue Size: " << recorder.q.size() << endl;
+	} else if (!recording && recorder.q.size() > 0) {
+		c << "Queue Size: " << recorder.q.size() << endl;
+	}
+	else if (recorder.q.size() == 0) {
+		recorder.stopThread();		
+	}
+	ofDrawBitmapString(c.str(), 650, 10);
+}
+
+
+void ofApp::initOculus() {
 	System::Init();
 	pManager = *DeviceManager::Create();
 	pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
@@ -33,129 +107,48 @@ void ofApp::setup(){
 	if (pSensor) {
 		FusionResult.AttachToSensor(pSensor);
 	}	
-
-	sender.setup(HOST, PORT);    
-	receiver.setup(PORT);    
-
-	machine.setup();
-
-	//init rxbuttons value	
-}
-
-//--------------------------------------------------------------
-void ofApp::update(){			
-	if (machine.vidGrabber.isFrameNew() && recording) {
-		recorder.addFrame(machine.vidGrabber);   
-	}    		
-        
-	if(pSensor)	{
-		Quatf quaternion = FusionResult.GetOrientation();		
-		quaternion.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&machine.yaw, &machine.pitch, &machine.roll);
-	}	
-	
-	//send calibrated angles value over OSC.
-	ofxOscMessage m;
-	m.setAddress("/ori");	
-	m.addFloatArg(machine.roll-machine.roll_cal);
-	m.addFloatArg(machine.pitch-machine.pitch_cal);
-	m.addFloatArg(machine.yaw-machine.yaw_cal);	
-	sender.sendMessage(m);     	
-    
-	machine.update();
-
-	//receive other's headtracking
-	while(receiver.hasWaitingMessages()){
-		ofxOscMessage rx_msg;
-		receiver.getNextMessage(&rx_msg);				
-        if(rx_msg.getAddress() == "/ori") {
-			machine.rx_roll = rx_msg.getArgAsFloat(0);
-			machine.rx_pitch = rx_msg.getArgAsFloat(1);
-			machine.rx_yaw = rx_msg.getArgAsFloat(2);                  
-			///PRINT IF RECEIVED (RX) MESSAGES
-			ofDrawBitmapString("Connection ON",10,10); 
-			cout << "message" << endl;
-		}
-	}	
-
-	stringstream c;		
-	if (recording) {
-		c << "Recording" <<  " | Queue Size: " << recorder.q.size() << endl;
-	} else if (!recording && recorder.q.size() > 0) {
-		c << "Queue Size: " << recorder.q.size() << endl;
-	}
-	else if (recorder.q.size() == 0) {
-		recorder.stopThread();		
-	}
-	ofDrawBitmapString(c.str(), 650, 10);
-
-}
-
-//--------------------------------------------------------------
-void ofApp::draw(){   
-	ofBackground(185);	        		
-	ofSetHexColor(0xffffff);									    
-	machine.drawVideo();
-	machine.drawOverlay();    
-}
-
-void ofApp::clear()
-{
-	pSensor.Clear();
-        pHMD.Clear();
-	pManager.Clear();  	
-	System::Destroy();	
-}
-
-
-
-void ofApp::output()
-{
-	
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){		
 	
-	if (key == 'w' || key == 'w'){
-		machine.y_offset -= 2;
-		cout << machine.y_offset;
-		//5016
-	}
-
-	if (key == 's' || key == 'S'){
-		machine.y_offset += 2;
-		cout << machine.y_offset;
-	}
-	
 	if (key == 'a' || key == 'A'){
-		machine.x_offset -= 2;
-		//37
+		machine.x_offset -= 2;		
 		cout << machine.x_offset;
 	}
 
 	if (key == 'd' || key == 'D'){
 		machine.x_offset += 2;
-		//37
 		cout << machine.x_offset;
 	}	    
    
-   if (key == ' ') { 	   
-	   machine.calibrate();
-   }
+	if (key == ' ') { 	   
+		machine.calibrate();
+	}
    
 	if (key == 'r') {
         recording = !recording;
         recorder.startThread(false, true);   
     }
-    
-    currentKey = key;
+       
+	//play tracks through keys 0-9
+    //if (key_is_a_number) {
+		player.playSound(key); //my non programmer solution to using keys 0-9        
+    //}            
 
 }
-
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){	
 	machine.calibrate();		
+}
+
+void ofApp::clear()
+{
+	pSensor.Clear();
+    pHMD.Clear();
+	pManager.Clear();  	
+	System::Destroy();	
 }
 
 void ofApp::exit(){
