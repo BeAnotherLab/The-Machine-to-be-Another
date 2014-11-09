@@ -5,7 +5,7 @@
 #include "machine.h"
 
 #define HOST "localhost"
-#define PORT 8015
+#define PORT 8015	
 //#define LISTEN_PORT 8017
 //#define SENDER_PORT 8016
 #define HOST "192.168.178.28"

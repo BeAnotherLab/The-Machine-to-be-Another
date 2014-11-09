@@ -32,6 +32,9 @@ void machine::setup()
 	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 	endTimer = 1;		
+
+	dimTimer = ofGetElapsedTimeMillis();
+	dimmed= false;
 }
 
 void machine::update() {
@@ -47,13 +50,38 @@ void machine::drawVideo() {
 	ofPopMatrix();		
 }
 
-void machine::drawOverlay(){
+void machine::drawOverlay() {
 	ofVec2f mine = ofVec2f(pitch,yaw);
 	ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
 	ofVec2f distance = their - mine;
 	
 	ofCircle(x_offset+camWidth/2-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5);
-	ofCircle(-x_offset+960-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5);    		
+	ofCircle(-x_offset+960-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5); 
+
+	dim();
+}
+
+void machine::dim() {
+	int timeDim = ofGetElapsedTimeMillis() - dimTimer;
+	ofSetColor(0);
+	if (timeDim < 2000) { //if dim/undim was triggered less than 2 seconds ago
+		if (dimmed == true) { //if we must dim the lights
+			ofSetColor(0,ofMap(timeDim,0,2000,0,255));
+			ofRect(0,0,ofGetWidth(),ofGetHeight());
+		}
+		else { //if we must turn the lights back on;
+			ofSetColor(0,ofMap(timeDim,0,2000,255,0));
+			ofRect(0,0,ofGetWidth(),ofGetHeight());
+		}
+	}
+	else if (dimmed == true) { // stay dark
+		ofRect(0,0,ofGetWidth(),ofGetHeight());
+	}	
+}
+
+void machine::triggerDim() {
+	dimTimer=ofGetElapsedTimeMillis();
+	dimmed = !dimmed;
 }
 
 void machine::calibrate() {

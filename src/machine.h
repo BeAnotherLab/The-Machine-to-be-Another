@@ -26,11 +26,16 @@ public:
 	ofShader hmdWarpShader;
 	float K0,K1,K2,K3,_x,_y,_w,_h,as,DistortionXCenterOffset;
 
+	int dimTimer;
+	bool dimmed; 
+
 	void machine::setup();
 	void machine::update();
 	void machine::drawVideo();
 	void machine::drawOverlay();	
 	void machine::calibrate();		
+	void machine::triggerDim();
+	void machine::dim();
 
 	machine(void);
 	~machine(void);
