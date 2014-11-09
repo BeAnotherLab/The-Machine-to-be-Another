@@ -19,7 +19,7 @@ void ofApp::setup(){
 	initOculus();
 	sender.setup(HOST, PORT);    
 	receiver.setup(PORT);    	
-	player.loadSounds("fab10 Welcome Legs Part2 Slowly CloseEyes Part3 Goodbye");
+	player.loadSounds("fab10");
 	machine.setup();
 }
 
@@ -43,9 +43,7 @@ void ofApp::draw(){
 	machine.drawOverlay();    
 }
 
-
 void ofApp::oscControl() {
-
 	//send calibrated angles value over OSC.
 	ofxOscMessage m;
 	m.setAddress("/ori");	
@@ -54,7 +52,7 @@ void ofApp::oscControl() {
 	m.addFloatArg(machine.yaw-machine.yaw_cal);	
 	sender.sendMessage(m);     	
     
-	//receive other's headtracking
+	//receive headtracking and touchOSC messages
 	while (receiver.hasWaitingMessages()) {
 		ofxOscMessage rx_msg;
 		receiver.getNextMessage(&rx_msg);				
@@ -62,6 +60,12 @@ void ofApp::oscControl() {
 			machine.rx_roll = rx_msg.getArgAsFloat(0);
 			machine.rx_pitch = rx_msg.getArgAsFloat(1);
 			machine.rx_yaw = rx_msg.getArgAsFloat(2);                  
+		}
+		else if (rx_msg.getAddress() == "/dim") {
+			machine.triggerDim();
+		}
+		else if (rx_msg.getAddress() == "/ht") {
+			machine.calibrate();
 		}
 		for (int i=0; i<player.count; i++) {
 			stringstream a;
@@ -89,7 +93,6 @@ void ofApp::record() {
 	}
 	ofDrawBitmapString(c.str(), 650, 10);
 }
-
 
 void ofApp::initOculus() {
 	System::Init();

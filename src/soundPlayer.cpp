@@ -9,8 +9,7 @@ void soundPlayer::loadSounds(string s)
     do
     {		
         string sub;
-        iss >> sub;
-        cout << "Substring: " << sub << endl;
+        iss >> sub;        
 		ofSoundPlayer so = *new ofSoundPlayer();
 		sounds.push_back(so);		
 		stringstream load;
@@ -19,7 +18,7 @@ void soundPlayer::loadSounds(string s)
 		cout << "loading " << "sounds/"+sub+".mp3" << endl;
 		count++;
     } while (iss);				
-
+	cout << count << " sounds loaded " << endl;
 	sounds.at(0).play(); //Initialize music on startup
 		    
 	phoneOscSender.setup("192.168.178.27", 8015);    
@@ -47,7 +46,7 @@ void soundPlayer::update() {
 	stringstream is_playing;	
 
 	//set something_is_playing
-	for (int i=1; i<8; i++) {
+	for (int i=1; i<sounds.size(); i++) {
 		if (sounds.at(i).getIsPlaying()) something_is_playing = true;
 	}   		
     
