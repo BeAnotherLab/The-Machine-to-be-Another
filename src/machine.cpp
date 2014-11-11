@@ -8,7 +8,7 @@ void machine::setup()
 	camWidth = 640;
 	camHeight = 480;		
 	vidGrabber.setVerbose(true);
-	vidGrabber.setDeviceID(1);
+	vidGrabber.setDeviceID(0);
 	vidGrabber.setDesiredFrameRate(120);
 	vidGrabber.initGrabber(camWidth,camHeight);			
 	ofSetFullscreen(true);
@@ -43,10 +43,13 @@ void machine::update() {
 
 void machine::drawVideo() {	
 	ofPushMatrix();				
+		int mx = 640;
+		int my = -312;
 		ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre
-		ofRotate(90, 0, 0, 1);//rotate from centre					
-		vidGrabber.draw(y_offset-camWidth/2,x_offset-880); //draw left
-		vidGrabber.draw(y_offset-camWidth/2,-x_offset-camHeight/2); //draw right		
+		ofRotate(270, 0, 0, 1); //rotate from centre					
+		vidGrabber.draw(y_offset-camWidth/2+my,x_offset-880+mx); //draw left
+		vidGrabber.draw(y_offset-camWidth/2+my,-x_offset-camHeight/2+mx); //draw right		
+		cout << "mx " << mx << "my " << my << endl;
 	ofPopMatrix();		
 }
 
