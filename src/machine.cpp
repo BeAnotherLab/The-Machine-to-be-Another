@@ -22,7 +22,7 @@ void machine::setup()
 	fbo.allocate(480,640);
 	fbo.setAnchorPercent(0.5, 0.5);
 	overlay.loadImage("pictures/overlay4.png");
-	overlay.resize(2000,2000);
+	overlay.resize(2000,2000*1.50);
 	overlay.setAnchorPercent(0.5, 0.5);
     //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses
     K0 = 1.0;
@@ -52,12 +52,12 @@ void machine::update() {
 	fbo.begin();			
 		ofBackground(0);
 		ofPushMatrix();			
-			ofTranslate(camHeight/2, camWidth/2);
+			ofTranslate(camHeight/2-distance.y*500, camWidth/2-distance.x*500);
 			ofRotate(270, 0, 0, 1); //rotate from centre					
 			vidGrabber.draw(-320, -240);
 		ofPopMatrix();		
 		
-		overlay.draw(camHeight/2-distance.y*1000, camWidth/2-distance.x*1000);
+		overlay.draw(camHeight/2-distance.y*500, camWidth/2-distance.x*500);
 		
 		ofNoFill();	   
 	fbo.end();	
