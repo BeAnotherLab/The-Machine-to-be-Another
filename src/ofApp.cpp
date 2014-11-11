@@ -27,7 +27,7 @@ void ofApp::setup(){
 void ofApp::update(){				    
 	if(pSensor)	{
 		Quatf quaternion = FusionResult.GetOrientation();		
-		quaternion.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&machine.yaw, &machine.pitch, &machine.roll);
+		quaternion.GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&machine.pitch, &machine.yaw, &machine.roll);
 	}	
 	machine.update();
 	player.update();

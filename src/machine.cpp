@@ -21,7 +21,7 @@ void machine::setup()
 	roll_cal = 0;
 	fbo.allocate(480,640);
 	fbo.setAnchorPercent(0.5, 0.5);
-	overlay.loadImage("pictures/overlay3.png");
+	overlay.loadImage("pictures/overlay4.png");
 	overlay.resize(2000,2000);
 	overlay.setAnchorPercent(0.5, 0.5);
     //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses
