@@ -54,12 +54,12 @@ void machine::drawVideo() {
 }
 
 void machine::drawOverlay() {
-	ofVec2f mine = ofVec2f(pitch,yaw);
+	ofVec2f mine = ofVec2f(pitch-pitch_cal,yaw-yaw_cal);
 	ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
 	ofVec2f distance = their - mine;
 	
-	ofCircle(x_offset+camWidth/2-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5);
-	ofCircle(-x_offset+960-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5); 
+	ofCircle(x_offset+camWidth/2-0*200*(distance.y), y_offset+camHeight/2-0*300*(distance.x), 5);
+	ofCircle(-x_offset+960-0*200*(distance.y), y_offset+camHeight/2-0*300*(distance.x), 5); 
 
 	dim();
 }
