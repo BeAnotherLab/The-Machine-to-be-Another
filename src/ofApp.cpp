@@ -37,7 +37,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){   
-	ofBackground(185);	        		
+	ofBackground(0);	        		
 	ofSetHexColor(0xffffff);									    
 	machine.drawVideo();
 	machine.drawOverlay();    
