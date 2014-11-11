@@ -3,8 +3,7 @@
 void machine::setup()
 {
 	//tested with PS3Eye camera.	
-	x_offset = 74;
-	y_offset = 164;
+	x_offset = 256;
 	camWidth = 640;
 	camHeight = 480;		
 	vidGrabber.setVerbose(true);
@@ -13,11 +12,14 @@ void machine::setup()
 	vidGrabber.initGrabber(camWidth,camHeight);			
 	ofSetFullscreen(true);
 	ofSetVerticalSync(true);
-		
+	ofEnableAlphaBlending();	
 	pitch = 0;
 	yaw = 0;
 	roll = 0;
 	    
+	fbo.allocate(480,640);
+	fbo.setAnchorPercent(0.5,0.5);
+
     //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses
     K0 = 1.0;
     K1 = 5.74;
@@ -38,11 +40,24 @@ void machine::setup()
 }
 
 void machine::update() {
+	int my = ofMap(ofGetMouseY(),0,ofGetHeight(),-2000,2000);
+	int mx = ofMap(ofGetMouseX(),0,ofGetWidth(),-2000,2000);
 	vidGrabber.update();	    	
+	fbo.begin();			
+		ofBackground(0);
+		ofPushMatrix();			
+			ofTranslate(camHeight/2, camWidth/2);
+			ofRotate(270, 0, 0, 1); //rotate from centre					
+			vidGrabber.draw(-320, -240);
+		ofPopMatrix();				
+		ofNoFill();	   
+	fbo.end();	
+	cout << "mx " << mx << "my " << my << endl;
+
 }
 
 void machine::drawVideo() {	
-	ofPushMatrix();				
+	/*ofPushMatrix();				
 		int mx = 640;
 		int my = -312;
 		ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre
@@ -50,7 +65,9 @@ void machine::drawVideo() {
 		vidGrabber.draw(y_offset-camWidth/2+my,x_offset-880+mx); //draw left
 		vidGrabber.draw(y_offset-camWidth/2+my,-x_offset-camHeight/2+mx); //draw right		
 		cout << "mx " << mx << "my " << my << endl;
-	ofPopMatrix();		
+	ofPopMatrix();	*/
+	fbo.draw(-x_offset + ofGetWidth()/2, ofGetHeight()/2); //draw left
+	fbo.draw(x_offset + ofGetWidth()/2, ofGetHeight()/2); //draw right
 }
 
 void machine::drawOverlay() {
@@ -61,7 +78,7 @@ void machine::drawOverlay() {
 	ofCircle(x_offset+camWidth/2-0*200*(distance.y), y_offset+camHeight/2-0*300*(distance.x), 5);
 	ofCircle(-x_offset+960-0*200*(distance.y), y_offset+camHeight/2-0*300*(distance.x), 5); 
 
-	dim();
+	//dim();
 }
 
 void machine::dim() {

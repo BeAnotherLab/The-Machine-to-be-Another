@@ -22,7 +22,8 @@ public:
     float endTimer;                    
             
     ofVideoGrabber vidGrabber;    	
-    
+    ofFbo fbo;
+
 	ofShader hmdWarpShader;
 	float K0,K1,K2,K3,_x,_y,_w,_h,as,DistortionXCenterOffset;
 
