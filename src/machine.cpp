@@ -16,10 +16,14 @@ void machine::setup()
 	pitch = 0;
 	yaw = 0;
 	roll = 0;
-	    
+	pitch_cal = 0;
+	yaw_cal = 0;
+	roll_cal = 0;
 	fbo.allocate(480,640);
-	fbo.setAnchorPercent(0.5,0.5);
-
+	fbo.setAnchorPercent(0.5, 0.5);
+	overlay.loadImage("pictures/overlay3.png");
+	overlay.resize(2000,2000);
+	overlay.setAnchorPercent(0.5, 0.5);
     //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses
     K0 = 1.0;
     K1 = 5.74;
@@ -40,20 +44,23 @@ void machine::setup()
 }
 
 void machine::update() {
-	int my = ofMap(ofGetMouseY(),0,ofGetHeight(),-2000,2000);
-	int mx = ofMap(ofGetMouseX(),0,ofGetWidth(),-2000,2000);
-	vidGrabber.update();	    	
+	vidGrabber.update();
+	ofVec2f mine = ofVec2f(pitch-pitch_cal,yaw-yaw_cal);
+	ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
+	ofVec2f distance = their - mine;
+
 	fbo.begin();			
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(camHeight/2, camWidth/2);
 			ofRotate(270, 0, 0, 1); //rotate from centre					
 			vidGrabber.draw(-320, -240);
-		ofPopMatrix();				
+		ofPopMatrix();		
+		
+		overlay.draw(camHeight/2-distance.y*1000, camWidth/2-distance.x*1000);
+		
 		ofNoFill();	   
 	fbo.end();	
-	cout << "mx " << mx << "my " << my << endl;
-
 }
 
 void machine::drawVideo() {	
@@ -75,8 +82,8 @@ void machine::drawOverlay() {
 	ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
 	ofVec2f distance = their - mine;
 	
-	ofCircle(x_offset+camWidth/2-0*200*(distance.y), y_offset+camHeight/2-0*300*(distance.x), 5);
-	ofCircle(-x_offset+960-0*200*(distance.y), y_offset+camHeight/2-0*300*(distance.x), 5); 
+	ofCircle(x_offset+camWidth/2-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5);
+	ofCircle(-x_offset+960-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5); 
 
 	//dim();
 }
