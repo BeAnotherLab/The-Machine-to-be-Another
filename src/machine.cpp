@@ -56,11 +56,22 @@ void machine::update() {
 			ofRotate(270, 0, 0, 1); //rotate from centre					
 			vidGrabber.draw(-320+distance.x*250, -240 -distance.y*250);
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
-		ofPopMatrix();		
-		
-		//overlay.draw(camHeight/2-distance.y*500, camWidth/2-distance.x*500);
-		
-		ofNoFill();	   
+		int timeDim = ofGetElapsedTimeMillis() - dimTimer;
+		ofPopMatrix();
+	ofSetColor(0);
+	if (timeDim < 2000) { //if dim/undim was triggered less than 2 seconds ago
+		if (dimmed == true) { //if we must dim the lights
+			ofSetColor(0,ofMap(timeDim,0,2000,0,255));
+			ofRect(0,0,ofGetWidth(),ofGetHeight());
+		}
+		else { //if we must turn the lights back on;
+			ofSetColor(0,ofMap(timeDim,0,2000,255,0));
+			ofRect(0,0,ofGetWidth(),ofGetHeight());
+		}
+	}
+	else if (dimmed == true) { // stay dark
+		ofRect(0,0,ofGetWidth(),ofGetHeight());
+	}	
 	fbo.end();	
 }
 
