@@ -37,7 +37,6 @@ void machine::setup()
 	DistortionXCenterOffset = 90;
 	        
     hmdWarpShader.load("shaders/HmdWarpExp");
-	endTimer = 1;		
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed= false;

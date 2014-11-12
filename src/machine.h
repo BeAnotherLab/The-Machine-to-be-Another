@@ -15,11 +15,6 @@ public:
 	//received headtracking
 	float rx_pitch, rx_yaw, rx_roll;
 	
-    float time_sync;
-    float time_no_sync;
-	float rx_pitch_limited;
-    float rx_yaw_limited;
-    float endTimer;                    
             
     ofVideoGrabber vidGrabber;    	
     ofImage overlay;

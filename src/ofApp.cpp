@@ -19,7 +19,7 @@ void ofApp::setup(){
 	initOculus();
 	sender.setup(HOST, PORT);    
 	receiver.setup(PORT);    	
-	player.loadSounds("fab10");
+	player.loadSounds("fab10 CloseEyes Goodbye Legs OpenEyes Part2");
 	machine.setup();
 }
 
@@ -69,7 +69,7 @@ void ofApp::oscControl() {
 		}
 		for (int i=0; i<player.count; i++) {
 			stringstream a;
-			a << "/btn" << i;
+			a << "/1/push" << i;
 			if (rx_msg.getAddress() == a.str()) player.playSound(i); //play sound at i
 		}
 	}		
