@@ -58,20 +58,8 @@ void machine::update() {
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
 		int timeDim = ofGetElapsedTimeMillis() - dimTimer;
 		ofPopMatrix();
-	ofSetColor(0);
-	if (timeDim < 2000) { //if dim/undim was triggered less than 2 seconds ago
-		if (dimmed == true) { //if we must dim the lights
-			ofSetColor(0,ofMap(timeDim,0,2000,0,255));
-			ofRect(0,0,ofGetWidth(),ofGetHeight());
-		}
-		else { //if we must turn the lights back on;
-			ofSetColor(0,ofMap(timeDim,0,2000,255,0));
-			ofRect(0,0,ofGetWidth(),ofGetHeight());
-		}
-	}
-	else if (dimmed == true) { // stay dark
-		ofRect(0,0,ofGetWidth(),ofGetHeight());
-	}	
+		ofSetColor(0);
+		dim();
 	fbo.end();	
 }
 
@@ -96,8 +84,6 @@ void machine::drawOverlay() {
 	
 	ofCircle(x_offset+camWidth/2-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5);
 	ofCircle(-x_offset+960-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5); 
-
-	//dim();
 }
 
 void machine::dim() {
