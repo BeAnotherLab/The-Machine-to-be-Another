@@ -9,6 +9,7 @@
 //#define LISTEN_PORT 8017
 //#define SENDER_PORT 8016
 #define HOST "192.168.2.106"
+#define COMPUTER 1 
 #define CAPTURE_FRAME_RATE 24
 
 class ofApp : public ofBaseApp{
@@ -34,15 +35,13 @@ class ofApp : public ofBaseApp{
 	void initOculus();
 
 	machine machine;
-
-    string currentKey;
 	
 	ofxImageSequenceRecorder recorder;
 	bool recording;    
 	
 	soundPlayer player;
 			
-	ofxOscReceiver phoneOscReceiver, receiver;
+	ofxOscReceiver receiver;
 	ofxOscSender   phoneOscSender, sender;    
 
 };

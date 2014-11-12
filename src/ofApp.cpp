@@ -63,14 +63,26 @@ void ofApp::oscControl() {
 		}
 		else if (rx_msg.getAddress() == "/dim") {
 			machine.triggerDim();
+			#if COMPUTER == 1
+				sender.sendMessage(rx_msg);
+			#endif
+
 		}
 		else if (rx_msg.getAddress() == "/ht") {
 			machine.calibrate();
+			#if COMPUTER == 1
+				sender.sendMessage(rx_msg);
+			#endif
 		}
 		for (int i=0; i<player.count; i++) {
 			stringstream a;
 			a << "/1/push" << i;
-			if (rx_msg.getAddress() == a.str()) player.playSound(i); //play sound at i
+			if (rx_msg.getAddress() == a.str()) {
+				player.playSound(i); //play sound at i
+				#if COMPUTER == 1
+					sender.sendMessage(rx_msg);
+				#endif
+			} 
 		}
 	}		
 
