@@ -33,7 +33,7 @@ class ofApp : public ofBaseApp{
 	void oscControl();
 	void record();
 	void initOculus();
-
+		
 	machine machine;
 	
 	ofxImageSequenceRecorder recorder;

@@ -19,7 +19,7 @@ void ofApp::setup(){
 	initOculus();
 	sender.setup(HOST, PORT);    
 	receiver.setup(PORT);    	
-	player.loadSounds("fab10 CloseEyes Goodbye Legs OpenEyes Part2");
+	player.loadSounds("fab10 welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en");
 	machine.setup();
 }
 
@@ -59,7 +59,7 @@ void ofApp::oscControl() {
         if (rx_msg.getAddress() == "/ori") {
 			machine.rx_roll = rx_msg.getArgAsFloat(0);
 			machine.rx_pitch = rx_msg.getArgAsFloat(1);
-			machine.rx_yaw = rx_msg.getArgAsFloat(2);                  
+ 			machine.rx_yaw = rx_msg.getArgAsFloat(2);                  
 		}
 		else if (rx_msg.getAddress() == "/dim") {
 			machine.triggerDim();
@@ -76,7 +76,7 @@ void ofApp::oscControl() {
 		}
 		for (int i=0; i<player.count; i++) {
 			stringstream a;
-			a << "/1/push" << i;
+			a << "/btn" << i;
 			if (rx_msg.getAddress() == a.str()) {
 				player.playSound(i); //play sound at i
 				#if COMPUTER == 1
