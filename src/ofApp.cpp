@@ -19,7 +19,7 @@ void ofApp::setup(){
 	initOculus();
 	sender.setup(HOST, PORT);    
 	receiver.setup(PORT);    	
-	player.loadSounds("fab10 welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en");
+	player.loadSounds("genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en");
 	machine.setup();
 }
 
@@ -149,7 +149,7 @@ void ofApp::keyPressed(int key){
 		machine.triggerDim();
 	}
 
-	//playtracks through keys 0-9
+	//playtracks through keys 0-9 
     if ((key>47) && (key < (48 + player.sounds.size()))) {
 		player.playSound(key-48); //my non programmer solution to using keys 0-9        
 	}          
