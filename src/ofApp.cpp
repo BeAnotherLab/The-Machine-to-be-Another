@@ -62,12 +62,13 @@ void ofApp::oscControl() {
  			machine.rx_yaw = rx_msg.getArgAsFloat(2);                  
 		}
 		else if (rx_msg.getAddress() == "/dim") {
-			machine.triggerDim();
+			cout << " " << rx_msg.getAddress() << " " << rx_msg.getArgAsFloat(0) << endl; 
+			if (rx_msg.getArgAsFloat(0) == 1.0f) machine.triggerDim();
+			//if (rx_msg.getArgAsFloat(0) == 1.0f) machine.triggerDim(false);
 			#if COMPUTER == 1
 				sender.sendMessage(rx_msg);
 			#endif
-
-		}
+		}		
 		else if (rx_msg.getAddress() == "/ht") {
 			machine.calibrate();
 			#if COMPUTER == 1

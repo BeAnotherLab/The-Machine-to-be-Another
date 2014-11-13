@@ -105,7 +105,7 @@ void machine::dim() {
 
 void machine::triggerDim() {
 	dimTimer=ofGetElapsedTimeMillis();
-	dimmed = !dimmed;
+	dimmed = !dimmed;	
 }
 
 void machine::calibrate() {
