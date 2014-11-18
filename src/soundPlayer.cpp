@@ -1,6 +1,6 @@
 #include "soundPlayer.h"
 
-void soundPlayer::loadSounds(string s)
+void soundPlayer::loadSounds(string s) //file names passed as parameters will be loaded from sounds folder
 {
 	//load sounds
 	cout << "sounds : " << s << endl;
@@ -13,15 +13,15 @@ void soundPlayer::loadSounds(string s)
 		ofSoundPlayer so = *new ofSoundPlayer();
 		sounds.push_back(so);		
 		stringstream load;
-		load << "sounds/" << sub << ".mp3";
+		load << "sounds/" << sub << ".mp3";		
 		sounds.at(count).loadSound(load.str());					
 		cout << "loading " << "sounds/"+sub+".mp3" << endl;
 		count++;
-    } while (iss);				
+    } while (iss); //while there are still sounds to be loaded create new ofSoundPlayer for each one of them
 	cout << count << " sounds loaded " << endl;
 	sounds.at(0).play(); //Initialize music on startup
 		    
-	phoneOscSender.setup("192.168.178.27", 8015);    
+	phoneOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);    
 }
 
 void soundPlayer::playSound(int id) {
@@ -48,6 +48,7 @@ void soundPlayer::update() {
 	//set something_is_playing
 	for (int i=1; i<sounds.size(); i++) {
 		if (sounds.at(i).getIsPlaying()) something_is_playing = true;
+		sounds[0].setVolume(0.5); //simple sidechaining
 	}   		
     
 	if (!something_is_playing) {		
@@ -57,8 +58,3 @@ void soundPlayer::update() {
         phoneOscSender.sendMessage(message);
     }       
 }
-/*
-soundPlayer::~soundPlayer(void)
-{
-}
-*/

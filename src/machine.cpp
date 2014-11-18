@@ -10,21 +10,21 @@ void machine::setup()
 	vidGrabber.setDeviceID(0);
 	vidGrabber.setDesiredFrameRate(120);
 	vidGrabber.initGrabber(camWidth,camHeight);			
-	ofSetFullscreen(true);
-	ofSetVerticalSync(true);
-	ofEnableAlphaBlending();	
+	
 	pitch = 0;
 	yaw = 0;
 	roll = 0;
 	pitch_cal = 0;
 	yaw_cal = 0;
 	roll_cal = 0;
+
 	fbo.allocate(480,640);
 	fbo.setAnchorPercent(0.5, 0.5);
+
 	overlay.loadImage("pictures/overlay4.png");
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);
-    //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses
+    //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
     K0 = 1.0;
     K1 = 5.74;
     K2 = 0.27;
@@ -34,8 +34,7 @@ void machine::setup()
     _w = 1.0f;
     _h = 1.0f;
     as = 640.0f/480.0f;
-	DistortionXCenterOffset = 90;
-	        
+	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 
 	dimTimer = ofGetElapsedTimeMillis();
@@ -62,27 +61,13 @@ void machine::update() {
 	fbo.end();	
 }
 
-void machine::drawVideo() {	
-	/*ofPushMatrix();				
-		int mx = 640;
-		int my = -312;
-		ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre
-		ofRotate(270, 0, 0, 1); //rotate from centre					
-		vidGrabber.draw(y_offset-camWidth/2+my,x_offset-880+mx); //draw left
-		vidGrabber.draw(y_offset-camWidth/2+my,-x_offset-camHeight/2+mx); //draw right		
-		cout << "mx " << mx << "my " << my << endl;
-	ofPopMatrix();	*/
+void machine::drawVideo() {		
 	fbo.draw(-x_offset + ofGetWidth()/2, ofGetHeight()/2); //draw left
 	fbo.draw(x_offset + ofGetWidth()/2, ofGetHeight()/2); //draw right
 }
 
 void machine::drawOverlay() {
-	ofVec2f mine = ofVec2f(pitch-pitch_cal,yaw-yaw_cal);
-	ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
-	ofVec2f distance = their - mine;
-	
-	ofCircle(x_offset+camWidth/2-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5);
-	ofCircle(-x_offset+960-200*(distance.y), y_offset+camHeight/2-300*(distance.x), 5); 
+		
 }
 
 void machine::dim() {
@@ -104,23 +89,24 @@ void machine::dim() {
 }
 
 void machine::triggerDim() {
-	dimTimer=ofGetElapsedTimeMillis();
+	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = !dimmed;	
 }
 
 void machine::calibrate() {
-	pitch_cal=pitch;
-	yaw_cal=yaw;
-	roll_cal=roll;
+	pitch_cal = pitch;
+	yaw_cal = yaw;
+	roll_cal = roll;
 }
 
 machine::machine(void)
 {
-}
 
+}
 
 machine::~machine(void)
 {
+
 }
 
 /*hmdWarpShader.begin();

@@ -13,13 +13,21 @@ bool							InfoLoaded;
 
 //--------------------------------------------------------------
 void ofApp::setup(){		
+	ofSetFullscreen(true);
+	ofSetVerticalSync(true);
+	ofEnableAlphaBlending();	
+
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    	
+	
 	initOculus();
+	
 	sender.setup(HOST, PORT);    
 	receiver.setup(PORT);    	
+	
 	player.loadSounds("genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en");
+	
 	machine.setup();
 }
 
@@ -27,7 +35,7 @@ void ofApp::setup(){
 void ofApp::update(){				    
 	if(pSensor)	{
 		Quatf quaternion = FusionResult.GetOrientation();		
-		quaternion.GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&machine.pitch, &machine.yaw, &machine.roll);
+		quaternion.GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&machine.pitch, &machine.yaw, &machine.roll); //rotation order affects gimbal lock.
 	}	
 	machine.update();
 	player.update();
@@ -63,8 +71,7 @@ void ofApp::oscControl() {
 		}
 		else if (rx_msg.getAddress() == "/dim") {
 			cout << " " << rx_msg.getAddress() << " " << rx_msg.getArgAsFloat(0) << endl; 
-			if (rx_msg.getArgAsFloat(0) == 1.0f) machine.triggerDim();
-			//if (rx_msg.getArgAsFloat(0) == 1.0f) machine.triggerDim(false);
+			if (rx_msg.getArgAsFloat(0) == 1.0f) machine.triggerDim();			
 			#if COMPUTER == 1
 				sender.sendMessage(rx_msg);
 			#endif
@@ -89,7 +96,7 @@ void ofApp::oscControl() {
 
 }
 
-void ofApp::record() {
+void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
 	stringstream c;		
 
 	if (machine.vidGrabber.isFrameNew() && recording) {
@@ -126,12 +133,12 @@ void ofApp::initOculus() {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){		
 	
-	if (key == 'a' || key == 'A'){
+	if (key == 'a' || key == 'A'){ //decrease IPD
 		machine.x_offset -= 2;		
 		cout << machine.x_offset;
 	}
 
-	if (key == 'd' || key == 'D'){
+	if (key == 'd' || key == 'D'){ //increase IPD
 		machine.x_offset += 2;
 		cout << machine.x_offset;
 	}	    
@@ -157,7 +164,7 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){	
-	machine.calibrate();		
+
 }
 
 void ofApp::clear()
@@ -171,18 +178,6 @@ void ofApp::clear()
 void ofApp::exit(){
     recorder.waitForThread();
 }
-
-/*		int totalPixels = camWidth*camHeight;
-		unsigned char * pixels = vidGrabber.getPixels();
-		for (int layer=0; layer<3; layer++){
-			layer_offset=camWidth*camHeight*layer;
-			for (int x=0; x<camWidth/2; x++){
-				for (int y=0; y<camHeight; y++){
-					pixels[(y*camWidth+x)+layer_offset] = pixels[(y*camWidth+(camWidth-x))+layer_offset];
-				}			
-			}*/
-		//}
-	//}
 
 /*	cout << "----- Oculus Console -----" << endl;
 
@@ -231,41 +226,5 @@ void ofApp::exit(){
 	cin.get();
 */
 
-
-//--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-
-}
-
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
-}
 
 
