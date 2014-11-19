@@ -8,8 +8,8 @@
 #define PORT 8015	
 //#define LISTEN_PORT 8017
 //#define SENDER_PORT 8016
-#define HOST "192.168.2.106"
-#define COMPUTER 1 
+#define HOST "10.10.203.14"
+#define COMPUTER 1  
 #define CAPTURE_FRAME_RATE 24
 
 class ofApp : public ofBaseApp{

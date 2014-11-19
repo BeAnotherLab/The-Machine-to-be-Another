@@ -47,7 +47,10 @@ void soundPlayer::update() {
 
 	//set something_is_playing
 	for (int i=1; i<sounds.size(); i++) {
-		if (sounds.at(i).getIsPlaying()) something_is_playing = true;
+		if (sounds.at(i).getIsPlaying()){
+			something_is_playing = true;
+			sounds[0].setVolume(0.575);   
+		}
 	}   		
     
 	if (!something_is_playing) {		
