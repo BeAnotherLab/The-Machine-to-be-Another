@@ -16,9 +16,7 @@ class ofApp : public ofBaseApp{
 	void draw();
     
 	void keyPressed(int key);		
-	void mousePressed(int x, int y, int button);		
-	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);
+	void mousePressed(int x, int y, int button);			
 	void exit();    
 	void clear();	
 	void oscControl();
