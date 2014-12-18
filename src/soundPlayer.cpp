@@ -58,3 +58,16 @@ void soundPlayer::update() {
         phoneOscSender.sendMessage(message);
     }       
 }
+
+void SoundPlayer::oscControl() {
+	for (int i=0; i<player.count; i++) {
+		stringstream a;
+		a << "/btn" << i;
+		if (rx_msg.getAddress() == a.str()) {
+			player.playSound(i); //play sound at i
+			#if COMPUTER == 1
+				sender.sendMessage(rx_msg);
+			#endif
+		} 
+	}
+}
