@@ -1,7 +1,9 @@
 #include "machine.h"
 
-void machine::setup()
+void machine::setup(int t)
 {
+	type = t;
+
 	//tested with PS3Eye camera.	
 	x_offset = 256;
 	camWidth = 640;
@@ -21,11 +23,13 @@ void machine::setup()
 	fbo.allocate(480,640);
 	fbo.setAnchorPercent(0.5, 0.5);
 
+	//was used for experimenting with torchlight-like overlay, left here as ref for later
 	overlay.loadImage("pictures/overlay4.png");
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);
     //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
-    K0 = 1.0;
+    //kept as ref, but need to be properly calibrated according to camera and lens used.
+	K0 = 1.0;
     K1 = 5.74;
     K2 = 0.27;
     K3 = 0.0;
@@ -43,9 +47,7 @@ void machine::setup()
 
 void machine::update() {
 	vidGrabber.update();
-	ofVec2f mine = ofVec2f(pitch-pitch_cal,yaw-yaw_cal);
-	ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
-	ofVec2f distance = their - mine;
+	ofVec2f distance = getDistance();	
 
 	fbo.begin();			
 		ofBackground(0);
@@ -54,11 +56,22 @@ void machine::update() {
 			ofRotate(270, 0, 0, 1); //rotate from centre					
 			vidGrabber.draw(-320+distance.x*250, -240 -distance.y*250);
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
-		int timeDim = ofGetElapsedTimeMillis() - dimTimer;
 		ofPopMatrix();
+		int timeDim = ofGetElapsedTimeMillis() - dimTimer;
 		ofSetColor(0);
 		dim();
 	fbo.end();	
+}
+
+ofVec2f machine::getDistance() {
+	if (type==TWO_WAY_SWAP) {			
+		ofVec2f mine = ofVec2f(pitch-pitch_cal,yaw-yaw_cal);
+		ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
+		return their - mine;
+	}
+	else {
+		return ofVec2f(0,0);
+	}	
 }
 
 void machine::drawVideo() {		
