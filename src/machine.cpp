@@ -1,6 +1,6 @@
 #include "machine.h"
 
-void machine::setup(int t)
+void machine::setup(int t, string h, int p)
 {
 	type = t;
 
@@ -19,6 +19,9 @@ void machine::setup(int t)
 	pitch_cal = 0;
 	yaw_cal = 0;
 	roll_cal = 0;
+
+	sender.setup(h, p);    
+	receiver.setup(p);    	
 
 	fbo.allocate(480,640);
 	fbo.setAnchorPercent(0.5, 0.5);
@@ -69,7 +72,7 @@ ofVec2f machine::getDistance() {
 		ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
 		return their - mine;
 	}
-	else {
+	else if (type==ONE_WAY_SWAP) {
 		return ofVec2f(0,0);
 	}	
 }
@@ -82,6 +85,46 @@ void machine::drawVideo() {
 void machine::drawOverlay() {
 		
 }
+
+void machine::oscControl() {
+	//receive headtracking and touchOSC messages
+	ofxOscMessage rx_msg;
+	while (receiver.hasWaitingMessages()) {
+		if (rx_msg.getAddress() == "/dim") {			
+			if (rx_msg.getArgAsFloat(0) == 1.0f) triggerDim();			
+			#if COMPUTER == 1
+				sender.sendMessage(rx_msg);
+			#endif
+		}		
+		else if (rx_msg.getAddress() == "/ht") {
+			calibrate();
+			#if COMPUTER == 1
+				sender.sendMessage(rx_msg);
+			#endif
+		}		
+	}		
+}
+
+void machine::sendHeadTracking(){
+	//send calibrated angles value over OSC.
+	ofxOscMessage m;
+	m.setAddress("/ori");	
+	m.addFloatArg(roll-roll_cal);
+	m.addFloatArg(pitch-pitch_cal);
+	m.addFloatArg(yaw-yaw_cal);	
+	sender.sendMessage(m);     	    
+}
+
+void machine::receiveHeadTracking() {
+	ofxOscMessage rx_msg;
+	receiver.getNextMessage(&rx_msg);				
+    if (rx_msg.getAddress() == "/ori") {
+		rx_roll = rx_msg.getArgAsFloat(0);
+		rx_pitch = rx_msg.getArgAsFloat(1);
+ 		rx_yaw = rx_msg.getArgAsFloat(2);                  
+	}	
+}
+
 
 void machine::dim() {
 	int timeDim = ofGetElapsedTimeMillis() - dimTimer;
@@ -106,10 +149,10 @@ void machine::triggerDim() {
 	dimmed = !dimmed;	
 }
 
-void machine::calibrate() {
-	pitch_cal = pitch;
-	yaw_cal = yaw;
-	roll_cal = roll;
+void machine::calibrate() {	
+		pitch_cal = pitch;
+		yaw_cal = yaw;
+		roll_cal = roll;	
 }
 
 machine::machine(void)

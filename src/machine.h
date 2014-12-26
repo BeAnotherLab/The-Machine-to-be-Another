@@ -1,9 +1,14 @@
 #pragma once
 #include "ofxOsc.h"
 
+#define ONE_WAY_SWAP 0
+#define TWO_WAY_SWAP 1
+
 class machine
 {
 public:			
+	//0 = one-way swap, 1 = two-way swap
+	int type;
 	//camera size
 	int camWidth, camHeight;
 	//used to adjust display position and separation
@@ -13,8 +18,7 @@ public:
 	//used to calibrate headtracking values
     float pitch_cal, yaw_cal, roll_cal;	
 	//received headtracking
-	float rx_pitch, rx_yaw, rx_roll;
-	
+	float rx_pitch, rx_yaw, rx_roll;	
             
     ofVideoGrabber vidGrabber;    	
     ofImage overlay;
@@ -25,14 +29,25 @@ public:
 
 	int dimTimer;
 	bool dimmed; 
+				
+	ofxOscReceiver receiver;
+	ofxOscSender   phoneOscSender, sender;    
 
-	void machine::setup();
+	void machine::setup(int type, string host, int port);	
 	void machine::update();
 	void machine::drawVideo();
 	void machine::drawOverlay();	
 	void machine::calibrate();		
 	void machine::triggerDim();
 	void machine::dim();
+	void machine::oscControl();
+	void machine::receiveHeadTracking();
+	void machine::sendHeadTracking();
+
+	ofVec2f machine::getDistance();
+
+	//TO BE IMPLEMENTED
+	void machine::sendToServos();
 
 	machine(void);
 	~machine(void);

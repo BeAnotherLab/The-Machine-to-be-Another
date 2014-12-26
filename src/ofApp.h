@@ -6,6 +6,7 @@
 
 #define PORT 8015	
 #define HOST "192.168.2.106"
+
 #define COMPUTER 1 //computer 1 is in charge of getting input from touchOSC tablet and relaying it to computer 2
 #define CAPTURE_FRAME_RATE 24
 
@@ -19,7 +20,7 @@ class ofApp : public ofBaseApp{
 	void mousePressed(int x, int y, int button);			
 	void exit();    
 	void clear();	
-	void oscControl();
+	void oscRepeat();
 	void record();
 	void initOculus();
 		
@@ -29,7 +30,4 @@ class ofApp : public ofBaseApp{
 	bool recording;    
 	
 	soundPlayer player;
-			
-	ofxOscReceiver receiver;
-	ofxOscSender   phoneOscSender, sender;    
 };

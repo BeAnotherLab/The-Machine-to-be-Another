@@ -21,14 +21,11 @@ void ofApp::setup(){
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    	
 	
-	initOculus();
-	
-	sender.setup(HOST, PORT);    
-	receiver.setup(PORT);    	
+	initOculus();		
 	
 	player.loadSounds("genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en");
 	
-	machine.setup();
+	machine.setup(0, HOST, PORT); //0 for one-way swap, 1 for two-way swap	
 }
 
 //--------------------------------------------------------------
@@ -51,49 +48,30 @@ void ofApp::draw(){
 	machine.drawOverlay();    
 }
 
-void ofApp::oscControl() {
-	//send calibrated angles value over OSC.
-	ofxOscMessage m;
-	m.setAddress("/ori");	
-	m.addFloatArg(machine.roll-machine.roll_cal);
-	m.addFloatArg(machine.pitch-machine.pitch_cal);
-	m.addFloatArg(machine.yaw-machine.yaw_cal);	
-	sender.sendMessage(m);     	
-    
-	//receive headtracking and touchOSC messages
-	while (receiver.hasWaitingMessages()) {
-		ofxOscMessage rx_msg;
-		receiver.getNextMessage(&rx_msg);				
-        if (rx_msg.getAddress() == "/ori") {
-			machine.rx_roll = rx_msg.getArgAsFloat(0);
-			machine.rx_pitch = rx_msg.getArgAsFloat(1);
- 			machine.rx_yaw = rx_msg.getArgAsFloat(2);                  
-		}
-		else if (rx_msg.getAddress() == "/dim") {
-			cout << " " << rx_msg.getAddress() << " " << rx_msg.getArgAsFloat(0) << endl; 
-			if (rx_msg.getArgAsFloat(0) == 1.0f) machine.triggerDim();			
+void ofApp::oscRepeat() { //if Computer 1, must repeat tablet osc control to computer 2 
+	ofxOscMessage rx_msg;
+
+	if (rx_msg.getAddress() == "/dim") {						
 			#if COMPUTER == 1
 				sender.sendMessage(rx_msg);
 			#endif
 		}		
-		else if (rx_msg.getAddress() == "/ht") {
-			machine.calibrate();
+	else if (rx_msg.getAddress() == "/ht") {
+			calibrate();
 			#if COMPUTER == 1
 				sender.sendMessage(rx_msg);
 			#endif
-		}
-		for (int i=0; i<player.count; i++) {
-			stringstream a;
-			a << "/btn" << i;
-			if (rx_msg.getAddress() == a.str()) {
-				player.playSound(i); //play sound at i
-				#if COMPUTER == 1
-					sender.sendMessage(rx_msg);
-				#endif
-			} 
-		}
-	}		
-
+		}		
+	for (int i=0; i<count; i++) {
+		stringstream a;
+		a << "/btn" << i;
+		if (rx_msg.getAddress() == a.str()) {
+			playSound(i); //play sound at i
+			#if COMPUTER == 1
+				sender.sendMessage(rx_msg);
+			#endif
+		} 
+	}
 }
 
 void ofApp::record() { //uses memo akten ofxImageSequenceRecorder

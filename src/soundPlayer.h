@@ -15,9 +15,11 @@ public:
 	vector<ofSoundPlayer> sounds; 
 	stringstream sound_names;
 	vector<int> rxButtons;	
+	
 	bool something_is_playing;
 	void loadSounds(string s); //list sounds in /data/bin/sounds to be loaded 
 	void playSound(int id);	
+	void oscControl();
 	void update();
 
 	//soundPlayer();
