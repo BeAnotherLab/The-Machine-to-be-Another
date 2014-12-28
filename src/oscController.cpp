@@ -6,14 +6,14 @@ void oscController::setup(machine* m, soundPlayer* p){
 	if (myMachine->type == TWO_WAY_SWAP) sender.setup(HOST, PORT);
 	else if (myMachine->type == ONE_WAY_SWAP) sender.setup("localhost", PORT);	
 	receiver.setup(PORT);    	
-	tabletOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);    
+	//tabletOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);    
 }	
 
 void oscController::loop() { 
 	//receive tablet messages, headtracking when two-way swa	
-	ofxOscMessage rx_msg;
-	//receiver.getNextMessage(&rx_msg);				
+	ofxOscMessage rx_msg;	
 	while (receiver.hasWaitingMessages()) {
+		receiver.getNextMessage(&rx_msg);				
 		if (rx_msg.getAddress() == "/dim") {			
 			myMachine->triggerDim();			
 		}		

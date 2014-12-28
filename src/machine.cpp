@@ -9,7 +9,7 @@ void machine::setup(int t)
 	camWidth = 640;
 	camHeight = 480;		
 	vidGrabber.setVerbose(true);
-	vidGrabber.setDeviceID(0);
+	vidGrabber.setDeviceID(1);
 	vidGrabber.setDesiredFrameRate(120);
 	vidGrabber.initGrabber(camWidth,camHeight);			
 	
