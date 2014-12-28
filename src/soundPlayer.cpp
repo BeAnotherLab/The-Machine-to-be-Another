@@ -19,9 +19,7 @@ void soundPlayer::loadSounds(string s) //file names passed as parameters will be
 		count++;
     } while (iss); //while there are still sounds to be loaded create new ofSoundPlayer for each one of them
 	cout << count << " sounds loaded " << endl;
-	sounds.at(0).play(); //Initialize music on startup
-		    
-	phoneOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);    
+	sounds.at(0).play(); //Initialize music on startup		    		
 }
 
 void soundPlayer::playSound(int id) {
@@ -31,11 +29,8 @@ void soundPlayer::playSound(int id) {
 			stringstream play;
 			play << "sound " << id << " is playing" << endl;
 
-			ofxOscMessage sendM;
-			sendM.setAddress("/1/label2");
-            sendM.addStringArg(play.str());
-            phoneOscSender.sendMessage(sendM);
-			}			
+			//then send to phone to display which sound is playing
+		}			
 }
 
 void soundPlayer::update() {	
@@ -53,22 +48,6 @@ void soundPlayer::update() {
     
 	if (!something_is_playing) {		
         sounds[0].setVolume(1);        
-        ofxOscMessage message;
-		message.addStringArg("nothing is playing");
-        phoneOscSender.sendMessage(message);
+		//TODO send "nothing is playing" to phone
     }       
-}
-
-void soundPlayer::oscControl() {
-	ofxOscMessage rx_msg;
-	for (int i=0; i<count; i++) {
-		stringstream a;
-		a << "/btn" << i;
-		if (rx_msg.getAddress() == a.str()) {
-			playSound(i); //play sound at i
-			#if COMPUTER == 1
-				sender.sendMessage(rx_msg);
-			#endif
-		} 
-	}
 }

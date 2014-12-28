@@ -8,22 +8,16 @@
 class soundPlayer
 {
 public:
-	int count; //the number of sounds deduced by the input string
-	
-	ofxOscSender phoneOscSender;
+	int count; //the number of sounds deduced by the input string		
 
 	vector<ofSoundPlayer> sounds; 
-	stringstream sound_names;
+	stringstream sound_names;	
 	vector<int> rxButtons;	
 	
 	bool something_is_playing;
 	void loadSounds(string s); //list sounds in /data/bin/sounds to be loaded 
-	void playSound(int id);	
-	void oscControl();
-	void update();
-
-	//soundPlayer();
-	//~soundPlayer(void);
-
+	void playSound(int id);		
+	void update();	
+	string getCurrentlyPlaying(); //TODO implement
 	
 };

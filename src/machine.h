@@ -28,27 +28,19 @@ public:
 	float K0,K1,K2,K3,_x,_y,_w,_h,as,DistortionXCenterOffset;
 
 	int dimTimer;
-	bool dimmed; 
-				
-	ofxOscReceiver receiver;
-	ofxOscSender   phoneOscSender, sender;    
+	bool dimmed; 					
 
-	void machine::setup(int type, string host, int port);	
+	void machine::setup(int type);	
 	void machine::update();
 	void machine::drawVideo();
 	void machine::drawOverlay();	
 	void machine::calibrate();		
+	float* machine::getCalibratedHeadtracking();
 	void machine::triggerDim();
-	void machine::dim();
-	void machine::oscControl();
-	void machine::receiveHeadTracking();
-	void machine::sendHeadTracking();
+	void machine::dim();	
 
 	ofVec2f machine::getDistance();
-
-	//TO BE IMPLEMENTED
-	void machine::sendToServos();
-
+	
 	machine(void);
 	~machine(void);
 };

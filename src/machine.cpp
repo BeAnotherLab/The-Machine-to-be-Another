@@ -1,6 +1,6 @@
 #include "machine.h"
 
-void machine::setup(int t, string h, int p)
+void machine::setup(int t)
 {
 	type = t;
 
@@ -20,9 +20,6 @@ void machine::setup(int t, string h, int p)
 	yaw_cal = 0;
 	roll_cal = 0;
 
-	sender.setup(h, p);    
-	receiver.setup(p);    	
-
 	fbo.allocate(480,640);
 	fbo.setAnchorPercent(0.5, 0.5);
 
@@ -31,7 +28,7 @@ void machine::setup(int t, string h, int p)
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);
     //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
-    //kept as ref, but need to be properly calibrated according to camera and lens used.
+    //kept as ref, but they need to be properly calibrated according to camera and lens used.
 	K0 = 1.0;
     K1 = 5.74;
     K2 = 0.27;
@@ -68,9 +65,9 @@ void machine::update() {
 
 ofVec2f machine::getDistance() {
 	if (type==TWO_WAY_SWAP) {			
-		ofVec2f mine = ofVec2f(pitch-pitch_cal,yaw-yaw_cal);
-		ofVec2f their = ofVec2f(rx_pitch,rx_yaw);		
-		return their - mine;
+		ofVec2f self = ofVec2f(pitch-pitch_cal,yaw-yaw_cal);
+		ofVec2f other = ofVec2f(rx_pitch,rx_yaw);		
+		return other - self;
 	}
 	else if (type==ONE_WAY_SWAP) {
 		return ofVec2f(0,0);
@@ -85,46 +82,6 @@ void machine::drawVideo() {
 void machine::drawOverlay() {
 		
 }
-
-void machine::oscControl() {
-	//receive headtracking and touchOSC messages
-	ofxOscMessage rx_msg;
-	while (receiver.hasWaitingMessages()) {
-		if (rx_msg.getAddress() == "/dim") {			
-			if (rx_msg.getArgAsFloat(0) == 1.0f) triggerDim();			
-			#if COMPUTER == 1
-				sender.sendMessage(rx_msg);
-			#endif
-		}		
-		else if (rx_msg.getAddress() == "/ht") {
-			calibrate();
-			#if COMPUTER == 1
-				sender.sendMessage(rx_msg);
-			#endif
-		}		
-	}		
-}
-
-void machine::sendHeadTracking(){
-	//send calibrated angles value over OSC.
-	ofxOscMessage m;
-	m.setAddress("/ori");	
-	m.addFloatArg(roll-roll_cal);
-	m.addFloatArg(pitch-pitch_cal);
-	m.addFloatArg(yaw-yaw_cal);	
-	sender.sendMessage(m);     	    
-}
-
-void machine::receiveHeadTracking() {
-	ofxOscMessage rx_msg;
-	receiver.getNextMessage(&rx_msg);				
-    if (rx_msg.getAddress() == "/ori") {
-		rx_roll = rx_msg.getArgAsFloat(0);
-		rx_pitch = rx_msg.getArgAsFloat(1);
- 		rx_yaw = rx_msg.getArgAsFloat(2);                  
-	}	
-}
-
 
 void machine::dim() {
 	int timeDim = ofGetElapsedTimeMillis() - dimTimer;
@@ -150,9 +107,18 @@ void machine::triggerDim() {
 }
 
 void machine::calibrate() {	
-		pitch_cal = pitch;
-		yaw_cal = yaw;
-		roll_cal = roll;	
+	pitch_cal = pitch;
+	yaw_cal = yaw;
+	roll_cal = roll;	
+}
+
+float* machine::getCalibratedHeadtracking(){
+	float* c;
+	c = new float[3];
+	c[0] = roll - roll_cal;
+	c[1] = pitch - pitch_cal;
+	c[2] = yaw - yaw_cal;
+	return c;
 }
 
 machine::machine(void)

@@ -73,6 +73,9 @@
     <ClCompile Include="src\machine.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\oscController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -516,6 +519,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\machine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\oscController.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

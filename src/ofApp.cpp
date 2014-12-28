@@ -14,18 +14,14 @@ bool							InfoLoaded;
 //--------------------------------------------------------------
 void ofApp::setup(){		
 	ofSetFullscreen(true);
-	ofSetVerticalSync(true);
-	ofEnableAlphaBlending();	
-
+	ofSetVerticalSync(true);	
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
-    recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    	
-	
-	initOculus();		
-	
-	player.loadSounds("genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en");
-	
-	machine.setup(0, HOST, PORT); //0 for one-way swap, 1 for two-way swap	
+    recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    		
+	initOculus();			
+	player.loadSounds("genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en");	
+	machine.setup(0); //0 for one-way swap, 1 for two-way swap	
+	controller.setup(&machine, &player);
 }
 
 //--------------------------------------------------------------
@@ -36,7 +32,7 @@ void ofApp::update(){
 	}	
 	machine.update();
 	player.update();
-	oscControl();
+	controller.loop();
 	record();		
 }
 
@@ -48,32 +44,7 @@ void ofApp::draw(){
 	machine.drawOverlay();    
 }
 
-void ofApp::oscRepeat() { //if Computer 1, must repeat tablet osc control to computer 2 
-	ofxOscMessage rx_msg;
-
-	if (rx_msg.getAddress() == "/dim") {						
-			#if COMPUTER == 1
-				sender.sendMessage(rx_msg);
-			#endif
-		}		
-	else if (rx_msg.getAddress() == "/ht") {
-			calibrate();
-			#if COMPUTER == 1
-				sender.sendMessage(rx_msg);
-			#endif
-		}		
-	for (int i=0; i<count; i++) {
-		stringstream a;
-		a << "/btn" << i;
-		if (rx_msg.getAddress() == a.str()) {
-			playSound(i); //play sound at i
-			#if COMPUTER == 1
-				sender.sendMessage(rx_msg);
-			#endif
-		} 
-	}
-}
-
+//--------------------------------------------------------------
 void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
 	stringstream c;		
 
@@ -92,6 +63,7 @@ void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
 	ofDrawBitmapString(c.str(), 650, 10);
 }
 
+//--------------------------------------------------------------
 void ofApp::initOculus() {
 	System::Init();
 	pManager = *DeviceManager::Create();
@@ -145,6 +117,7 @@ void ofApp::mousePressed(int x, int y, int button){
 
 }
 
+//--------------------------------------------------------------
 void ofApp::clear()
 {
 	pSensor.Clear();
@@ -153,6 +126,7 @@ void ofApp::clear()
 	System::Destroy();	
 }
 
+//--------------------------------------------------------------
 void ofApp::exit(){
     recorder.waitForThread();
 }
