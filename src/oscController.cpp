@@ -10,7 +10,7 @@ void oscController::setup(machine* m, soundPlayer* p){
 }	
 
 void oscController::loop() { 
-	//receive tablet messages, headtracking when two-way swa	
+	//receive tablet messages
 	ofxOscMessage rx_msg;	
 	while (receiver.hasWaitingMessages()) {
 		receiver.getNextMessage(&rx_msg);				
@@ -20,6 +20,7 @@ void oscController::loop() {
 		else if (rx_msg.getAddress() == "/ht") {
 			myMachine->calibrate();		
 		}		
+		//receive headtracking when two-way swap
 		else if ((rx_msg.getAddress() == "/ori") && (myMachine->type == TWO_WAY_SWAP)) {
 			myMachine->rx_roll = rx_msg.getArgAsFloat(0);
 			myMachine->rx_pitch = rx_msg.getArgAsFloat(1);
