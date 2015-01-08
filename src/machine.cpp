@@ -42,7 +42,7 @@ void machine::setup(int t)
     hmdWarpShader.load("shaders/HmdWarpExp");
 
 	dimTimer = ofGetElapsedTimeMillis();
-	dimmed= false;
+	dimmed = false;		
 }
 
 void machine::update() {

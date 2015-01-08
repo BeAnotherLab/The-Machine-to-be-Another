@@ -19,7 +19,10 @@ void soundPlayer::loadSounds(string s) //file names passed as parameters will be
 		count++;
     } while (iss); //while there are still sounds to be loaded create new ofSoundPlayer for each one of them
 	cout << count << " sounds loaded " << endl;
-	sounds.at(0).play(); //Initialize music on startup		    		
+	
+	music_volume = 1.f;
+	sounds.at(0).play(); //Initialize music on startup	
+
 }
 
 void soundPlayer::playSound(int id) {
@@ -43,11 +46,20 @@ void soundPlayer::update() {
 	//set something_is_playing
 	for (int i=1; i<sounds.size(); i++) {
 		if (sounds.at(i).getIsPlaying()) something_is_playing = true;
-		sounds[0].setVolume(0.5); //simple sidechaining
+		sounds[0].setVolume(music_volume/2); //simple sidechaining
 	}   		
     
 	if (!something_is_playing) {		
-        sounds[0].setVolume(1);        
+        sounds[0].setVolume(music_volume);        
 		//TODO send "nothing is playing" to phone
     }       
+}
+
+void soundPlayer::muteUnmute(){
+	if (music_volume == 1.f) {
+		music_volume = 0.f;
+	}	
+	else if (music_volume == 0.f) {
+		music_volume = 1.f;
+	}
 }

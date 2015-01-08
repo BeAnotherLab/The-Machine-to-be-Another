@@ -106,6 +106,10 @@ void ofApp::keyPressed(int key){
 		machine.triggerDim();
 	}
 
+	if (key == 'm' || key == 'M') {
+		player.muteUnmute();
+	}
+
 	//playtracks through keys 0-9 
     if ((key>47) && (key < (48 + player.sounds.size()))) {
 		player.playSound(key-48); //my non programmer solution to using keys 0-9        

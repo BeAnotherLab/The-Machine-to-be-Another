@@ -37,7 +37,7 @@ public:
 	void machine::calibrate();		
 	float* machine::getCalibratedHeadtracking();
 	void machine::triggerDim();
-	void machine::dim();	
+	void machine::dim();		
 
 	ofVec2f machine::getDistance();
 	
