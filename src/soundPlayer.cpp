@@ -22,7 +22,7 @@ void soundPlayer::loadSounds(string s) //file names passed as parameters will be
 	
 	music_volume = 1.f;
 	sounds.at(0).play(); //Initialize music on startup	
-
+	sounds.at(0).setLoop(true);
 }
 
 void soundPlayer::playSound(int id) {
