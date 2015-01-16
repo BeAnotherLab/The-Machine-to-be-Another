@@ -16,6 +16,7 @@ The project was tested with Openframeworks 0.8.4 on Windows 7&8 + VS Express 201
 3. TODO: Download the required addons inside the folder ```openframeworks_folder/addons``` by running the clone_addons script or manually by.. TODO
 4. Open the project from Visual Studio or XCode and compile.
 
+
 Triggering sounds and TouchOSC control
 =========================
 You can load background music and as many audio samples in mp3 format as you wish with the machine to be another. in https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/src/ofApp.cpp setup() function, calling player.loadSounds("background_music sample_1 sample_2 sample_3"); loads the files named background_music.mp3, sample_1, sample_2, sample_3 and automatically assigns them numpad keys to trigger them. The music will automaticly loop and the next samples can be triggered by pressing keys 1-9 or sending a trigger on /btn*x* through TouchOSC.
@@ -27,7 +28,7 @@ You can also send /dim and /ht to respectively dim the display to black and back
 Building the Vest
 =========================
 We designed a 3D printable vest that you can build yourself. The plastic parts are combined with off-the shelf components so that it is very easy and cheap to replicate. Instructions on how to build it are coming, but here is what you need to get 
--stl files printable by any modern 3D printer. 
+- stl files printable by any modern 3D printer. 
 https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/3D
 - this wide FOV lens http://peauproductions.com/store/index.php?main_page=product_info&products_id=76
 - this visible light filter http://peauproductions.com/store/index.php?main_page=product_info&products_id=44
