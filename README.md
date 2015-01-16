@@ -16,17 +16,6 @@ The project was tested with Openframeworks 0.8.4 on Windows 7&8 + VS Express 201
 3. TODO: Download the required addons inside the folder ```openframeworks_folder/addons``` by running the clone_addons script or manually by.. TODO
 4. Open the project from Visual Studio or XCode and compile.
 
-
-=========================
-Smartphone Open Sound Control
-=========================
-This is achieved using Charlie Roberts' GPL Control app which allows users to define interfaces via javascript and upload them through a web server. The current interface for controlling The Machine to Be Another can be found at /oscControllers/theMachineButtons.js, or at http://marte.me/osc/theMachineButtons .
-
-In order to upload an interface in the Control app go to "Interfaces" and select the "+" button on the upper right corner of the screen. Afterwards add the path of your javascript file (it's recommended that you downloaded from a web server, e.g. http://marte.me/osc/theMachineButtons) and click Submit. Your new interface should appear in the Interfaces menu as "TheMachineToBeAnother".
-
-To run, add your the IP and port (6999 by default) of the computer running TheMachineToBeAnother. Also add the IP of your smartphone on OpenFrameworks under "#define PHONE_IP" on the testApp.h.
-
-
 ========================
 TODOs
 ========================	
