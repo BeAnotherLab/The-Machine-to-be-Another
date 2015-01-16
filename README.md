@@ -1,6 +1,6 @@
 The-Machine-to-be-Another
 =========================
-This is the repository for the Machine to be Another, built with openFrameworks. At the moment we are still using bits of software written in Pure Data (check the repo for Servos-Control) that should be merged into the main project soon.
+This is the software for using The Machine to Be Another on an Oculus Rift. It's built fundamentaly on Open Frameworks, except for a few aspects that are still running on PureData.
 
 It includes both the traditional version for a user and a performer with a servomotor (currently run by PureData), as well as the GenderSwap version for two users without servomotors. The version may be selected from the testApp.h. 
 
@@ -35,8 +35,7 @@ If you wish to contribute, then please consider the following :
 1) Add the servomotor control natively in OpenFrameworks.
 2) Use ofxXmlSettings for settings such as experiment type, camera choice, Ip adresses etc
 3) Create a GUI for selecting the version, camera and adding IPs and ports.
-4) Creating a black screen that may be faded in and out via OSC from a smartPhone.
-5) Barrel Shader to adapt to different lenses
-6) Separating machine, sound player and headtracking in container classes
+5) Barrel Shader class to adapt to different lenses
+6) creating an abstraction for headtracking to support different kind of devices (GearVR, DK1, DK2, Cardboard)
 
 Check the corresponding issues

@@ -2,6 +2,7 @@
 
 Based on code by Memo from this thread:
 http://forum.openframeworks.cc/index.php?topic=1687.0
+largely untested and prone to bugs
 
 */
 

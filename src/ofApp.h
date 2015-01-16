@@ -1,74 +1,31 @@
 #pragma once
-
 #include "ofMain.h"
-#include "ofxOsc.h"
 #include "ofxImageSequenceRecorder.h"
+#include "soundPlayer.h"
+#include "machine.h"
+#include "oscController.h"
 
-#define OSC_CONTROL_ON 4
-#define OSC_CONTROL_OFF 5
-
-#define OSC_CONTROL_STATUS OSC_CONTROL_ON
-
-#define HOST "localhost"
-#define PORT 8015
-
-//oscMessages from and to Phone
-#define PHONE_LISTENER_PORT 6999
-#define PHONE_SENDER_PORT 8080
-#define PHONE_IP "169.254.215.94"
-
-#define CAPTURE_FRAME_RATE 24
-
-#define LISTEN_PORT 8017
-#define SENDER_PORT 8016
-#define IP_COMPUTER "10.0.0.4"
-
+#define COMPUTER 1 //computer 1 is in charge of getting input from touchOSC tablet and relaying it to computer 2
+#define CAPTURE_FRAME_RATE 24 //for video recording
 
 class ofApp : public ofBaseApp{
-
-	public:
+	public:	
 	void setup();
 	void update();
 	void draw();
     
-    void soundPlayer();
-    void oscManager();
-
-	void keyPressed  (int key);
-	void keyReleased(int key);
-	void mouseMoved(int x, int y );
-	void mouseDragged(int x, int y, int button);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);
+	void keyPressed(int key);		
+	void mousePressed(int x, int y, int button);			
 	void exit();    
-	void clear();
-	void output();    
+	void clear();		
+	void record();
+	void initOculus();
 		
-	ofxOscSender sender;
-    
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON) //for some reason it cannot initialize when OSC_CONTROL_OFF... something weird with the Pixel format that doesn't make any sense
-        ofxOscReceiver phoneOscReceiver;
-        ofxOscSender   phoneOscSender;
-    #endif
-            
-    ofVideoGrabber vidGrabber;    
-	int camWidth, camHeight;
-	int x_offset, y_offset;
-	float pitch, yaw, roll;
-	int layer_offset;
-	bool symmetry;
-            
-    char currentKey;
-
-	ofSoundPlayer sounds[12];
-	int rxButtons[12];
-    bool somethingIsPlaying;
-    
-    bool screenToggle;
-
+	machine machine;
+	
 	ofxImageSequenceRecorder recorder;
+	oscController controller;
 	bool recording;    
+	
+	soundPlayer player;
 };

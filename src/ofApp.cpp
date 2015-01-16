@@ -1,5 +1,6 @@
 #include "ofApp.h"
 #include "OVR.h"
+
 using namespace OVR;
 using namespace std;
 OVR::Ptr<OVR::DeviceManager>	pManager;
@@ -7,33 +8,64 @@ OVR::Ptr<OVR::HMDDevice>		pHMD;
 OVR::Ptr<OVR::SensorDevice>		pSensor;
 OVR::SensorFusion				FusionResult;
 OVR::HMDInfo					Info;
-bool							InfoLoaded;
-
+bool							InfoLoaded;    
 #include <iostream>
 
 //--------------------------------------------------------------
-void ofApp::setup(){	
-	//tested with PS3Eye camera.
-	x_offset = 74;
-	y_offset = 164;
-	camWidth = 640;
-	camHeight = 480;		
-	layer_offset = camWidth*camHeight;
+void ofApp::setup(){		
 	ofSetFullscreen(true);
-		
-	vidGrabber.setVerbose(true);
-	vidGrabber.setDeviceID(0);//1
-	vidGrabber.setDesiredFrameRate(20);//60
-	vidGrabber.initGrabber(camWidth,camHeight);	
-	
-	ofSetVerticalSync(true);
-	
-	System::Init();
-	pitch = 0;
-	yaw = 0;
-	roll = 0;
+	ofSetVerticalSync(true);	
+	recording = false;	
+	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
+    recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    		
+	initOculus();			
+	player.loadSounds("genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en");	
+	machine.setup(0); //0 for one-way swap, 1 for two-way swap	
+	controller.setup(&machine, &player);
+}
 
-	//init oculus headtracking
+//--------------------------------------------------------------
+void ofApp::update(){				    
+	if(pSensor)	{
+		Quatf quaternion = FusionResult.GetOrientation();		
+		quaternion.GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&machine.pitch, &machine.yaw, &machine.roll); //rotation order affects gimbal lock.
+	}	
+	machine.update();
+	player.update();
+	controller.loop();
+	record();		
+}
+
+//--------------------------------------------------------------
+void ofApp::draw(){   
+	ofBackground(0);	        		
+	ofSetHexColor(0xffffff);									    
+	machine.drawVideo();
+	machine.drawOverlay();    
+}
+
+//--------------------------------------------------------------
+void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
+	stringstream c;		
+
+	if (machine.vidGrabber.isFrameNew() && recording) {
+		recorder.addFrame(machine.vidGrabber);   
+	}    		
+    
+	if (recording) {
+		c << "Recording" <<  " | Queue Size: " << recorder.q.size() << endl;
+	} else if (!recording && recorder.q.size() > 0) {
+		c << "Queue Size: " << recorder.q.size() << endl;
+	}
+	else if (recorder.q.size() == 0) {
+		recorder.stopThread();		
+	}
+	ofDrawBitmapString(c.str(), 650, 10);
+}
+
+//--------------------------------------------------------------
+void ofApp::initOculus() {
+	System::Init();
 	pManager = *DeviceManager::Create();
 	pHMD = *pManager->EnumerateDevices<HMDDevice>().CreateDevice();
 	if (pHMD) {
@@ -45,289 +77,110 @@ void ofApp::setup(){
 	}
 	if (pSensor) {
 		FusionResult.AttachToSensor(pSensor);
-	}
-    
-	sender.setup(HOST, PORT);
-    
-
-	recording = false;	
-	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
-    recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right
-    
-
-    //SOUND PLAYER
-    sounds[0].loadSound("sounds/fab10.mp3");
-    sounds[1].loadSound("sounds/Welcome.mp3");
-	sounds[2].loadSound("sounds/Legs.mp3");
-	sounds[3].loadSound("sounds/Part2.mp3");
-    sounds[4].loadSound("sounds/Slowly.mp3");
-	sounds[5].loadSound("sounds/CloseEyes.mp3");
-	sounds[6].loadSound("sounds/Part3.mp3");
-    sounds[7].loadSound("sounds/Goodbye.mp3");    
-    sounds[0].play(); //INITIALIZE MUSIC ON STARTUP, COMMENT IN OR OUT
-     
-    
-    //OSC CONTROLER
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-		phoneOscReceiver.setup(PHONE_LISTENER_PORT);
-		phoneOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);
-    #endif    
-
+	}	
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){	
-	ofBackground(0,0,0);	        
-    
-        vidGrabber.update();
-		if (vidGrabber.isFrameNew() && recording) {
-			recorder.addFrame(vidGrabber);   
-		}    		
-        
-	if(pSensor)	{
-		Quatf quaternion = FusionResult.GetOrientation();		
-		quaternion.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&yaw, &pitch, &roll);
-	}
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::draw(){   
-	//output();
-	//send angles value over OSC to control the servos
-	ofxOscMessage m;
-	m.setAddress("/ori");	
-	m.addFloatArg(roll);//-roll_cal);
-	m.addFloatArg(pitch);//-pitch_cal);
-	m.addFloatArg(yaw);//-yaw_cal);
-    
-    if (rxButtons[10] ==1 || currentKey == 32){ //servo correction control, either /btn10 or space key
-        m.clear();
-        m.setAddress("/correct");
-        m.addIntArg(1);
-        currentKey = NULL;
-    }
-    
-    sender.sendMessage(m); //send headtracking to pure data
-
-	ofSetHexColor(0xffffff);
-	//duplicate video stream. You can also draw videograbbers from 2 different cameras. WASD to adjust the position of image.
-	ofPushMatrix();		
-		ofTranslate(camWidth/2, camHeight/2, 0);//move pivot to centre
-		ofRotate(90, 0, 0, 1);//rotate from centre				
+void ofApp::keyPressed(int key){		
 	
-    
-    //Draw screen if screen toggle is on on iPad
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-    if (rxButtons[11] == 1 || screenToggle){ //	ERROR at: "throw SystemException("cannot lock mutex")"  when stopping seems to be coming from the screenToggle for some reason?
-            vidGrabber.draw(y_offset-camWidth/2,-x_offset-camHeight/2);//move back by the centre offset
-			vidGrabber.draw(y_offset-camWidth/2,x_offset-880);
-    }
-    #else
-            vidGrabber.draw(y_offset-camWidth/2,-x_offset-camHeight/2);//move back by the centre offset
-            vidGrabber.draw(y_offset-camWidth/2,x_offset-880);
-    #endif
-    
-	ofPopMatrix();
-	
-    stringstream c;		
-
-	if (recording) {
-		c << "Recording" <<  " | Queue Size: " << recorder.q.size() << endl;
-	} else if (!recording && recorder.q.size() > 0) {
-		c << "Queue Size: " << recorder.q.size() << endl;
-	}
-	else if (recorder.q.size() == 0) {
-		recorder.stopThread();		
-	}
-	
-    ofDrawBitmapString(c.str(), 650, 10);
-	
-    oscManager();
-	soundPlayer();
-    
-}
-
-
-//--------------------------------------------------------------
-void ofApp::oscManager() {
-    
-    #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-    
-    while(phoneOscReceiver.hasWaitingMessages()){
-            ofxOscMessage msg;
-            phoneOscReceiver.getNextMessage(&msg);
-            
-        for (int i=0; i<12; i++) {
-            stringstream a;
-            a << "/btn" << i;
-            if(msg.getAddress() == a.str()) rxButtons[i] = msg.getArgAsFloat(0);
-           
-            }
-        }
-    
-    
-        if (!somethingIsPlaying) {
-            ofxOscMessage sendM;
-            sendM.setAddress("/nowPlaying");
-            sendM.addStringArg("nothing is playing");
-            phoneOscSender.sendMessage(sendM);
-    }
-   
-    #endif
-
-}
-
-
-//--------------------------------------------------------------
-void ofApp::soundPlayer() {
-    
-    // update the sound playing system:
-	ofSoundUpdate();
-	
-	somethingIsPlaying = false;  
-	stringstream isplaying;
-
-	for (int i=1; i<9; i++) if (sounds[i].getIsPlaying()) somethingIsPlaying = true;
-
-    if (!somethingIsPlaying) {
-        sounds[0].setVolume(1.);
-        
-        #if (OSC_CONTROL_STATUS == OSC_CONTROL_ON)
-        //play tracks through OSC buttons
-        for (int i=0; i<9; i++) {
-            
-            if (rxButtons[i] != 0) {
-                sounds[i].play();
-                sounds[0].setVolume(0.5);
-                }
-            }
-        #endif
-        
-        //play tracks through keys 0-9
-       if (currentKey >= 48 && currentKey <= 57){
-            sounds[(currentKey-48)].play(); //my non programmer solution to using keys 0-9
-            sounds[0].setVolume(0.5);
-            }
-        }
-    
-    currentKey = NULL;
-   
-}
-
-
-//--------------------------------------------------------------
-void ofApp::clear()
-{
-	pSensor.Clear();
-        pHMD.Clear();
-	pManager.Clear();  	
-	System::Destroy();	
-}
-
-
-//--------------------------------------------------------------
-void ofApp::output()
-{
-	
-}
-
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-    
-	if (key == 'o' || key == 'O'){
-		layer_offset +=2;
-		cout << layer_offset;		
+	if (key == 'a' || key == 'A'){ //decrease IPD
+		machine.x_offset -= 2;		
+		cout << machine.x_offset;
 	}
 
-	if (key == 'i' || key == 'I'){
-		layer_offset -=2;
-		cout << layer_offset << endl;		
-	}
-
-	if (key == 'w' || key == 'w'){
-		y_offset -= 2;
-		cout << y_offset;
-		//5016
-	}
-
-	if (key == 's' || key == 'S'){
-		y_offset += 2;
-		cout << y_offset;
-	}
-	
-	if (key == 'a' || key == 'A'){
-		x_offset -= 2;
-		//37
-		cout << x_offset;
-	}
-
-	if (key == 'd' || key == 'D'){
-		x_offset += 2;
-		//37
-		cout << x_offset;
+	if (key == 'd' || key == 'D'){ //increase IPD
+		machine.x_offset += 2;
+		cout << machine.x_offset;
 	}	    
    
-    if (key == 't' || key == 'T'){
-        screenToggle = false;
-    }
-    
-   if (key == ' ') {
-        
-   }
+	if (key == ' ') { 	   
+		machine.calibrate();
+	}
    
 	if (key == 'r') {
         recording = !recording;
         recorder.startThread(false, true);   
     }
-    
-    currentKey = key;
-    
+       
+	if (key == OF_KEY_UP) {
+		machine.triggerDim();
+	}
+
+	if (key == 'm' || key == 'M') {
+		player.muteUnmute();
+	}
+
+	//playtracks through keys 0-9 
+    if ((key>47) && (key < (48 + player.sounds.size()))) {
+		player.playSound(key-48); //my non programmer solution to using keys 0-9        
+	}          
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
-    if (key == 't' || key == 'T'){
-        screenToggle = true;
-    }
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){	
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-	
+void ofApp::clear()
+{
+	pSensor.Clear();
+    pHMD.Clear();
+	pManager.Clear();  	
+	System::Destroy();	
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
-}
-
 void ofApp::exit(){
     recorder.waitForThread();
 }
+
+/*	cout << "----- Oculus Console -----" << endl;
+
+	if (pHMD)
+	{
+		cout << " [x] HMD Found" << endl;
+	}
+	else
+	{
+		cout << " [ ] HMD Not Found" << endl;
+	}
+
+	if (pSensor)
+	{
+		cout << " [x] Sensor Found" << endl;
+	}
+	else
+	{
+		cout << " [ ] Sensor Not Found" << endl;
+	}
+
+	cout << "--------------------------" << endl;
+
+	if (InfoLoaded)
+        {
+		cout << " DisplayDeviceName: " << Info.DisplayDeviceName << endl;
+		cout << " ProductName: " << Info.ProductName << endl;
+		cout << " Manufacturer: " << Info.Manufacturer << endl;
+		cout << " Version: " << Info.Version << endl;
+		cout << " HResolution: " << Info.HResolution<< endl;
+		cout << " VResolution: " << Info.VResolution<< endl;
+		cout << " HScreenSize: " << Info.HScreenSize<< endl;
+		cout << " VScreenSize: " << Info.VScreenSize<< endl;
+		cout << " VScreenCenter: " << Info.VScreenCenter<< endl;
+		cout << " EyeToScreenDistance: " << Info.EyeToScreenDistance << endl;
+		cout << " LensSeparationDistance: " << Info.LensSeparationDistance << endl;
+		cout << " InterpupillaryDistance: " << Info.InterpupillaryDistance << endl;
+		cout << " DistortionK[0]: " << Info.DistortionK[0] << endl;
+		cout << " DistortionK[1]: " << Info.DistortionK[1] << endl;
+		cout << " DistortionK[2]: " << Info.DistortionK[2] << endl;
+		cout << "--------------------------" << endl;
+        }
+
+	cout << endl << " Press ENTER to continue" << endl;
+
+	cin.get();
+*/
+
+
+
