@@ -21,10 +21,15 @@ TODOs
 ========================	
 If you wish to contribute, then please consider the following :
 
-1) Add the servomotor control natively in OpenFrameworks.
-2) Use ofxXmlSettings for settings such as experiment type, camera choice, Ip adresses etc
-3) Create a GUI for selecting the version, camera and adding IPs and ports.
-5) Barrel Shader class to adapt to different lenses
-6) creating an abstraction for headtracking to support different kind of devices (GearVR, DK1, DK2, Cardboard)
+- Add servomotor control natively in OpenFrameworks. (at the moment it is done with pure data)
+- Use ofxXmlSettings for settings such as experiment type, camera choice, Ip adresses etc.
+- Create a GUI for the corresponding XmlSettings that allows to save them.
+- Map video on a sphere, and use quaternions instead of euler angles for orientation.
+- DK2 display + headtrcking support.
+- DK2 position tracking support.
+- Camera abstraction to support different devices. (logitech C310, ovrvision, clduo, PS3eye, etc)
+- Create debug view.
+- Barrel Shader class to adapt to different lenses.
+- Creating an abstraction for headtracking to support different kind of devices (GearVR, DK1, DK2, other heasets etc)
 
 Check the corresponding issues
