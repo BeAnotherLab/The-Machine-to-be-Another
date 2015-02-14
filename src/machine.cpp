@@ -1,27 +1,41 @@
 #include "machine.h"
 
-void machine::setup(int t)
+void machine::setup(int s, int c)
 {
-	type = t;
-
+	initOculus();
+	setup_type = s;
+	camera_type = c;
 	//tested with PS3Eye camera.	
 	x_offset = 256;
 	camWidth = 640;
 	camHeight = 480;		
-	vidGrabber.setVerbose(true);
-	vidGrabber.setDeviceID(1);
-	vidGrabber.setDesiredFrameRate(120);
-	vidGrabber.initGrabber(camWidth,camHeight);			
 	
+	vidGrabberLeft.setVerbose(true);
+	vidGrabberLeft.setDeviceID(0);
+	vidGrabberLeft.setDesiredFrameRate(120);
+	vidGrabberLeft.initGrabber(camWidth,camHeight);							
+
+	if (c = STEREO) {		
+	    vidGrabberRight.setVerbose(true);
+		vidGrabberRight.setDeviceID(2);
+		vidGrabberRight.setDesiredFrameRate(120);
+		vidGrabberRight.initGrabber(camWidth,camHeight);	
+	}
+
 	pitch = 0;
 	yaw = 0;
 	roll = 0;
+	rx_pitch = 0;
+	rx_yaw = 0;
+	rx_roll = 0;
 	pitch_cal = 0;
 	yaw_cal = 0;
 	roll_cal = 0;
 
-	fbo.allocate(480,640);
-	fbo.setAnchorPercent(0.5, 0.5);
+	fboLeft.allocate(camWidth,camHeight);
+	fboLeft.setAnchorPercent(0.5, 0.5);
+	fboRight.allocate(camWidth,camHeight);
+	fboRight.setAnchorPercent(0.5, 0.5);
 
 	//was used for experimenting with torchlight-like overlay, left here as ref for later
 	overlay.loadImage("pictures/overlay4.png");
@@ -45,38 +59,75 @@ void machine::setup(int t)
 	dimmed = false;		
 }
 
-void machine::update() {
-	vidGrabber.update();
-	ofVec2f distance = getDistance();	
+//--------------------------------------------------------------
+void machine::initOculus() {	
+	ovr_Initialize();	
+	hmd = ovrHmd_Create(0);	
+	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
+		cout << "Unable to detect Rift head tracker" << endl;		
+	}
+}
 
-	fbo.begin();			
+void machine::update() {	
+/*	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
+	Quatf pose = state.HeadPose.ThePose.Orientation;
+	pose.GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&pitch, &yaw, &roll); //rotation order affects gimbal lock.
+	*/
+	vidGrabberLeft.update();
+	if (camera_type == STEREO) {
+		vidGrabberRight.update();
+	}		
+
+	ofVec2f distance = getDistance();	
+	
+	fboLeft.begin();					
 		ofBackground(0);
 		ofPushMatrix();			
-			ofTranslate(camHeight/2, camWidth/2);
-			ofRotate(270, 0, 0, 1); //rotate from centre					
-			vidGrabber.draw(-320+distance.x*250, -240 -distance.y*250);
+			ofTranslate(camWidth/2, camHeight/2);
+			ofRotate(0, 0, 0, 1); //rotate from centre						
+				vidGrabberLeft.draw(-x_offset-320+distance.x*250, -240 -distance.y*250);				
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
-		ofPopMatrix();
-		int timeDim = ofGetElapsedTimeMillis() - dimTimer;
-		ofSetColor(0);
-		dim();
-	fbo.end();	
+		ofPopMatrix();							
+	//dim();
+	fboLeft.end();	
+			
+		fboRight.begin();						
+			ofBackground(0);
+			ofPushMatrix();			
+				ofTranslate(camWidth/2, camHeight/2);
+				ofRotate(0, 0, 0, 1); //rotate from centre		
+					if (camera_type == STEREO) {			
+						vidGrabberRight.draw(x_offset-320+distance.x*250, -240 -distance.y*250);	
+					} else {
+						vidGrabberLeft.draw(x_offset-320+distance.x*250, -240 -distance.y*250);	
+					}
+			ofPopMatrix();
+			ofSetColor(0);
+			//dim();
+			ofSetColor(255);						
+		fboRight.end();	
+	
 }
 
 ofVec2f machine::getDistance() {
-	if (type==TWO_WAY_SWAP) {			
-		ofVec2f self = ofVec2f(pitch-pitch_cal,yaw-yaw_cal);
-		ofVec2f other = ofVec2f(rx_pitch,rx_yaw);		
+	if (setup_type == TWO_WAY_SWAP) {			
+		ofVec2f self = ofVec2f(pitch-pitch_cal, yaw-yaw_cal);
+		ofVec2f other = ofVec2f(rx_pitch, rx_yaw);		
 		return other - self;
 	}
-	else if (type==ONE_WAY_SWAP) {
+	else if (setup_type == ONE_WAY_SWAP) {
 		return ofVec2f(0,0);
 	}	
 }
 
-void machine::drawVideo() {		
-	fbo.draw(-x_offset + ofGetWidth()/2, ofGetHeight()/2); //draw left
-	fbo.draw(x_offset + ofGetWidth()/2, ofGetHeight()/2); //draw right
+void machine::drawVideo() {			
+	/*if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice
+		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw left	
+		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw right
+	} else if (camera_type == STEREO) {*/
+		fboLeft.draw(fboLeft.getWidth()/2, ofGetHeight()/2); //draw left	
+		fboRight.draw(fboLeft.getWidth()/2+ofGetWidth()/2, ofGetHeight()/2); //draw right	
+	//}		
 }
 
 void machine::drawOverlay() {
@@ -121,6 +172,13 @@ float* machine::getCalibratedHeadtracking(){
 	return c;
 }
 
+void machine::clear() {
+	/*pSensor.Clear();
+    pHMD.Clear();
+	pManager.Clear();  	
+	System::Destroy();	*/
+}
+
 machine::machine(void)
 {
 
@@ -128,7 +186,7 @@ machine::machine(void)
 
 machine::~machine(void)
 {
-
+	
 }
 
 /*hmdWarpShader.begin();

@@ -3,8 +3,8 @@
 void oscController::setup(machine* m, soundPlayer* p){
 	myMachine = m;
 	mySoundPlayer = p;	
-	if (myMachine->type == TWO_WAY_SWAP) sender.setup(HOST, PORT);
-	else if (myMachine->type == ONE_WAY_SWAP) sender.setup("localhost", PORT);	
+	if (myMachine->setup_type == TWO_WAY_SWAP) sender.setup(HOST, PORT);
+	else if (myMachine->setup_type == ONE_WAY_SWAP) sender.setup("localhost", PORT);	
 	receiver.setup(PORT);    	
 	//tabletOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);    
 }	
@@ -21,7 +21,7 @@ void oscController::loop() {
 			myMachine->calibrate();		
 		}		
 		//receive headtracking when two-way swap
-		else if ((rx_msg.getAddress() == "/ori") && (myMachine->type == TWO_WAY_SWAP)) {
+		else if ((rx_msg.getAddress() == "/ori") && (myMachine->setup_type == TWO_WAY_SWAP)) {
 			myMachine->rx_roll = rx_msg.getArgAsFloat(0);
 			myMachine->rx_pitch = rx_msg.getArgAsFloat(1);
 			myMachine->rx_yaw = rx_msg.getArgAsFloat(2);                  
