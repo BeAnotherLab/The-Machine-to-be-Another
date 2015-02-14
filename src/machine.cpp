@@ -84,7 +84,7 @@ void machine::update() {
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(camWidth/2, camHeight/2);
-			ofRotate(0, 0, 0, 1); //rotate from centre						
+			ofRotate(180, 0, 0, 1); //rotate from centre						
 				vidGrabberLeft.draw(-x_offset-320+distance.x*250, -240 -distance.y*250);				
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
 		ofPopMatrix();							
@@ -95,7 +95,7 @@ void machine::update() {
 			ofBackground(0);
 			ofPushMatrix();			
 				ofTranslate(camWidth/2, camHeight/2);
-				ofRotate(0, 0, 0, 1); //rotate from centre		
+				ofRotate(180, 0, 0, 1); //rotate from centre		
 					if (camera_type == STEREO) {			
 						vidGrabberRight.draw(x_offset-320+distance.x*250, -240 -distance.y*250);	
 					} else {
