@@ -1,6 +1,5 @@
 /************************************************************************************
 
-PublicHeader:   OVR.h
 Filename    :   OVR_Profile.h
 Content     :   Structs and functions for loading and storing device profile settings
 Created     :   February 14, 2013
@@ -11,32 +10,68 @@ Notes       :
    can be accomplished in game via the Profile API or by the official Oculus Configuration
    Utility.
 
-Copyright   :   Copyright 2013 Oculus VR, Inc. All Rights reserved.
+Copyright   :   Copyright 2014 Oculus VR, LLC All Rights reserved.
 
-Use of this software is subject to the terms of the Oculus license
-agreement provided at the time of installation or download, or which
+Licensed under the Oculus VR Rift SDK License Version 3.2 (the "License"); 
+you may not use the Oculus VR Rift SDK except in compliance with the License, 
+which is provided at the time of installation or download, or which 
 otherwise accompanies this software in either electronic or hard copy form.
+
+You may obtain a copy of the License at
+
+http://www.oculusvr.com/licenses/LICENSE-3.2 
+
+Unless required by applicable law or agreed to in writing, the Oculus VR SDK 
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 ************************************************************************************/
 
 #ifndef OVR_Profile_h
 #define OVR_Profile_h
 
+#include "OVR_CAPI_Keys.h"
+
+#include "Sensors/OVR_DeviceConstants.h"
 #include "Kernel/OVR_String.h"
 #include "Kernel/OVR_RefCount.h"
 #include "Kernel/OVR_Array.h"
+#include "Kernel/OVR_StringHash.h"
+#include "Kernel/OVR_System.h"
 
 namespace OVR {
 
-// Defines the profile object for each device type
-enum ProfileType
+class HMDInfo; // Opaque forward declaration
+class Profile;
+class JSON;
+
+
+// Device key for looking up profiles
+struct ProfileDeviceKey
 {
-    Profile_Unknown       = 0,
-    Profile_RiftDK1       = 1,
-    Profile_RiftDKHD      = 2,
+    ProfileDeviceKey(const HMDInfo* info);
+
+	// Initialized properly?
+	bool Valid;
+
+    // The HMD type
+    HmdTypeEnum HmdType;
+
+	// This is the 12 character serial number printed on the HMD
+	String PrintedSerial;
+
+	// This is the product name string of the USB sensor device
+	// Note: It has been modified from the original to remove spaces and strip off "Oculus"
+	String ProductName;
+
+	// This is the product id from the HID info of the USB sensor device
+	unsigned ProductId;
+
+    static String SanitizeProductName(String productName);
 };
 
-class Profile;
 
 // -----------------------------------------------------------------------------
 // ***** ProfileManager
@@ -57,130 +92,131 @@ class Profile;
 //     {   // Retrieve the current profile settings
 //     }
 // }   // Profile will be destroyed and any disk I/O completed when going out of scope
-
-class ProfileManager : public RefCountBase<ProfileManager>
+class ProfileManager : public NewOverrideBase, public SystemSingletonBase<ProfileManager>
 {
+    friend class OVR::SystemSingletonBase<ProfileManager>;
+
+protected:
+    ProfileManager(bool sys_register);
+    virtual ~ProfileManager();
+    virtual void OnSystemDestroy();
+
 protected:
     // Synchronize ProfileManager access since it may be accessed from multiple threads,
     // as it's shared through DeviceManager.
-    Lock                    ProfileLock;
-    Array<Ptr<Profile> >    ProfileCache;
-    ProfileType             CacheDevice;
-    String                  DefaultProfile;
-    bool                    Changed;
-    char                    NameBuff[32];
+    Lock                ProfileLock;
+    Ptr<JSON>           ProfileCache;
+    bool                Changed;
+    String              TempBuff;
+    String              BasePath;
     
 public:
-    static ProfileManager* Create();
+    // In the service process it is important to set the base path because this cannot be detected automatically
+    void                SetBasePath(String basePath);
 
-    // Static interface functions
-    int                 GetProfileCount(ProfileType device);
-    const char*         GetProfileName(ProfileType device, unsigned int index);
-    bool                HasProfile(ProfileType device, const char* name);
-    Profile*            LoadProfile(ProfileType device, unsigned int index);
-    Profile*            LoadProfile(ProfileType device, const char* name);
-    Profile*            GetDeviceDefaultProfile(ProfileType device);
-    const char*         GetDefaultProfileName(ProfileType device);
-    bool                SetDefaultProfileName(ProfileType device, const char* name);
-    bool                Save(const Profile* profile);
-    bool                Delete(const Profile* profile);
+    int                 GetUserCount();
+    const char*         GetUser(unsigned int index);
+    bool                CreateUser(const char* user, const char* name);
+	bool				HasUser(const char* user);
+    bool                RemoveUser(const char* user);
+    const char*         GetDefaultUser(const ProfileDeviceKey& deviceKey);
+    bool                SetDefaultUser(const ProfileDeviceKey& deviceKey, const char* user);
+
+    virtual Profile*    CreateProfile();
+    Profile*            GetProfile(const ProfileDeviceKey& deviceKey, const char* user);
+    Profile*            GetDefaultUserProfile(const ProfileDeviceKey& deviceKey);
+    Profile*            GetDefaultProfile(HmdTypeEnum device);
+    Profile*            GetTaggedProfile(const char** key_names, const char** keys, int num_keys);
+    bool                SetTaggedProfile(const char** key_names, const char** keys, int num_keys, Profile* profile);
+    
+    // Force re-reading the settings
+    void                Read();
 
 protected:
-    ProfileManager();
-    ~ProfileManager();
-    void                LoadCache(ProfileType device);
-    void                SaveCache();
-    void                ClearCache();
-    Profile*            CreateProfileObject(const char* user,
-                                            ProfileType device,
-                                            const char** device_name);
+    // Force writing the settings
+    void                ClearProfileData();
+    void                Save();
+
+    String              GetProfilePath();
+    void                LoadCache(bool create);
+    void                LoadV1Profiles(JSON* v1);
+    const char*         GetDefaultUser(const char* product, const char* serial);
 };
+
 
 //-------------------------------------------------------------------
 // ***** Profile
 
-// The base profile for all HMD devices.  This object is never created directly.
-// Instead derived objects provide specific data implementations.  Some settings
-// such as IPD will be tied to a specific user and be consistent between ,
-// implementations but other settings like optical distortion may vary between devices.
-
+// The base profile for all users.  This object is not created directly.
+// Instead derived device objects provide add specific device members to 
+// the base profile
 class Profile : public RefCountBase<Profile>
 {
-public:
-    enum { MaxNameLen    = 32 };
-
-    enum GenderType
-    {
-        Gender_Unspecified  = 0,
-        Gender_Male         = 1,
-        Gender_Female       = 2
-    };
-
-    ProfileType Type;              // The type of device profile
-    char        Name[MaxNameLen];  // The name given to this profile
-
 protected:
-    GenderType  Gender;            // The gender of the user
-    float       PlayerHeight;      // The height of the user in meters
-    float       IPD;               // Distance between eyes in meters
+    OVR::Hash<String, JSON*, String::HashFunctor>   ValMap;
+    OVR::Array<JSON*>   Values;  
+    OVR::String         TempVal;
+    String              BasePath;
 
 public:
-    // These are properties which are intrinsic to the user and affect scene setup
-    GenderType      GetGender()                     { return Gender; };
-    float           GetPlayerHeight()               { return PlayerHeight; };
-    float           GetIPD()                        { return IPD; };
-    float           GetEyeHeight();    
+    ~Profile();
+
+    int                 GetNumValues(const char* key) const;
+    const char*         GetValue(const char* key);
+    char*               GetValue(const char* key, char* val, int val_length) const;
+    bool                GetBoolValue(const char* key, bool default_val) const;
+    int                 GetIntValue(const char* key, int default_val) const;
+    float               GetFloatValue(const char* key, float default_val) const;
+    int                 GetFloatValues(const char* key, float* values, int num_vals) const;
+    double              GetDoubleValue(const char* key, double default_val) const;
+    int                 GetDoubleValues(const char* key, double* values, int num_vals) const;
+
+    void                SetValue(const char* key, const char* val);
+    void                SetBoolValue(const char* key, bool val);
+    void                SetIntValue(const char* key, int val);
+    void                SetFloatValue(const char* key, float val);
+    void                SetFloatValues(const char* key, const float* vals, int num_vals);
+    void                SetDoubleValue(const char* key, double val);
+    void                SetDoubleValues(const char* key, const double* vals, int num_vals);
+
+    bool                IsDefaultProfile();
     
-    void            SetGender(GenderType gender)    { Gender = gender; };
-    void            SetPlayerHeight(float height)   { PlayerHeight = height; };
-    void            SetIPD(float ipd)               { IPD = ipd; };
-
+    bool Close();
 
 protected:
-    Profile(ProfileType type, const char* name);
-
-    virtual Profile*     Clone() const = 0;
-    virtual bool         ParseProperty(const char* prop, const char* sval);
+	Profile(String basePath) :
+		BasePath(basePath)
+	{
+	}
     
-    friend class ProfileManager;
-};
+    void                SetValue(JSON* val);
 
+	static bool         LoadProfile(const ProfileDeviceKey& deviceKey,
+                                    const char* user,
+                                    Profile** profile);
+    void                CopyItems(JSON* root, String prefix);
+    
+    bool                LoadDeviceFile(unsigned int device_id, const char* serial);
+	bool                LoadDeviceProfile(const ProfileDeviceKey& deviceKey);
 
-//-----------------------------------------------------------------------------
-// ***** RiftDK1Profile
+    bool                LoadProfile(JSON* root,
+                                    const char* user,
+                                    const char* device_model,
+                                    const char* device_serial);
 
-// This profile is specific to the Rift Dev Kit 1 and contains overrides specific 
-// to that device and lens cup settings.
-class RiftDK1Profile : public Profile
-{
-public:
-    enum EyeCupType
-    {
-        EyeCup_A = 0,
-        EyeCup_B = 1,
-        EyeCup_C = 2
-    };
-
-protected:
-    EyeCupType  EyeCups;            // Which eye cup does the player use
-    int         LL;                 // Configuration Utility IPD setting
-    int         LR;                 // Configuration Utility IPD setting
-    int         RL;                 // Configuration Utility IPD setting
-    int         RR;                 // Configuration Utility IPD setting
-
-public:
-    EyeCupType          GetEyeCup() { return EyeCups; };
-    void                SetEyeCup(EyeCupType cup) { EyeCups = cup; };
-
-protected:
-    RiftDK1Profile(const char* name);
-
-    virtual Profile*    Clone() const;
-    virtual bool        ParseProperty(const char* prop, const char* sval);
+    bool                LoadUser(JSON* root,
+                                 const char* user,
+                                 const char* device_name,
+                                 const char* device_serial);
 
     friend class ProfileManager;
+    friend class WProfileManager;
 };
 
-}
+// This path should be passed into the ProfileManager
+String GetBaseOVRPath(bool create_dir);
+
+
+} // namespace OVR
 
 #endif // OVR_Profile_h
