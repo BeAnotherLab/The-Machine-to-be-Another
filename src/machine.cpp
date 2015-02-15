@@ -3,19 +3,20 @@
 void machine::setup(int s, int c)
 {
 	initOculus();
+	vidGrabberLeft.listDevices();
 	setup_type = s;
 	camera_type = c;
 	//tested with PS3Eye camera.	
-	x_offset = 256;
+	x_offset = 0;
 	camWidth = 640;
 	camHeight = 480;		
 	
 	vidGrabberLeft.setVerbose(true);
-	vidGrabberLeft.setDeviceID(0);
-	vidGrabberLeft.setDesiredFrameRate(120);
+	vidGrabberLeft.setDeviceID(1);
+	vidGrabberLeft.setDesiredFrameRate(60);
 	vidGrabberLeft.initGrabber(camWidth,camHeight);							
 
-	if (c = STEREO) {		
+	if (c == STEREO) {		
 	    vidGrabberRight.setVerbose(true);
 		vidGrabberRight.setDeviceID(2);
 		vidGrabberRight.setDesiredFrameRate(120);
@@ -40,20 +41,7 @@ void machine::setup(int s, int c)
 	//was used for experimenting with torchlight-like overlay, left here as ref for later
 	overlay.loadImage("pictures/overlay4.png");
 	overlay.resize(2000*1.25,2000);
-	overlay.setAnchorPercent(0.5, 0.5);
-    //These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
-    //kept as ref, but they need to be properly calibrated according to camera and lens used.
-	K0 = 1.0;
-    K1 = 5.74;
-    K2 = 0.27;
-    K3 = 0.0;
-    _x = 0.0f;
-    _y = 0.0f;
-    _w = 1.0f;
-    _h = 1.0f;
-    as = 640.0f/480.0f;
-	DistortionXCenterOffset = 90;	        
-    hmdWarpShader.load("shaders/HmdWarpExp");
+	overlay.setAnchorPercent(0.5, 0.5);   
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
@@ -69,7 +57,7 @@ void machine::initOculus() {
 }
 
 void machine::update() {	
-/*	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
+	/*ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&pitch, &yaw, &roll); //rotation order affects gimbal lock.
 	*/
@@ -220,3 +208,19 @@ machine::~machine(void)
     glTexCoord2f(0,1); glVertex3f(640,800,0);
     glTexCoord2f(1,1); glVertex3f(0,800,0);
     glEnd();*/	
+
+/*
+//These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
+    //kept as ref, but they need to be properly calibrated according to camera and lens used.
+	K0 = 1.0;
+    K1 = 5.74;
+    K2 = 0.27;
+    K3 = 0.0;
+    _x = 0.0f;
+    _y = 0.0f;
+    _w = 1.0f;
+    _h = 1.0f;
+    as = 640.0f/480.0f;
+	DistortionXCenterOffset = 90;	        
+    hmdWarpShader.load("shaders/HmdWarpExp");
+*/

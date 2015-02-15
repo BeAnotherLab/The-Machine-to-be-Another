@@ -16,8 +16,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){				    
 	machine.update();
-	player.update();
-	controller.loop();
+	//player.update();
+	//controller.loop();
 	record();		
 }
 
@@ -51,12 +51,12 @@ void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){		
 	
-	if (key == 'a' || key == 'A'){ //decrease IPD
+	if (key == OF_KEY_LEFT){ //decrease IPD
 		machine.x_offset -= 2;		
 		cout << machine.x_offset;
 	}
 
-	if (key == 'd' || key == 'D'){ //increase IPD
+	if (key == OF_KEY_RIGHT){ //increase IPD
 		machine.x_offset += 2;
 		cout << machine.x_offset;
 	}	    
