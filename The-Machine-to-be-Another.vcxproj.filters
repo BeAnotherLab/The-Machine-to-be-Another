@@ -64,16 +64,16 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp">
       <Filter>addons\ofxOsc\libs\oscpack\src\osc</Filter>
     </ClCompile>
-    <ClCompile Include="src\ofApp.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\soundPlayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\machine.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\oscController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\testApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\soundPlayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -512,16 +512,16 @@
     <ClInclude Include="src\ofxImageSequenceRecorder.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ofApp.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\soundPlayer.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\machine.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\oscController.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\testApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\soundPlayer.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
