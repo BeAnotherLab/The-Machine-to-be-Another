@@ -73,7 +73,8 @@ void machine::update() {
 		ofPushMatrix();			
 			ofTranslate(camWidth/2, camHeight/2);
 			ofRotate(180, 0, 0, 1); //rotate from centre						
-				vidGrabberLeft.draw(-x_offset-320+distance.x*250, -240 -distance.y*250);				
+				//vidGrabberLeft.draw(-x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
+				vidGrabberLeft.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
 		ofPopMatrix();							
 	//dim();
@@ -85,9 +86,11 @@ void machine::update() {
 				ofTranslate(camWidth/2, camHeight/2);
 				ofRotate(180, 0, 0, 1); //rotate from centre		
 					if (camera_type == STEREO) {			
-						vidGrabberRight.draw(x_offset-320+distance.x*250, -240 -distance.y*250);	
+						//vidGrabberRight.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
+						vidGrabberRight.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
 					} else {
-						vidGrabberLeft.draw(x_offset-320+distance.x*250, -240 -distance.y*250);	
+						//vidGrabberLeft.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
+						vidGrabberLeft.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
 					}
 			ofPopMatrix();
 			ofSetColor(0);
@@ -113,8 +116,8 @@ void machine::drawVideo() {
 		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw left	
 		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw right
 	} else if (camera_type == STEREO) {*/
-		fboLeft.draw(fboLeft.getWidth()/2, ofGetHeight()/2); //draw left	
-		fboRight.draw(fboLeft.getWidth()/2+ofGetWidth()/2, ofGetHeight()/2); //draw right	
+		fboLeft.draw(-x_offset+ofGetWidth()/4, ofGetHeight()/2); //draw left	
+		fboRight.draw(x_offset+3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
 	//}		
 }
 
@@ -132,11 +135,11 @@ void machine::dim() {
 		}
 		else { //if we must turn the lights back on;
 			ofSetColor(0,ofMap(timeDim,0,2000,255,0));
-			ofRect(0,0,ofGetWidth(),ofGetHeight());
+			ofRect(0,0,ofGetWidth(), ofGetHeight());
 		}
 	}
 	else if (dimmed == true) { // stay dark
-		ofRect(0,0,ofGetWidth(),ofGetHeight());
+		ofRect(0,0,ofGetWidth(), ofGetHeight());
 	}	
 }
 

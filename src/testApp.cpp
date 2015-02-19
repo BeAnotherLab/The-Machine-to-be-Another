@@ -3,21 +3,21 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){		
-	ofSetFullscreen(true);
+	ofSetFullscreen(false);
 	ofSetVerticalSync(true);	
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
 	player.loadSounds(""); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
-	machine.setup(ONE_WAY_SWAP, STEREO); 
+	machine.setup(ONE_WAY_SWAP, MONO); 
 	controller.setup(&machine, &player);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){				    
 	machine.update();
-	//player.update();
-	//controller.loop();
+	player.update();
+	controller.loop();
 	record();		
 }
 
