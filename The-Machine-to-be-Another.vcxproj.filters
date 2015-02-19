@@ -524,5 +524,8 @@
     <ClInclude Include="src\soundPlayer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\OculusLensShader.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,16 +11,23 @@ void machine::setup(int s, int c)
 	camWidth = 640;
 	camHeight = 480;		
 	
-	vidGrabberLeft.setVerbose(true);
-	vidGrabberLeft.setDeviceID(1);
-	vidGrabberLeft.setDesiredFrameRate(60);
-	vidGrabberLeft.initGrabber(camWidth,camHeight);							
-
-	if (c == STEREO) {		
+	if (c == MONO) {
+		vidGrabberLeft.setVerbose(true);
+		vidGrabberLeft.setDeviceID(1);
+		vidGrabberLeft.setDesiredFrameRate(120);
+		vidGrabberLeft.initGrabber(camWidth,camHeight);							
+	} else if (c == STEREO) {		
 	    vidGrabberRight.setVerbose(true);
 		vidGrabberRight.setDeviceID(2);
 		vidGrabberRight.setDesiredFrameRate(120);
 		vidGrabberRight.initGrabber(camWidth,camHeight);	
+	} else if (c == OVRVISION) {
+		g_pOvrvision = new OVR::Ovrvision();
+	    g_pOvrvision->Open(0,OVR::OV_CAMVGA_FULL);   
+	    left.allocate(camWidth,camHeight,GL_RGB);
+		//left.setAnchorPercent(0.5, 0.5);
+	    right.allocate(camWidth,camHeight,GL_RGB);
+		//right.setAnchorPercent(0.5, 0.5);		
 	}
 
 	pitch = 0;
@@ -57,14 +64,18 @@ void machine::initOculus() {
 }
 
 void machine::update() {	
-	/*ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
+	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&pitch, &yaw, &roll); //rotation order affects gimbal lock.
-	*/
-	vidGrabberLeft.update();
-	if (camera_type == STEREO) {
+	
+	if (camera_type == MONO) {
+		vidGrabberLeft.update();
+	}else if (camera_type == STEREO) {
 		vidGrabberRight.update();
-	}		
+	} else if (camera_type == OVRVISION) {
+		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT), 640,480, GL_RGB);
+		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT), 640,480, GL_RGB);	
+	}
 
 	ofVec2f distance = getDistance();	
 	
@@ -74,7 +85,12 @@ void machine::update() {
 			ofTranslate(camWidth/2, camHeight/2);
 			ofRotate(180, 0, 0, 1); //rotate from centre						
 				//vidGrabberLeft.draw(-x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
-				vidGrabberLeft.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
+				if (camera_type == OVRVISION) {
+					left.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);
+					ofCircle(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250, 50);
+				} else {
+					vidGrabberLeft.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
+				}
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
 		ofPopMatrix();							
 	//dim();
@@ -88,6 +104,9 @@ void machine::update() {
 					if (camera_type == STEREO) {			
 						//vidGrabberRight.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
 						vidGrabberRight.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
+					} else if (camera_type == OVRVISION) {
+						right.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
+						ofCircle(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250, 50);	
 					} else {
 						//vidGrabberLeft.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
 						vidGrabberLeft.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
@@ -112,13 +131,14 @@ ofVec2f machine::getDistance() {
 }
 
 void machine::drawVideo() {			
-	/*if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice
+	if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice
 		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw left	
 		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw right
-	} else if (camera_type == STEREO) {*/
-		fboLeft.draw(-x_offset+ofGetWidth()/4, ofGetHeight()/2); //draw left	
+	} else {
+	cout << ofGetMouseY()*0.15 << endl;
+		fboLeft.draw(-x_offset+ofGetWidth()/4, ofGetHeight()/2+29.1); //draw left. 29.1 is to adjust for 	
 		fboRight.draw(x_offset+3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
-	//}		
+	}		
 }
 
 void machine::drawOverlay() {

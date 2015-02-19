@@ -1,14 +1,25 @@
 #pragma once
 #include "ofxOsc.h"
 #include "OVR.h"
+#include <ovrvision.h>		//Ovrvision SDK
+//#include "COculusVR.h" //Oculus SDK
 
 #define ONE_WAY_SWAP 0
 #define TWO_WAY_SWAP 1
-#define MONO 2
-#define STEREO 3
+#define MONO 2 //one webcam
+#define STEREO 3 //two webcams
+#define OVRVISION 4 //ovrvision
 
 using namespace OVR;
 using namespace std;
+
+//Oculus Rift screen size
+#define RIFTSCREEN_WIDTH	(1920)
+#define RIFTPSCREEN_HEIGHT	(1080)
+
+//Application screen size
+#define APPSCREEN_WIDTH		(1280)
+#define APPSCREEN_HEIGHT	(800)
 
 class machine
 {
@@ -24,6 +35,8 @@ public:
             
     ofVideoGrabber vidGrabberLeft, vidGrabberRight; //for using with webcam or PS3 camera		
 	
+	ofTexture left, right; //for using with ovrvision cameras    
+
 	ofFbo fboLeft, fboRight; //where we draw image for each different eye
 
     ofImage overlay;
@@ -33,6 +46,10 @@ public:
 
 	int dimTimer;
 	bool dimmed; 					
+
+	//ovrvisionstuff
+	//Objects
+	OVR::Ovrvision* g_pOvrvision;
 
 	void machine::setup(int setup_type, int camera_type);	
 	void machine::initOculus();

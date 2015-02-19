@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\machine.h" />
+    <ClInclude Include="src\OculusLensShader.h" />
     <ClInclude Include="src\ofxImageSequenceRecorder.h" />
     <ClInclude Include="src\oscController.h" />
     <ClInclude Include="src\soundPlayer.h" />
