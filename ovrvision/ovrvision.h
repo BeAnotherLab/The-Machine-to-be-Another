@@ -1,5 +1,5 @@
 // ovrvision.h
-// Version 0.7 : 20/May/2014
+// Version 2.12 : 2/Dec/2014
 //
 //MIT License
 //THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -99,6 +99,13 @@ typedef enum ov_cameraeye {
 } Cameye;
 #endif
 
+//HMD Flags
+typedef enum ov_hmdprop {
+	OV_HMD_OCULUS_OTHER = 0,
+	OV_HMD_OCULUS_DK1,
+	OV_HMD_OCULUS_DK2,
+} HmdProp;
+
 //Device Status
 typedef enum ov_camstatus {
 	OV_CAMCLOSED= 0,			//No open device
@@ -112,8 +119,16 @@ typedef enum ov_camstatus {
 #define OV_RESULT_OK		(0)
 #define OV_RESULT_FAILED	(1)
 
+//Processing Quality
+typedef enum ov_psqt {
+	OV_PSQT_NONE = 0,		//No Processing quality
+	OV_PSQT_LOW = 1,		//Low Processing quality
+	OV_PSQT_HIGH = 2,		//High Processing quality
+	OV_PSQT_REFSET = 3,		//RefOnly Processing quality
+} OvPSQuality;
+
 //File path
-#define OV_DEFAULT_SETTING_FILEPATH	"ovrvision_config.xml"
+#define OV_DEFAULT_SETTING_FILEPATH		"ovrvision_conf2.xml"
 
 /////////// CLASS ///////////
 
@@ -127,7 +142,7 @@ public:
 
 	//Initialize
 	//Open the Ovrvision
-	int Open(int locationID, OVR::Camprop flag);
+	int Open(int locationID, OVR::Camprop flag, OVR::HmdProp hmd = OV_HMD_OCULUS_DK2);
 	//Close the Ovrvision
 	void Close();
 
@@ -135,11 +150,14 @@ public:
 	void PreStoreCamData();
 	//Get RGB8bit image data.
 	// * You must call the PreStoreCamData() method ahead.
-	unsigned char* GetCamImage(OVR::Cameye eye);
-	void GetCamImage(unsigned char* pImageBuf, OVR::Cameye eye);
+	unsigned char* GetCamImage(OVR::Cameye eye, OvPSQuality processing = OV_PSQT_HIGH);
+	void GetCamImage(unsigned char* pImageBuf, OVR::Cameye eye, OvPSQuality processing = OV_PSQT_HIGH);
 	//Get MJPEG raw data.
 	// * You must call the PreStoreCamData() method ahead.
 	void GetCamImageMJPEG(unsigned char* pImageBuf, int* pSize, OVR::Cameye eye);
+
+	//This method will be detected if a hand is put in front of a camera. 
+	bool PutHandInFrontOfCamera(unsigned char thres_less, unsigned char* pImageBuf);
 
 	//Property
 
@@ -148,8 +166,9 @@ public:
 	//Save parameter
 	//todo : char* savefilename = FullPath
 	bool SaveParamXMLtoFile(char* savefilename = NULL);
-	//DirectSaveParamXMLtoTempFile : Don't use this method.
-	void DirectSaveParamXMLtoTempFile(int* config1, double* config2);
+	//DirectSaveParamXMLtoTempFile : Don't use this method. For Unity.
+	void DirectSaveParamXMLtoTempFile(int* config1, float* config2);
+	void DefaultSetting();
 
 	//Set exposure
 	void SetExposure(int value = OV_SET_AUTOMODE);
@@ -181,6 +200,9 @@ public:
 	//Get gamma
 	int GetGamma();
 
+	//Get focalPoint
+	float GetFocalPoint() { return m_focalPoint; };
+
 	//Get image property
 	Camprop GetCameraProperty();
 	//Get camera status
@@ -197,17 +219,12 @@ public:
 	//Get buffer size
 	int GetBufferSize();
 
-	//IPD(InterPupillary Distance)
-	//Set IPD Horizontal
-	void SetIPDHorizontal(double value);
-	//Set IPD Vertical
-	void SetIPDVertical(double value);
-	//Get IPD Horizontal
-	double GetIPDHorizontal();
-	//Get IPD Vertical
-	double GetIPDVertical();
+	//Ovrvision cameras calibration method
+	//Get Oculus Right-eye Gap
+	float GetOculusRightGap(int at){ return m_oculusRightGap[at]; };
 
 private:
+
 #ifdef WIN32
 	//DirectShow
 	OvrvisionDirectShow*	m_pODS[OV_CAMNUM];
@@ -216,6 +233,7 @@ private:
 #elif LINUX
 	//NONE
 #endif
+	OvrvisionUndistort*		m_pUndistortEngine[OV_CAMNUM];
 
 	//Pixels
 	byte*			m_pPixels[OV_CAMNUM];
@@ -237,13 +255,11 @@ private:
 	int				m_propBrightness;	//Brightness
 	int				m_propSharpness;	//Sharpness
 	int				m_propGamma;		//Gamma
-
-	//Setting Property
-	double			m_ipd_horizontal;	//IPD_H
-	double			m_ipd_vertical;		//IPD_V
+	float			m_focalPoint;		//FocalPoint
+	float			m_oculusRightGap[3];	//GapVec3
 
 	//Private method
-	void InitCameraSetting();
+	void InitCameraSetting(OVR::HmdProp hmd);
 };
 
 };

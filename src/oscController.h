@@ -4,9 +4,6 @@
 #include "machine.h"
 #include "soundPlayer.h"
 
-#define PORT 8015 //for all OSC communications	
-#define HOST "192.168.2.106" //other computer to send headtracking to
-
 class oscController {
 public:
 	machine* myMachine;

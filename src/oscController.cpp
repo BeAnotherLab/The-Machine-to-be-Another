@@ -1,5 +1,8 @@
 #include "oscController.h"
 
+#define PORT 8015 //for all OSC communications	
+#define HOST "192.168.4.116" //other computer to send headtracking to
+
 void oscController::setup(machine* m, soundPlayer* p){
 	myMachine = m;
 	mySoundPlayer = p;	

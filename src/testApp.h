@@ -8,6 +8,8 @@
 #define COMPUTER 1 //computer 1 is in charge of getting input from touchOSC tablet and relaying it to computer 2
 #define CAPTURE_FRAME_RATE 24 //for video recording
 
+
+
 class ofApp : public ofBaseApp{
 	public:	
 	void setup();
