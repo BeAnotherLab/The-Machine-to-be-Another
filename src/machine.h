@@ -57,7 +57,7 @@ public:
 	void machine::drawVideo();
 	void machine::drawOverlay();	
 	void machine::calibrate();		
-	float* machine::getCalibratedHeadtracking();
+	float* machine::getHeadtracking();
 	void machine::triggerDim();
 	void machine::dim();		
 	ofVec2f machine::getDistance();

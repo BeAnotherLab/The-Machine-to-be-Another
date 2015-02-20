@@ -59,6 +59,7 @@ void machine::initOculus() {
 	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
 		cout << "Unable to detect Rift head tracker" << endl;		
 	}
+	ovrHmd_RecenterPose(hmd);
 }
 
 void machine::update() {	
@@ -66,7 +67,7 @@ void machine::update() {
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&yaw, &pitch, &roll); //rotation order affects gimbal lock.
 	
-
+	//ofMap(yaw, -180, 0, 180, 360);
 	if (camera_type == MONO) {
 		vidGrabberLeft.update();
 	}else if (camera_type == STEREO) {
@@ -147,7 +148,7 @@ void machine::debug() {
 	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
 	
 	ofDrawBitmapString("yaw calibration value : " + ofToString(ofRadToDeg(yaw_cal)), 180,10);
-	ofDrawBitmapString("yaw calibrated value : " + ofToString(ofRadToDeg(yaw - yaw_cal)), 180,10);
+	ofDrawBitmapString("yaw calibrated value  : " + ofToString(ofRadToDeg(yaw - yaw_cal)), 180,25);
 }
 
 void machine::drawOverlay() {
@@ -178,17 +179,19 @@ void machine::triggerDim() {
 }
 
 void machine::calibrate() {	
-	pitch_cal = pitch;
-	yaw_cal = yaw;
-	roll_cal = roll;	
+//	yaw_cal=ofMap(yaw-, -180, 180, 0, 360);
+	ovrHmd_RecenterPose(hmd);
+	//pitch_cal = pitch;
+	//yaw_cal = yaw;
+	//roll_cal = roll;	
 }
 
-float* machine::getCalibratedHeadtracking(){
+float* machine::getHeadtracking(){
 	float* c;
 	c = new float[3];
-	c[0] = roll - roll_cal;
-	c[1] = pitch - pitch_cal;
-	c[2] = yaw - yaw_cal;
+	c[0] = roll;
+	c[1] = pitch;
+	c[2] = yaw;
 	return c;
 }
 

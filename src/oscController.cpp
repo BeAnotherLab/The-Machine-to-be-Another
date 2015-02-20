@@ -14,6 +14,7 @@ void oscController::setup(machine* m, soundPlayer* p){
 
 void oscController::loop() { 
 	//receive tablet messages
+	//yaw+=
 	ofxOscMessage rx_msg;	
 	while (receiver.hasWaitingMessages()) {
 		receiver.getNextMessage(&rx_msg);				
@@ -42,7 +43,7 @@ void oscController::loop() {
 	ofxOscMessage m;
 	m.setAddress("/ori");
 	for (int i=0; i<3; i++) {
-		m.addFloatArg(myMachine->getCalibratedHeadtracking()[i]);
+		m.addFloatArg(myMachine->getHeadtracking()[i]);
 	}	
 	sender.sendMessage(m); 
 }
