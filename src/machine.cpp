@@ -64,7 +64,7 @@ void machine::initOculus() {
 void machine::update() {	
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
-	pose.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&pitch, &yaw, &roll); //rotation order affects gimbal lock.
+	pose.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&yaw, &pitch, &roll); //rotation order affects gimbal lock.
 	
 
 	if (camera_type == MONO) {
@@ -88,9 +88,9 @@ void machine::update() {
 			ofRotate(0, 0, 0, 1); //rotate from centre						
 				//vidGrabberLeft.draw(-x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
 				if (camera_type == OVRVISION) {
-					left.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);
+					left.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);
 				} else {
-					vidGrabberLeft.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
+					vidGrabberLeft.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);				
 				}
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
 		ofPopMatrix();							
@@ -104,12 +104,12 @@ void machine::update() {
 				ofRotate(0, 0, 0, 1); //rotate from centre		
 					if (camera_type == STEREO) {			
 						//vidGrabberRight.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
-						vidGrabberRight.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
+						vidGrabberRight.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);	
 					} else if (camera_type == OVRVISION) {
-						right.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
+						right.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);	
 					} else {
 						//vidGrabberLeft.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
-						vidGrabberLeft.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
+						vidGrabberLeft.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);	
 					}
 			ofPopMatrix();
 			ofSetColor(0);
