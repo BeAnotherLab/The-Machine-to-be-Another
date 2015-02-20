@@ -9,7 +9,7 @@ void ofApp::setup(){
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
 	player.loadSounds(""); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
-	machine.setup(ONE_WAY_SWAP, OVRVISION); 
+	machine.setup(TWO_WAY_SWAP, MONO); 
 	controller.setup(&machine, &player);
 }
 
@@ -27,6 +27,7 @@ void ofApp::draw(){
 	ofSetHexColor(0xffffff);									    
 	machine.drawVideo();
 	machine.drawOverlay();    
+	machine.debug();
 }
 
 //--------------------------------------------------------------

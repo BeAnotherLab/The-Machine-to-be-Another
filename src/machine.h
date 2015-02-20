@@ -62,6 +62,7 @@ public:
 	void machine::dim();		
 	ofVec2f machine::getDistance();
 	void machine::clear();
+	void machine::debug();
 
 	machine(void);
 	~machine(void);

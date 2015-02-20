@@ -13,7 +13,7 @@ void machine::setup(int s, int c)
 	
 	if (c == MONO) {
 		vidGrabberLeft.setVerbose(true);
-		vidGrabberLeft.setDeviceID(1);
+		vidGrabberLeft.setDeviceID(0);
 		vidGrabberLeft.setDesiredFrameRate(120);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);							
 	} else if (c == STEREO) {		
@@ -64,8 +64,9 @@ void machine::initOculus() {
 void machine::update() {	
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
-	pose.GetEulerAngles<Axis_X, Axis_Y, Axis_Z>(&pitch, &yaw, &roll); //rotation order affects gimbal lock.
+	pose.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&pitch, &yaw, &roll); //rotation order affects gimbal lock.
 	
+
 	if (camera_type == MONO) {
 		vidGrabberLeft.update();
 	}else if (camera_type == STEREO) {
@@ -131,13 +132,19 @@ ofVec2f machine::getDistance() {
 
 void machine::drawVideo() {			
 	if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice
-		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw left	
-		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw right
+		fboLeft.draw(-x_offset + ofGetWidth()/4, ofGetHeight()/2); //draw left	
+		fboLeft.draw(x_offset + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
 	} else {
 	 cout << ofGetMouseY()*0.15 << endl;
 		 fboLeft.draw(-x_offset+ofGetWidth()/4, ofGetHeight()/2+ofGetMouseX()*0.5-500); //draw left. 29.1 is to adjust for slight cameras disalignment
 		 fboRight.draw(x_offset+3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
 	}		
+}
+
+void machine::debug() {
+	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,10);
+	ofDrawBitmapString("yaw : " + ofToString(ofRadToDeg(yaw)), 10,25);
+	ofDrawBitmapString("roll : " + ofToString(ofRadToDeg(roll)), 10,40);
 }
 
 void machine::drawOverlay() {
