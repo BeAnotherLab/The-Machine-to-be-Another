@@ -65,7 +65,7 @@ void machine::initOculus() {
 void machine::update() {	
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
-	pose.GetEulerAngles<Axis_Y, Axis_X, Axis_Z>(&yaw, &pitch, &roll); //rotation order affects gimbal lock.
+	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.
 	
 	//ofMap(yaw, -180, 0, 180, 360);
 	if (camera_type == MONO) {
