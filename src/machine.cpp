@@ -24,7 +24,6 @@ void machine::setup(int s, int c)
 	} else if (c == OVRVISION) {
 		g_pOvrvision = new OVR::Ovrvision();
 	    g_pOvrvision->Open(0,OVR::OV_CAMVGA_FULL);   
-
 	    left.allocate(camWidth,camHeight,GL_RGB);
 	    right.allocate(camWidth,camHeight,GL_RGB);
 	}
@@ -74,10 +73,9 @@ void machine::update() {
 	} else if (camera_type == OVRVISION) {
 		//left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT), 640,480, GL_RGB);
 		g_pOvrvision->PreStoreCamData();
-
-		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_HIGH), 640,480, GL_RGB);
+		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_HIGH), 640,480, GL_RGB);
 		//right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT), 640,480, GL_RGB);	
-		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_HIGH), 640,480, GL_RGB);	
+		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_HIGH), 640,480, GL_RGB);	
 	}
 
 	ofVec2f distance = getDistance();	
@@ -86,7 +84,7 @@ void machine::update() {
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(camWidth/2, camHeight/2);
-			ofRotate(180, 0, 0, 1); //rotate from centre						
+			ofRotate(0, 0, 0, 1); //rotate from centre						
 				//vidGrabberLeft.draw(-x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
 				if (camera_type == OVRVISION) {
 					left.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);
@@ -102,7 +100,7 @@ void machine::update() {
 			ofBackground(0);
 			ofPushMatrix();			
 				ofTranslate(camWidth/2, camHeight/2);
-				ofRotate(180, 0, 0, 1); //rotate from centre		
+				ofRotate(0, 0, 0, 1); //rotate from centre		
 					if (camera_type == STEREO) {			
 						//vidGrabberRight.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
 						vidGrabberRight.draw(-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
@@ -136,9 +134,9 @@ void machine::drawVideo() {
 		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw left	
 		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2); //draw right
 	} else {
-	cout << ofGetMouseY()*0.15 << endl;
-		fboLeft.draw(-x_offset+ofGetWidth()/4, ofGetHeight()/2+29.1); //draw left. 29.1 is to adjust for slight cameras disalignment
-		fboRight.draw(x_offset+3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
+	 cout << ofGetMouseY()*0.15 << endl;
+		 fboLeft.draw(-x_offset+ofGetWidth()/4, ofGetHeight()/2+ofGetMouseX()*0.5-500); //draw left. 29.1 is to adjust for slight cameras disalignment
+		 fboRight.draw(x_offset+3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
 	}		
 }
 
@@ -149,7 +147,7 @@ void machine::drawOverlay() {
 void machine::dim() {
 	int timeDim = ofGetElapsedTimeMillis() - dimTimer;
 	ofSetColor(0);
-	if (timeDim < 2000) { //if dim/undim was triggered less than 2 seconds ago
+	if (timeDim < 2000) {//if dim/undim was triggered less than 2 seconds ago
 		if (dimmed == true) { //if we must dim the lights
 			ofSetColor(0,ofMap(timeDim,0,2000,0,255));
 			ofRect(0,0,ofGetWidth(),ofGetHeight());
