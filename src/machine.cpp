@@ -143,8 +143,11 @@ void machine::drawVideo() {
 
 void machine::debug() {
 	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,10);
-	ofDrawBitmapString("yaw : " + ofToString(ofRadToDeg(yaw)), 10,25);
-	ofDrawBitmapString("roll : " + ofToString(ofRadToDeg(roll)), 10,40);
+	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 10,25);
+	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
+	
+	ofDrawBitmapString("yaw calibration value : " + ofToString(ofRadToDeg(yaw_cal)), 180,10);
+	ofDrawBitmapString("yaw calibrated value : " + ofToString(ofRadToDeg(yaw - yaw_cal)), 180,10);
 }
 
 void machine::drawOverlay() {
