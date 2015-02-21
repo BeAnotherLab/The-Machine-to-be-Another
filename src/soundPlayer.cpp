@@ -27,13 +27,13 @@ void soundPlayer::loadSounds(string s) //file names passed as parameters will be
 
 void soundPlayer::playSound(int id) {
 	//play sound i if button i was pressed on phone or on keyboard
-		if (!something_is_playing && !sounds.at(id).getIsPlaying()){						
-			sounds.at(id).play();				
-			stringstream play;
-			play << "sound " << id << " is playing" << endl;
+	if (!something_is_playing && !sounds.at(id).getIsPlaying()){						
+		sounds.at(id).play();				
+		stringstream play;
+		play << "sound " << id << " is playing" << endl;
 
-			//then send to phone to display which sound is playing
-		}			
+		//then send to phone to display which sound is playing
+	}			
 }
 
 void soundPlayer::update() {	

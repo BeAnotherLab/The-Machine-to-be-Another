@@ -38,6 +38,20 @@ void machine::setup(int s, int c)
 	yaw_cal = 0;
 	roll_cal = 0;
 
+	//These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
+    //kept as ref, but they need to be properly calibrated according to camera and lens used.
+	K0 = 1.0;
+    K1 = 5.74;
+    K2 = 0.27;
+    K3 = 0.0;
+    _x = 0.0f;
+    _y = 0.0f;
+    _w = 1.0f;
+    _h = 1.0f;
+    as = 640.0f/480.0f;
+	DistortionXCenterOffset = 90;	        
+    hmdWarpShader.load("shaders/HmdWarpExp");
+
 	fboLeft.allocate(camWidth,camHeight);
 	fboLeft.setAnchorPercent(0.5, 0.5);
 	fboRight.allocate(camWidth,camHeight);
@@ -55,6 +69,22 @@ void machine::setup(int s, int c)
 //--------------------------------------------------------------
 void machine::initOculus() {	
 	ovr_Initialize();	
+	/*
+	// Configure Stereo settings.
+	Sizei recommenedTex0Size = ovrHmd_GetFovTextureSize(hmd, ovrEye_Left,
+	hmd->DefaultEyeFov[0], 1.0f);
+	Sizei recommenedTex1Size = ovrHmd_GetFovTextureSize(hmd, ovrEye_Right,
+	hmd->DefaultEyeFov[1], 1.0f);
+	Sizei renderTargetSize;
+	renderTargetSize.w = recommenedTex0Size.w + recommenedTex1Size.w;
+	renderTargetSize.h = max ( recommenedTex0Size.h, recommenedTex1Size.h );
+	const int eyeRenderMultisample = 1;
+	pRendertargetTexture = pRender->CreateTexture(texture_RGBA | Texture_RenderTarget | eyeRenderMultisample,renderTargetSize.w, renderTargetSize.h, NULL);
+	// The actual RT size may be different due to HW limits.
+	renderTargetSize.w = pRendertargetTexture->GetWidth();
+	renderTargetSize.h = pRendertargetTexture->GetHeight();
+	*/
+
 	hmd = ovrHmd_Create(0);	
 	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
 		cout << "Unable to detect Rift head tracker" << endl;		
@@ -211,51 +241,36 @@ machine::~machine(void)
 {
 	
 }
+/*
+void machine::distortion(){
 
-/*hmdWarpShader.begin();
-	hmdWarpShader.setUniformTexture("tex", vidGrabber.getTextureReference(), 0);
-    hmdWarpShader.setUniform2f("LensCenter", DistortionXCenterOffset, 0 );
-    hmdWarpShader.setUniform2f("ScreenCenter", _x + _w*1.0f, _y + _h*1.0f );
-    hmdWarpShader.setUniform2f("Scale", (_w/1.0f) * 1.0f, (_h/1.0f) * 1.0f * as );
-    hmdWarpShader.setUniform2f("ScaleIn", (1.0f/_w), (1.0f/_h) / as );
-    hmdWarpShader.setUniform4f("HmdWarpParam", K0, K1, K2, K3 );*/
-	
-	//hmdWarpShader.end();
 
-		/*
+	hmdWarpShader.begin();
+		hmdWarpShader.setUniformTexture("tex", vidGrabber.getTextureReference(), 0);
+		hmdWarpShader.setUniform2f("LensCenter", DistortionXCenterOffset, 0 );
+		hmdWarpShader.setUniform2f("ScreenCenter", _x + _w*1.0f, _y + _h*1.0f );
+		hmdWarpShader.setUniform2f("Scale", (_w/1.0f) * 1.0f, (_h/1.0f) * 1.0f * as );
+		hmdWarpShader.setUniform2f("ScaleIn", (1.0f/_w), (1.0f/_h) / as );
+		hmdWarpShader.setUniform4f("HmdWarpParam", K0, K1, K2, K3 );
+	hmdWarpShader.end();
+		
     float planeScale = 0.75;
     int planeWidth = ofGetWidth() * planeScale;
     int planeHeight = ofGetHeight() * planeScale;
     int planeGridSize = 20;
     int planeColumns = planeWidth / planeGridSize;
     int planeRows = planeHeight / planeGridSize;
- */
+ 
     //ofPlanePrimitive plane = *(new ofPlanePrimitive());		
 	//plane.set(planeWidth, planeHeight, planeColumns, planeRows, OF_PRIMITIVE_TRIANGLES);
 	//plane.mapTexCoordsFromTexture(vidGrabber.getTextureReference);		
 	//ofRotate(90,0,0,1);
-	
-	
-	/*
+			
 	glBegin(GL_QUADS);
     glTexCoord2f(1,0); glVertex3f(0,0,0);
     glTexCoord2f(0,0); glVertex3f(640,0,0);
     glTexCoord2f(0,1); glVertex3f(640,800,0);
     glTexCoord2f(1,1); glVertex3f(0,800,0);
-    glEnd();*/	
-
-/*
-//These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
-    //kept as ref, but they need to be properly calibrated according to camera and lens used.
-	K0 = 1.0;
-    K1 = 5.74;
-    K2 = 0.27;
-    K3 = 0.0;
-    _x = 0.0f;
-    _y = 0.0f;
-    _w = 1.0f;
-    _h = 1.0f;
-    as = 640.0f/480.0f;
-	DistortionXCenterOffset = 90;	        
-    hmdWarpShader.load("shaders/HmdWarpExp");
+    glEnd();
+}
 */

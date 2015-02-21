@@ -63,7 +63,7 @@ public:
 	ofVec2f machine::getDistance();
 	void machine::clear();
 	void machine::debug();
-
+	void machine::distortion();
 	machine(void);
 	~machine(void);
 };
