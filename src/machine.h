@@ -32,7 +32,8 @@ public:
 	float pitch, yaw, roll; //headtracking received from oculus		
     float pitch_cal, yaw_cal, roll_cal; //used to calibrate headtracking values
 	float rx_pitch, rx_yaw, rx_roll; //received headtracking
-            
+    float zoom; //used to zoom camera input in/out        
+
     ofVideoGrabber vidGrabberLeft, vidGrabberRight; //for using with webcam or PS3 camera		
 	
 	ofTexture left, right; //for using with ovrvision cameras    

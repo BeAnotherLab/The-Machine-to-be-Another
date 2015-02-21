@@ -15,17 +15,21 @@ void machine::setup(int s, int c)
 		vidGrabberLeft.setVerbose(true);
 		vidGrabberLeft.setDeviceID(0);
 		vidGrabberLeft.setDesiredFrameRate(120);
-		vidGrabberLeft.initGrabber(camWidth,camHeight);							
+		vidGrabberLeft.initGrabber(camWidth,camHeight);			
+		vidGrabberLeft.setAnchorPercent(0.5,0.5);
 	} else if (c == STEREO) {		
 	    vidGrabberRight.setVerbose(true);
 		vidGrabberRight.setDeviceID(2);
 		vidGrabberRight.setDesiredFrameRate(120);
 		vidGrabberRight.initGrabber(camWidth,camHeight);	
+		vidGrabberRight.setAnchorPercent(0.5,0.5);
 	} else if (c == OVRVISION) {
 		g_pOvrvision = new OVR::Ovrvision();
 	    g_pOvrvision->Open(0,OVR::OV_CAMVGA_FULL);   
 	    left.allocate(camWidth,camHeight,GL_RGB);
+		left.setAnchorPercent(0.5,0.5);
 	    right.allocate(camWidth,camHeight,GL_RGB);
+		right.setAnchorPercent(0.5,0.5);
 	}
 
 	pitch = 0;
@@ -52,9 +56,9 @@ void machine::setup(int s, int c)
 	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 
-	fboLeft.allocate(camWidth,camHeight);
+	fboLeft.allocate(ofGetWidth()/2,ofGetHeight());
 	fboLeft.setAnchorPercent(0.5, 0.5);
-	fboRight.allocate(camWidth,camHeight);
+	fboRight.allocate(ofGetWidth()/2,ofGetHeight());
 	fboRight.setAnchorPercent(0.5, 0.5);
 
 	//was used for experimenting with torchlight-like overlay, left here as ref for later
@@ -62,28 +66,15 @@ void machine::setup(int s, int c)
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);   
 
+	zoom = 1.2;
+
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
 }
 
 //--------------------------------------------------------------
 void machine::initOculus() {	
-	ovr_Initialize();	
-	/*
-	// Configure Stereo settings.
-	Sizei recommenedTex0Size = ovrHmd_GetFovTextureSize(hmd, ovrEye_Left,
-	hmd->DefaultEyeFov[0], 1.0f);
-	Sizei recommenedTex1Size = ovrHmd_GetFovTextureSize(hmd, ovrEye_Right,
-	hmd->DefaultEyeFov[1], 1.0f);
-	Sizei renderTargetSize;
-	renderTargetSize.w = recommenedTex0Size.w + recommenedTex1Size.w;
-	renderTargetSize.h = max ( recommenedTex0Size.h, recommenedTex1Size.h );
-	const int eyeRenderMultisample = 1;
-	pRendertargetTexture = pRender->CreateTexture(texture_RGBA | Texture_RenderTarget | eyeRenderMultisample,renderTargetSize.w, renderTargetSize.h, NULL);
-	// The actual RT size may be different due to HW limits.
-	renderTargetSize.w = pRendertargetTexture->GetWidth();
-	renderTargetSize.h = pRendertargetTexture->GetHeight();
-	*/
+	ovr_Initialize();		
 
 	hmd = ovrHmd_Create(0);	
 	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
@@ -96,57 +87,51 @@ void machine::update() {
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.
-	
-	//ofMap(yaw, -180, 0, 180, 360);
+
 	if (camera_type == MONO) {
 		vidGrabberLeft.update();
 	}else if (camera_type == STEREO) {
 		vidGrabberRight.update();
-	} else if (camera_type == OVRVISION) {
-		//left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT), 640,480, GL_RGB);
+	} else if (camera_type == OVRVISION) {		
 		g_pOvrvision->PreStoreCamData();
-		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_HIGH), 640,480, GL_RGB);
-		//right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT), 640,480, GL_RGB);	
-		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_HIGH), 640,480, GL_RGB);	
+		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_LOW), 640,480, GL_RGB);		
+		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_LOW), 640,480, GL_RGB);	
 	}
 
 	ofVec2f distance = getDistance();	
 	
 	fboLeft.begin();					
-		ofBackground(0);
+		ofBackground(0);				
 		ofPushMatrix();			
-			ofTranslate(camWidth/2, camHeight/2);
-			ofRotate(0, 0, 0, 1); //rotate from centre						
-				//vidGrabberLeft.draw(-x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);				
-				if (camera_type == OVRVISION) {
-					left.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);
+			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center			
+			ofRotate(0, 0, 0, 1); //rotate from centre														
+				if (camera_type == OVRVISION) {					
+					left.draw(-x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);					
 				} else {
-					vidGrabberLeft.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);				
+					vidGrabberLeft.draw(-x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);				
 				}
 			//overlay.draw(distance.x*500,  -240-distance.y*500);
 		ofPopMatrix();							
 	//dim();
 	fboLeft.end();	
 			
-		fboRight.begin();						
-			ofBackground(0);
-			ofPushMatrix();			
-				ofTranslate(camWidth/2, camHeight/2);
-				ofRotate(0, 0, 0, 1); //rotate from centre		
-					if (camera_type == STEREO) {			
-						//vidGrabberRight.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
-						vidGrabberRight.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);	
-					} else if (camera_type == OVRVISION) {
-						right.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);	
-					} else {
-						//vidGrabberLeft.draw(x_offset-camWidth/2+distance.x*250, -camHeight/2 -distance.y*250);	
-						vidGrabberLeft.draw(-camWidth/2+distance.y*250, -camHeight/2 -distance.x*250);	
-					}
-			ofPopMatrix();
-			ofSetColor(0);
-			//dim();
-			ofSetColor(255);						
-		fboRight.end();	
+	fboRight.begin();						
+		ofBackground(0);
+		ofPushMatrix();			
+			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center			
+			ofRotate(0, 0, 0, 1); //rotate from centre		
+				if (camera_type == STEREO) {				
+					vidGrabberRight.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
+				} else if (camera_type == OVRVISION) {				
+					right.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
+				} else {
+					vidGrabberLeft.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
+				}
+		ofPopMatrix();
+		ofSetColor(0);
+		//dim();
+		ofSetColor(255);						
+	fboRight.end();	
 	
 }
 
@@ -166,9 +151,10 @@ void machine::drawVideo() {
 		fboLeft.draw(-x_offset + ofGetWidth()/4, ofGetHeight()/2); //draw left	
 		fboLeft.draw(x_offset + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
 	} else {
-	 cout << ofGetMouseY()*0.15 << endl;
-		 fboLeft.draw(-x_offset+ofGetWidth()/4, ofGetHeight()/2+ofGetMouseX()*0.5-500); //draw left. 29.1 is to adjust for slight cameras disalignment
-		 fboRight.draw(x_offset+3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
+	 //cout << ofGetMouseY()*0.15 << endl;
+		//+ofGetMouseX()*0.5-500
+		 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left. 29.1 is to adjust for slight cameras disalignment		 
+		 fboRight.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
 	}		
 }
 
@@ -209,11 +195,7 @@ void machine::triggerDim() {
 }
 
 void machine::calibrate() {	
-//	yaw_cal=ofMap(yaw-, -180, 180, 0, 360);
 	ovrHmd_RecenterPose(hmd);
-	//pitch_cal = pitch;
-	//yaw_cal = yaw;
-	//roll_cal = roll;	
 }
 
 float* machine::getHeadtracking(){
@@ -241,6 +223,76 @@ machine::~machine(void)
 {
 	
 }
+
+/*
+	// Configure Stereo settings.
+	Sizei recommenedTex0Size = ovrHmd_GetFovTextureSize(hmd, ovrEye_Left,
+	hmd->DefaultEyeFov[0], 1.0f);
+	Sizei recommenedTex1Size = ovrHmd_GetFovTextureSize(hmd, ovrEye_Right,
+	hmd->DefaultEyeFov[1], 1.0f);
+	Sizei renderTargetSize;
+	renderTargetSize.w = recommenedTex0Size.w + recommenedTex1Size.w;
+	renderTargetSize.h = max ( recommenedTex0Size.h, recommenedTex1Size.h );
+	const int eyeRenderMultisample = 1;
+	pRendertargetTexture = pRender->CreateTexture(texture_RGBA | Texture_RenderTarget | eyeRenderMultisample,renderTargetSize.w, renderTargetSize.h, NULL);
+	// The actual RT size may be different due to HW limits.
+	renderTargetSize.w = pRendertargetTexture->GetWidth();
+	renderTargetSize.h = pRendertargetTexture->GetHeight();
+	*/
+
+
+/*
+	// 1st, draw on screen:
+	ofSetHexColor(0x66CC33);	
+	ofDrawRectangle(100,100,300,300);
+	
+	ofSetHexColor(0xffffff);
+	ofPushMatrix();
+		ofTranslate(200,200,0);
+		ofRotate(counter,0,0,1);
+		ofDrawCircle(0,0,80);
+		ofDrawCircle(100,0,10);	// a small one
+	ofPopMatrix();
+	ofSetHexColor(0x333333);
+	ofDrawBitmapString("(a) on screen", 150,200);
+
+	ofSetHexColor(0xFFCC33);	
+	ofDrawCircle(mouseX, mouseY,20);
+	
+
+	// 2nd, grab a portion of the screen into a texture
+	// this is quicker then grabbing into an ofImage
+	// because the transfer is done in the graphics card
+	// as opposed to bringing pixels back to memory
+	// note: you need to allocate the texture to the right size
+	texScreen.loadScreenData(100,100,300,300);
+	
+	
+
+	// finally, draw that texture on screen, how ever you want
+	// (note: you can even draw the texture before you call loadScreenData, 
+	// in order to make some trails or feedback type effects)
+	ofPushMatrix();
+		ofSetHexColor(0xffffff);
+		ofTranslate(550,300,0);
+		//glRotatef(counter, 0.1f, 0.03f, 0);
+		float width = 200 + 100 * sin(counter/200.0f);
+		float height = 200 + 100 * sin(counter/200.0f);;
+		texScreen.draw(-width/2,-height/2,width,height);
+	ofPopMatrix();
+
+	ofPushMatrix();
+		ofSetHexColor(0xffffff);
+		ofTranslate(700,210,0);
+		ofRotate(counter, 0.1f, 0.03f, 0);
+		texScreen.draw(-50,-50,100,100);
+	ofPopMatrix();
+
+	ofSetHexColor(0x333333);
+	ofDrawBitmapString("(b) in a texture, very meta!", 500,200);
+
+*/
+
 /*
 void machine::distortion(){
 

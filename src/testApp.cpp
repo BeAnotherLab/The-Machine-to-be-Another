@@ -8,8 +8,8 @@ void ofApp::setup(){
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
-	player.loadSounds("genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
-	machine.setup(TWO_WAY_SWAP, MONO); 
+	player.loadSounds("genderswapmusic welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en calibrate_en"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
+	machine.setup(ONE_WAY_SWAP, MONO); 
 	controller.setup(&machine, &player);
 }
 
@@ -78,6 +78,15 @@ void ofApp::keyPressed(int key){
 	if (key == 'm' || key == 'M') {
 		player.muteUnmute();
 	}
+
+	if (key == 'o' || key == 'O') {
+		machine.zoom -= 0.1;
+	}
+
+	if (key == 'p' || key == 'P') {
+		machine.zoom += 0.1;
+	}
+
 
 	//playtracks through keys 0-9 
     if ((key>47) && (key < (48 + player.sounds.size()))) {
