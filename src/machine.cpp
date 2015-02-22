@@ -56,9 +56,9 @@ void machine::setup(int s, int c)
 	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 
-	fboLeft.allocate(ofGetWidth()/2,ofGetHeight());
+	fboLeft.allocate(ofGetWidth()/2, ofGetHeight());
 	fboLeft.setAnchorPercent(0.5, 0.5);
-	fboRight.allocate(ofGetWidth()/2,ofGetHeight());
+	fboRight.allocate(ofGetWidth()/2, ofGetHeight());
 	fboRight.setAnchorPercent(0.5, 0.5);
 
 	//was used for experimenting with torchlight-like overlay, left here as ref for later
@@ -80,6 +80,7 @@ void machine::initOculus() {
 	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
 		cout << "Unable to detect Rift head tracker" << endl;		
 	}
+
 	ovrHmd_RecenterPose(hmd);
 }
 
@@ -90,16 +91,16 @@ void machine::update() {
 
 	if (camera_type == MONO) {
 		vidGrabberLeft.update();
-	}else if (camera_type == STEREO) {
+	} else if (camera_type == STEREO) {
 		vidGrabberRight.update();
 	} else if (camera_type == OVRVISION) {		
 		g_pOvrvision->PreStoreCamData();
 		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_LOW), 640,480, GL_RGB);		
 		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_LOW), 640,480, GL_RGB);	
 	}
-
-	ofVec2f distance = getDistance();	
 	
+	ofVec2f distance = getDistance();	
+	ofSetColor(255);
 	fboLeft.begin();					
 		ofBackground(0);				
 		ofPushMatrix();			
@@ -109,10 +110,8 @@ void machine::update() {
 					left.draw(-x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);					
 				} else {
 					vidGrabberLeft.draw(-x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);				
-				}
-			//overlay.draw(distance.x*500,  -240-distance.y*500);
-		ofPopMatrix();							
-	//dim();
+				}			
+		ofPopMatrix();										
 	fboLeft.end();	
 			
 	fboRight.begin();						
@@ -127,12 +126,8 @@ void machine::update() {
 				} else {
 					vidGrabberLeft.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
 				}
-		ofPopMatrix();
-		ofSetColor(0);
-		//dim();
-		ofSetColor(255);						
+		ofPopMatrix();			
 	fboRight.end();	
-	
 }
 
 ofVec2f machine::getDistance() {
@@ -146,16 +141,17 @@ ofVec2f machine::getDistance() {
 	}	
 }
 
-void machine::drawVideo() {			
+void machine::drawVideo() {				
 	if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice
 		fboLeft.draw(-x_offset + ofGetWidth()/4, ofGetHeight()/2); //draw left	
 		fboLeft.draw(x_offset + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
 	} else {
-	 //cout << ofGetMouseY()*0.15 << endl;
-		//+ofGetMouseX()*0.5-500
 		 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left. 29.1 is to adjust for slight cameras disalignment		 
 		 fboRight.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
 	}		
+	ofSetColor(255);
+	dim();
+	ofSetColor(255);
 }
 
 void machine::debug() {
@@ -163,8 +159,11 @@ void machine::debug() {
 	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 10,25);
 	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
 	
-	ofDrawBitmapString("yaw calibration value : " + ofToString(ofRadToDeg(yaw_cal)), 180,10);
-	ofDrawBitmapString("yaw calibrated value  : " + ofToString(ofRadToDeg(yaw - yaw_cal)), 180,25);
+	ofDrawBitmapString("dimTimer  : " + ofToString(dimTimer), 10,55);
+	ofDrawBitmapString("timeDim  : " + ofToString(ofGetElapsedTimeMillis() - dimTimer), 10,70);	
+	ofDrawBitmapString("dimmed  : " + ofToString(dimmed), 10,85);	
+	//ofDrawBitmapString("transparency  : " + ofToString(dimmed), 10,85);	
+	ofDrawBitmapString("alpha  : ", 10,100);	
 }
 
 void machine::drawOverlay() {
@@ -173,20 +172,28 @@ void machine::drawOverlay() {
 
 void machine::dim() {
 	int timeDim = ofGetElapsedTimeMillis() - dimTimer;
+	//ofDrawBitmapString("alpha  : " + ofToString(ofMap(timeDim,0,2000,0,255)), 10,100);	
 	ofSetColor(0);
 	if (timeDim < 2000) {//if dim/undim was triggered less than 2 seconds ago
-		if (dimmed == true) { //if we must dim the lights
-			ofSetColor(0,ofMap(timeDim,0,2000,0,255));
+		if (dimmed == true) { //if we must dim the lights			
+			ofSetColor(0,ofMap(timeDim,0,2000,0,255));			
 			ofRect(0,0,ofGetWidth(),ofGetHeight());
+			ofCircle(ofGetMouseX(),ofGetMouseY(),50);
 		}
 		else { //if we must turn the lights back on;
-			ofSetColor(0,ofMap(timeDim,0,2000,255,0));
+			ofSetColor(255);
+			ofDrawBitmapString("alpha  : " + ofToString(ofMap(timeDim,0,2000,255,0)), 10,100);	
+			ofSetColor(0,ofMap(timeDim,0,2000,255,0));			
 			ofRect(0,0,ofGetWidth(), ofGetHeight());
+			ofCircle(ofGetMouseX(),ofGetMouseY(),50);
 		}
 	}
 	else if (dimmed == true) { // stay dark
 		ofRect(0,0,ofGetWidth(), ofGetHeight());
-	}	
+		ofCircle(ofGetMouseX(),ofGetMouseY(),50);
+	}		
+	ofSetColor(255);
+//	ofCircle(ofGetMouseX(),ofGetMouseY(),50);
 }
 
 void machine::triggerDim() {
