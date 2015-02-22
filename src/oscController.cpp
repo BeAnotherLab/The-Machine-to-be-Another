@@ -8,7 +8,7 @@ void oscController::setup(machine* m, soundPlayer* p){
 	mySoundPlayer = p;	
 	if (myMachine->setup_type == TWO_WAY_SWAP) sender.setup("192.168.1.100", 8015);
 	else if (myMachine->setup_type == ONE_WAY_SWAP) sender.setup("localhost", PORT);	
-	receiver.setup(PORT);    	
+	receiver.setup(8015);    	
 	//tabletOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);    
 }	
 
