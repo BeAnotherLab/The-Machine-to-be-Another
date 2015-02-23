@@ -67,6 +67,8 @@ void machine::setup(int s, int c)
 	overlay.setAnchorPercent(0.5, 0.5);   
 
 	zoom = 1.2;
+	speed = 500;
+	alignment = 19;
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
@@ -84,7 +86,8 @@ void machine::initOculus() {
 	ovrHmd_RecenterPose(hmd);
 }
 
-void machine::update() {	
+void machine::update() {
+
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.
@@ -101,38 +104,39 @@ void machine::update() {
 	
 	ofVec2f distance = getDistance();	
 	ofSetColor(255);
+
 	fboLeft.begin();					
 		ofBackground(0);				
-		ofPushMatrix();			
+		/*ofPushMatrix();			
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center			
-			ofRotate(0, 0, 0, 1); //rotate from centre														
+			ofRotate(180, 0, 0, 1); *///rotate from centre														
 				if (camera_type == OVRVISION) {					
-					left.draw(-x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);					
+					left.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
-					vidGrabberLeft.draw(-x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);				
+					vidGrabberLeft.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);				
 				}			
-		ofPopMatrix();										
+		//ofPopMatrix();										
 	fboLeft.end();	
 			
 	fboRight.begin();						
 		ofBackground(0);
-		ofPushMatrix();			
+		/*ofPushMatrix();			
 			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center			
-			ofRotate(0, 0, 0, 1); //rotate from centre		
+			ofRotate(180, 0, 0, 1);*/ //rotate from centre		
 				if (camera_type == STEREO) {				
-					vidGrabberRight.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
+					vidGrabberRight.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {				
-					right.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
-				} else {
-					vidGrabberLeft.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
+					right.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+				} else { // mono
+					vidGrabberLeft.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				}
-		ofPopMatrix();			
+		//ofPopMatrix();			
 	fboRight.end();	
 }
 
 ofVec2f machine::getDistance() {
 	if (setup_type == TWO_WAY_SWAP) {			
-		ofVec2f self = ofVec2f(pitch-pitch_cal, yaw-yaw_cal);
+		ofVec2f self = ofVec2f(pitch, yaw);
 		ofVec2f other = ofVec2f(rx_pitch, rx_yaw);		
 		return other - self;
 	}
@@ -146,7 +150,7 @@ void machine::drawVideo() {
 		fboLeft.draw(-x_offset + ofGetWidth()/4, ofGetHeight()/2); //draw left	
 		fboLeft.draw(x_offset + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
 	} else {
-		 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left. 29.1 is to adjust for slight cameras disalignment		 
+		 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left.		 
 		 fboRight.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
 	}		
 	ofSetColor(255);
