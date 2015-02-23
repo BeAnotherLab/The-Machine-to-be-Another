@@ -66,8 +66,8 @@ void machine::setup(int s, int c)
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);   
 
-	zoom = 1.2;
-	speed = 500;
+	zoom = 1.8;
+	speed = 920;
 	alignment = 19;
 
 	dimTimer = ofGetElapsedTimeMillis();
@@ -98,8 +98,8 @@ void machine::update() {
 		vidGrabberRight.update();
 	} else if (camera_type == OVRVISION) {		
 		g_pOvrvision->PreStoreCamData();
-		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_LOW), 640,480, GL_RGB);		
-		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_LOW), 640,480, GL_RGB);	
+		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640,480, GL_RGB);		
+		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640,480, GL_RGB);	
 	}
 	
 	ofVec2f distance = getDistance();	
@@ -109,7 +109,7 @@ void machine::update() {
 		ofBackground(0);				
 		ofPushMatrix();			
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center			
-			ofRotate(0, 0, 0, 1); //rotate from centre														
+			ofRotate(180, 0, 0, 1); //rotate from centre														
 				if (camera_type == OVRVISION) {					
 					left.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
@@ -122,7 +122,7 @@ void machine::update() {
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center			
-			ofRotate(0, 0, 0, 1);//rotate from centre		
+			ofRotate(180, 0, 0, 1);//rotate from centre		
 				if (camera_type == STEREO) {				
 					vidGrabberRight.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {				
@@ -136,8 +136,8 @@ void machine::update() {
 
 ofVec2f machine::getDistance() {
 	if (setup_type == TWO_WAY_SWAP) {			
-		ofVec2f self = ofVec2f(pitch-pitch_cal, -yaw);
-		ofVec2f other = ofVec2f(rx_pitch, -rx_yaw);		
+		ofVec2f self = ofVec2f(-pitch-pitch_cal, yaw);
+		ofVec2f other = ofVec2f(-rx_pitch, rx_yaw);		
 		return other - self;
 	}
 	else if (setup_type == ONE_WAY_SWAP) {
@@ -159,19 +159,21 @@ void machine::drawVideo() {
 }
 
 void machine::debug() {
-	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,10);
-	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 10,25);
-	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
+	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 310,300); //10
+	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 310,320);
+	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 310,340);
 
-	ofDrawBitmapString("zoom : " + ofToString(zoom), 310,10);
-	ofDrawBitmapString("speed   : " + ofToString(pitch), 310,25);
-	ofDrawBitmapString("alignment  : " + ofToString(alignment), 310,40);
+	ofDrawBitmapString("zoom : " + ofToString(zoom), 310,360);
+	//ofDrawBitmapString("speed   : " + ofToString(pitch), 310,380);
+	ofDrawBitmapString("speed   : " + ofToString(speed), 310,380);
+	ofDrawBitmapString("alignment  : " + ofToString(alignment), 310,400);
 
-	ofDrawBitmapString("dimTimer  : " + ofToString(dimTimer), 10,55);
-	ofDrawBitmapString("timeDim  : " + ofToString(ofGetElapsedTimeMillis() - dimTimer), 10,70);	
-	ofDrawBitmapString("dimmed  : " + ofToString(dimmed), 10,85);	
+	ofDrawBitmapString("dimTimer  : " + ofToString(dimTimer), 310,420);
+	ofDrawBitmapString("timeDim  : " + ofToString(ofGetElapsedTimeMillis() - dimTimer), 310,440);	
+	ofDrawBitmapString("dimmed  : " + ofToString(dimmed), 310,460);	
 	//ofDrawBitmapString("transparency  : " + ofToString(dimmed), 10,85);	
 	ofDrawBitmapString("alpha  : ", 10,100);	
+	ofDrawBitmapString("side : " + ofToString(x_offset), 310, 480);
 }
 
 void machine::drawOverlay() {
