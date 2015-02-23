@@ -136,7 +136,7 @@ void machine::update() {
 
 ofVec2f machine::getDistance() {
 	if (setup_type == TWO_WAY_SWAP) {			
-		ofVec2f self = ofVec2f(pitch, -yaw);
+		ofVec2f self = ofVec2f(pitch-pitch_cal, -yaw);
 		ofVec2f other = ofVec2f(rx_pitch, -rx_yaw);		
 		return other - self;
 	}
@@ -162,7 +162,11 @@ void machine::debug() {
 	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,10);
 	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 10,25);
 	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
-	
+
+	ofDrawBitmapString("zoom : " + ofToString(zoom), 310,10);
+	ofDrawBitmapString("speed   : " + ofToString(pitch), 310,25);
+	ofDrawBitmapString("alignment  : " + ofToString(alignment), 310,40);
+
 	ofDrawBitmapString("dimTimer  : " + ofToString(dimTimer), 10,55);
 	ofDrawBitmapString("timeDim  : " + ofToString(ofGetElapsedTimeMillis() - dimTimer), 10,70);	
 	ofDrawBitmapString("dimmed  : " + ofToString(dimmed), 10,85);	
@@ -207,6 +211,7 @@ void machine::triggerDim() {
 
 void machine::calibrate() {	
 	ovrHmd_RecenterPose(hmd);
+	pitch_cal = pitch;
 }
 
 float* machine::getHeadtracking(){
