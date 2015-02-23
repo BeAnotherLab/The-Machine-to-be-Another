@@ -107,22 +107,22 @@ void machine::update() {
 
 	fboLeft.begin();					
 		ofBackground(0);				
-		/*ofPushMatrix();			
+		ofPushMatrix();			
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center			
-			ofRotate(180, 0, 0, 1); *///rotate from centre														
+			ofRotate(0, 0, 0, 1); //rotate from centre														
 				if (camera_type == OVRVISION) {					
 					left.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
 					vidGrabberLeft.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);				
 				}			
-		//ofPopMatrix();										
+		ofPopMatrix();										
 	fboLeft.end();	
 			
 	fboRight.begin();						
 		ofBackground(0);
-		/*ofPushMatrix();			
+		ofPushMatrix();			
 			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center			
-			ofRotate(180, 0, 0, 1);*/ //rotate from centre		
+			ofRotate(0, 0, 0, 1);//rotate from centre		
 				if (camera_type == STEREO) {				
 					vidGrabberRight.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {				
@@ -130,14 +130,14 @@ void machine::update() {
 				} else { // mono
 					vidGrabberLeft.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				}
-		//ofPopMatrix();			
+		ofPopMatrix();			
 	fboRight.end();	
 }
 
 ofVec2f machine::getDistance() {
 	if (setup_type == TWO_WAY_SWAP) {			
-		ofVec2f self = ofVec2f(pitch, yaw);
-		ofVec2f other = ofVec2f(rx_pitch, rx_yaw);		
+		ofVec2f self = ofVec2f(pitch, -yaw);
+		ofVec2f other = ofVec2f(rx_pitch, -rx_yaw);		
 		return other - self;
 	}
 	else if (setup_type == ONE_WAY_SWAP) {
