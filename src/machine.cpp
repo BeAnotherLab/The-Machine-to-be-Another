@@ -13,7 +13,13 @@ void machine::setup(int s, int c)
 	
 	if (c == MONO) {
 		vidGrabberLeft.setVerbose(true);
-		vidGrabberLeft.setDeviceID(0);
+            		vidGrabberLeft.setDeviceID(1);
+
+
+//AI ESTA CONECTADA LA PS3 DEBEN PONER EL DEVICE ID A 1
+
+		
+					
 		vidGrabberLeft.setDesiredFrameRate(120);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
@@ -66,9 +72,10 @@ void machine::setup(int s, int c)
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);   
 
-	zoom = 1.8;
+	zoom = 1.35;
 	speed = 920;
-	alignment = 19;
+	alignment = -22;
+	x_offset -16;
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
@@ -109,7 +116,16 @@ void machine::update() {
 		ofBackground(0);				
 		ofPushMatrix();			
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center			
-			ofRotate(180, 0, 0, 1); //rotate from centre														
+		
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0 ofRotate(180
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+			
+			
+			ofRotate(180, 0, 0, 1); //rotate from centre	
+
+
 				if (camera_type == OVRVISION) {					
 					left.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
@@ -121,8 +137,17 @@ void machine::update() {
 	fboRight.begin();						
 		ofBackground(0);
 		ofPushMatrix();			
-			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center			
+			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
+
+			
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0 ofRotate(180
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+
 			ofRotate(180, 0, 0, 1);//rotate from centre		
+
+			
 				if (camera_type == STEREO) {				
 					vidGrabberRight.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {				
@@ -136,8 +161,16 @@ void machine::update() {
 
 ofVec2f machine::getDistance() {
 	if (setup_type == TWO_WAY_SWAP) {			
+
+
+//SI ESTA CONECTADA LA PS3 ES ASI:
+		//ofVec2f self = ofVec2f(pitch-pitch_cal, -yaw);
+		//ofVec2f other = ofVec2f(rx_pitch, -rx_yaw);		
+
 		ofVec2f self = ofVec2f(-pitch-pitch_cal, yaw);
 		ofVec2f other = ofVec2f(-rx_pitch, rx_yaw);		
+
+
 		return other - self;
 	}
 	else if (setup_type == ONE_WAY_SWAP) {
@@ -159,6 +192,7 @@ void machine::drawVideo() {
 }
 
 void machine::debug() {
+	/*
 	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 310,300); //10
 	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 310,320);
 	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 310,340);
@@ -174,6 +208,7 @@ void machine::debug() {
 	//ofDrawBitmapString("transparency  : " + ofToString(dimmed), 10,85);	
 	ofDrawBitmapString("alpha  : ", 10,100);	
 	ofDrawBitmapString("side : " + ofToString(x_offset), 310, 480);
+	*/
 }
 
 void machine::drawOverlay() {
@@ -213,7 +248,7 @@ void machine::triggerDim() {
 
 void machine::calibrate() {	
 	ovrHmd_RecenterPose(hmd);
-	pitch_cal = pitch;
+	//pitch_cal = pitch;
 }
 
 float* machine::getHeadtracking(){

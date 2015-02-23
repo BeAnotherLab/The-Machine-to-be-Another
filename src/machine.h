@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include "ofxOsc.h"
 #include "OVR.h"
 #include <ovrvision.h>		//Ovrvision SDK
