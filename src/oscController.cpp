@@ -19,8 +19,11 @@ void oscController::loop() {
 	while (receiver.hasWaitingMessages()) {
 		receiver.getNextMessage(&rx_msg);				
 		if (rx_msg.getAddress() == "/dim") {			
-			myMachine->triggerDim();			
-		}		
+			myMachine->dimmed=true;			
+		}
+		if (rx_msg.getAddress() == "/dimoff") {			
+			myMachine->dimmed=false;			
+		}
 		else if (rx_msg.getAddress() == "/ht") {
 			myMachine->calibrate();		
 		}		
@@ -56,6 +59,7 @@ void oscController::oscRepeat() { //if Computer 1, must repeat tablet OSC contro
 	if ((rx_msg.getAddress() == "/dim") || (rx_msg.getAddress() == "/ht")) {								
 		sender.sendMessage(rx_msg);			
 	}			
+
 
 	//sound player control
 	for (int i=0; i<mySoundPlayer->count; i++) {

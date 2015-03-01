@@ -187,7 +187,11 @@ void machine::drawVideo() {
 		 fboRight.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
 	}		
 	ofSetColor(255);
-	dim();
+	//dim();
+	if (dimmed) {
+		ofSetColor(0);
+		ofRect(0,0,ofGetWidth(), ofGetHeight());
+	}
 	ofSetColor(255);
 }
 

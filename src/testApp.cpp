@@ -21,7 +21,7 @@ void ofApp::setup(){
 void ofApp::update(){				    
 	machine.update();
 	player.update();
-	controller.loop();
+	controller.loop();			
 	record();		
 }
 
@@ -76,7 +76,11 @@ void ofApp::keyPressed(int key){
     }
        
 	if (key == OF_KEY_UP) {
-		machine.triggerDim();
+		machine.dimmed = false;
+	}
+
+	if (key == OF_KEY_DOWN) {
+		machine.dimmed = true;
 	}
 
 	if (key == 'm' || key == 'M') {
