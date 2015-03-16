@@ -13,7 +13,13 @@ void machine::setup(int s, int c)
 	
 	if (c == MONO) {
 		vidGrabberLeft.setVerbose(true);
-		vidGrabberLeft.setDeviceID(0);
+            		vidGrabberLeft.setDeviceID(1);
+
+
+//AI ESTA CONECTADA LA PS3 DEBEN PONER EL DEVICE ID A 1
+
+		
+					
 		vidGrabberLeft.setDesiredFrameRate(120);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
@@ -66,7 +72,10 @@ void machine::setup(int s, int c)
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);   
 
-	zoom = 1.2;
+	zoom = 1.35;
+	speed = 920;
+	alignment = -22;
+	x_offset -16;
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
@@ -84,7 +93,8 @@ void machine::initOculus() {
 	ovrHmd_RecenterPose(hmd);
 }
 
-void machine::update() {	
+void machine::update() {
+
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.
@@ -95,21 +105,31 @@ void machine::update() {
 		vidGrabberRight.update();
 	} else if (camera_type == OVRVISION) {		
 		g_pOvrvision->PreStoreCamData();
-		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_LOW), 640,480, GL_RGB);		
-		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_LOW), 640,480, GL_RGB);	
+		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640,480, GL_RGB);		
+		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640,480, GL_RGB);	
 	}
 	
 	ofVec2f distance = getDistance();	
 	ofSetColor(255);
+
 	fboLeft.begin();					
 		ofBackground(0);				
 		ofPushMatrix();			
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center			
-			ofRotate(0, 0, 0, 1); //rotate from centre														
+		
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0 ofRotate(180
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+			
+			
+			ofRotate(180, 0, 0, 1); //rotate from centre	
+
+
 				if (camera_type == OVRVISION) {					
-					left.draw(-x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);					
+					left.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
-					vidGrabberLeft.draw(-x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);				
+					vidGrabberLeft.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);				
 				}			
 		ofPopMatrix();										
 	fboLeft.end();	
@@ -117,14 +137,23 @@ void machine::update() {
 	fboRight.begin();						
 		ofBackground(0);
 		ofPushMatrix();			
-			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center			
-			ofRotate(0, 0, 0, 1); //rotate from centre		
+			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
+
+			
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0 ofRotate(180
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
+
+			ofRotate(180, 0, 0, 1);//rotate from centre		
+
+			
 				if (camera_type == STEREO) {				
-					vidGrabberRight.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
+					vidGrabberRight.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {				
-					right.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
-				} else {
-					vidGrabberLeft.draw(x_offset + distance.y*250, - distance.x*250, camWidth*zoom, camHeight*zoom);	
+					right.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+				} else { // mono
+					vidGrabberLeft.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				}
 		ofPopMatrix();			
 	fboRight.end();	
@@ -132,8 +161,16 @@ void machine::update() {
 
 ofVec2f machine::getDistance() {
 	if (setup_type == TWO_WAY_SWAP) {			
-		ofVec2f self = ofVec2f(pitch-pitch_cal, yaw-yaw_cal);
-		ofVec2f other = ofVec2f(rx_pitch, rx_yaw);		
+
+
+//SI ESTA CONECTADA LA PS3 ES ASI:
+		//ofVec2f self = ofVec2f(pitch-pitch_cal, -yaw);
+		//ofVec2f other = ofVec2f(rx_pitch, -rx_yaw);		
+
+		ofVec2f self = ofVec2f(-pitch-pitch_cal, yaw);
+		ofVec2f other = ofVec2f(-rx_pitch, rx_yaw);		
+
+
 		return other - self;
 	}
 	else if (setup_type == ONE_WAY_SWAP) {
@@ -146,24 +183,36 @@ void machine::drawVideo() {
 		fboLeft.draw(-x_offset + ofGetWidth()/4, ofGetHeight()/2); //draw left	
 		fboLeft.draw(x_offset + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
 	} else {
-		 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left. 29.1 is to adjust for slight cameras disalignment		 
+		 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left.		 
 		 fboRight.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
 	}		
 	ofSetColor(255);
-	dim();
+	//dim();
+	if (dimmed) {
+		ofSetColor(0);
+		ofRect(0,0,ofGetWidth(), ofGetHeight());
+	}
 	ofSetColor(255);
 }
 
 void machine::debug() {
-	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,10);
-	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 10,25);
-	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
-	
-	ofDrawBitmapString("dimTimer  : " + ofToString(dimTimer), 10,55);
-	ofDrawBitmapString("timeDim  : " + ofToString(ofGetElapsedTimeMillis() - dimTimer), 10,70);	
-	ofDrawBitmapString("dimmed  : " + ofToString(dimmed), 10,85);	
+	/*
+	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 310,300); //10
+	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 310,320);
+	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 310,340);
+
+	ofDrawBitmapString("zoom : " + ofToString(zoom), 310,360);
+	//ofDrawBitmapString("speed   : " + ofToString(pitch), 310,380);
+	ofDrawBitmapString("speed   : " + ofToString(speed), 310,380);
+	ofDrawBitmapString("alignment  : " + ofToString(alignment), 310,400);
+
+	ofDrawBitmapString("dimTimer  : " + ofToString(dimTimer), 310,420);
+	ofDrawBitmapString("timeDim  : " + ofToString(ofGetElapsedTimeMillis() - dimTimer), 310,440);	
+	ofDrawBitmapString("dimmed  : " + ofToString(dimmed), 310,460);	
 	//ofDrawBitmapString("transparency  : " + ofToString(dimmed), 10,85);	
 	ofDrawBitmapString("alpha  : ", 10,100);	
+	ofDrawBitmapString("side : " + ofToString(x_offset), 310, 480);
+	*/
 }
 
 void machine::drawOverlay() {
@@ -203,6 +252,7 @@ void machine::triggerDim() {
 
 void machine::calibrate() {	
 	ovrHmd_RecenterPose(hmd);
+	//pitch_cal = pitch;
 }
 
 float* machine::getHeadtracking(){

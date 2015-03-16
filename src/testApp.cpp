@@ -3,13 +3,17 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){		
-	ofSetFullscreen(true);
+	ofSetFullscreen(true);//false?
 	ofSetVerticalSync(true);	
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
 	player.loadSounds("genderswapmusic welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en calibrate_en"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
-	machine.setup(ONE_WAY_SWAP, MONO); 
+	
+	//SI ESTA CONECTADA LA PS3 DEBES PONER MONO EN VEZ DE OVRVISION	
+	//machine.setup(TWO_WAY_SWAP, MONO); 
+
+    machine.setup(TWO_WAY_SWAP, OVRVISION); 
 	controller.setup(&machine, &player);
 }
 
@@ -17,7 +21,7 @@ void ofApp::setup(){
 void ofApp::update(){				    
 	machine.update();
 	player.update();
-	controller.loop();
+	controller.loop();			
 	record();		
 }
 
@@ -72,7 +76,11 @@ void ofApp::keyPressed(int key){
     }
        
 	if (key == OF_KEY_UP) {
-		machine.triggerDim();
+		machine.dimmed = false;
+	}
+
+	if (key == OF_KEY_DOWN) {
+		machine.dimmed = true;
 	}
 
 	if (key == 'm' || key == 'M') {
@@ -85,6 +93,22 @@ void ofApp::keyPressed(int key){
 
 	if (key == 'p' || key == 'P') {
 		machine.zoom += 0.1;
+	}
+
+	if (key == 'k' || key == 'K') {
+		machine.speed -= 10;
+	}
+
+	if (key == 'l' || key == 'L') {
+		machine.speed += 10;
+	}
+
+	if (key == 'n' || key == 'N') {
+		machine.alignment -= 1;
+	}
+
+	if (key == 'm' || key == 'M') {   
+		machine.alignment += 1;
 	}
 
 	//playtracks through keys 0-9 
