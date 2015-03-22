@@ -12,9 +12,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7FD42DF7-442E-479A-BA76-D0022F99702A}</ProjectGuid>
-    <RootNamespace>theMachineToBeAnother</RootNamespace>
+    <RootNamespace>The-Machine-to-be-Another</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <ProjectName>theMachineToBeAnother</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -41,7 +40,7 @@
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">obj\$(Configuration)\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">obj\$(Configuration)\</IntDir>
@@ -58,7 +57,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>ovrvision;LibOVR\Include;%(AdditionalIncludeDirectories);..\..\..\addons\ofxOpenCv\libs;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxOpenCv\libs\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\lib;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>ovrvision;LibOVR\include;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;%(AdditionalIncludeDirectories);..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxFenster\libs;..\..\..\addons\ofxFenster\src;..\..\..\addons\ofxFenster\libs\ghost;..\..\..\addons\ofxFenster\libs\ghost\include;..\..\..\addons\ofxFenster\libs\ghost\include\Cocoa;..\..\..\addons\ofxFenster\libs\ghost\include\WIN32;..\..\..\addons\ofxFenster\libs\ghost\include\X11;..\..\..\addons\ofxFenster\libs\ghost\lib;..\..\..\addons\ofxFenster\libs\ghost\lib\osx32;..\..\..\addons\ofxFenster\libs\ghost\lib\osx64;..\..\..\addons\ofxFenster\libs\ghost\lib\win_vs;..\..\..\addons\ofxFenster\libs\string;..\..\..\addons\ofxFenster\libs\string\include;..\..\..\addons\ofxUI\libs;..\..\..\addons\ofxUI\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -68,8 +67,8 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>%(AdditionalDependencies);libovrd.lib;Winmm.lib;opencv_calib3d231d.lib;opencv_contrib231d.lib;opencv_core231d.lib;opencv_features2d231d.lib;opencv_flann231d.lib;opencv_gpu231d.lib;opencv_haartraining_engined.lib;opencv_highgui231d.lib;opencv_imgproc231d.lib;opencv_legacy231d.lib;opencv_ml231d.lib;opencv_objdetect231d.lib;opencv_video231d.lib;zlibd.lib;ovrvisiond.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>LibOVR\Lib\Win32\vs2010;%(AdditionalLibraryDirectories);ovrvision;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ovrvision\ovrvisiond.lib;LibOVR\Lib\Win32\VS2010\libovrd.lib;..\..\..\addons\ofxFenster\libs\ghost\lib\win_vs\libghost_debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
@@ -81,7 +80,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat />
-      <AdditionalIncludeDirectories>ovrvision;LibOVR\Include;%(AdditionalIncludeDirectories);..\..\..\addons\ofxOpenCv\libs;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxOpenCv\libs\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\lib;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\addons\ofxXmlSettings\src;ovrvision;LibOVR\include;%(AdditionalIncludeDirectories);..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxFenster\libs;..\..\..\addons\ofxFenster\src;..\..\..\addons\ofxFenster\libs\ghost;..\..\..\addons\ofxFenster\libs\ghost\include;..\..\..\addons\ofxFenster\libs\ghost\include\Cocoa;..\..\..\addons\ofxFenster\libs\ghost\include\WIN32;..\..\..\addons\ofxFenster\libs\ghost\include\X11;..\..\..\addons\ofxFenster\libs\ghost\lib;..\..\..\addons\ofxFenster\libs\ghost\lib\osx32;..\..\..\addons\ofxFenster\libs\ghost\lib\osx64;..\..\..\addons\ofxFenster\libs\ghost\lib\win_vs;..\..\..\addons\ofxFenster\libs\string;..\..\..\addons\ofxFenster\libs\string\include;..\..\..\addons\ofxUI\libs;..\..\..\addons\ofxUI\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -93,24 +92,21 @@
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-      <AdditionalDependencies>%(AdditionalDependencies);libovr.lib;Winmm.lib;opencv_calib3d231.lib;opencv_contrib231.lib;ovrvision.lib;opencv_core231.lib;opencv_features2d231.lib;opencv_flann231.lib;opencv_gpu231.lib;opencv_haartraining_engine.lib;opencv_highgui231.lib;opencv_imgproc231.lib;opencv_legacy231.lib;opencv_ml231.lib;opencv_objdetect231.lib;opencv_video231.lib;zlib.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>ovrvision;%(AdditionalLibraryDirectories);LibOVR\Lib\Win32\vs2010;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs2010</AdditionalLibraryDirectories>
+      <AdditionalDependencies>LibOVR\Lib\Win32\VS2010\libovr.lib;ovrvision\ovrvision.lib;..\..\..\addons\ofxFenster\libs\ghost\lib\win_vs\libghost.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
     <ClCompile Include="src\machine.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\oscController.cpp" />
     <ClCompile Include="src\soundPlayer.cpp" />
     <ClCompile Include="src\testApp.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvContourFinder.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvFloatImage.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvGrayscaleImage.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp" />
@@ -124,107 +120,21 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPrintReceivedElements.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscReceivedElements.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxDisplay.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxDisplayManager.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxDisplayManagerMac.mm" />
+    <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxFenster.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxFensterCanvas.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxFensterManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
     <ClInclude Include="src\machine.h" />
-    <ClInclude Include="src\OculusLensShader.h" />
     <ClInclude Include="src\ofxImageSequenceRecorder.h" />
     <ClInclude Include="src\oscController.h" />
     <ClInclude Include="src\soundPlayer.h" />
     <ClInclude Include="src\testApp.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvBlob.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvConstants.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvContourFinder.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvFloatImage.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvGrayscaleImage.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvMain.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxOpenCv.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cv.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cv.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cvaux.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cvaux.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cvwimage.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cxcore.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cxcore.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cxeigen.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\cxmisc.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\highgui.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv\ml.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d\calib3d.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib\contrib.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib\retina.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\core.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\core_c.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\eigen.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\internal.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\mat.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\operations.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\types_c.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\version.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\wimage.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d\features2d.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\allocator.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\all_indices.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\any.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\autotuned_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\composite_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\config.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\defines.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\dist.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\dummy.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\dynamic_bitset.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\flann.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\flann_base.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\general.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\ground_truth.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\hdf5.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\heap.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\hierarchical_clustering_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\index_testing.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\kdtree_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\kdtree_single_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\kmeans_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\linear_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\logger.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\lsh_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\lsh_table.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\matrix.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\miniflann.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\nn_index.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\object_factory.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\params.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\random.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\result_set.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\sampling.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\saving.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\simplex_downhill.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\timer.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\devmem2d.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\gpu.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\gpumat.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\matrix_operations.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\stream_accessor.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui\highgui.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui\highgui_c.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\imgproc.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\imgproc_c.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\types_c.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy\blobtrack.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy\compat.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy\legacy.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy\streams.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml\ml.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect\objdetect.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\opencv.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\ts.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\ts_gtest.h" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\background_segm.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\tracking.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\video.hpp" />
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h" />
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscArg.h" />
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.h" />
@@ -244,6 +154,103 @@
     <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPrintReceivedElements.h" />
     <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscReceivedElements.h" />
     <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\src\ofxDisplay.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\src\ofxDisplayMac.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\src\ofxDisplayManager.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\src\ofxFenster.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\src\ofxFensterCanvas.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\src\ofxFensterManager.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\Cocoa\GHOST_DisplayManagerCocoa.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\Cocoa\GHOST_SystemCocoa.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\Cocoa\GHOST_SystemPathsCocoa.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\Cocoa\GHOST_WindowCocoa.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_Buttons.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_C-api.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_CallbackEventConsumer.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_Debug.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_DisplayManager.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_DisplayManagerNULL.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_Event.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventButton.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventCursor.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventDragnDrop.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventKey.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventManager.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventNDOF.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventPrinter.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventString.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventTrackpad.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_EventWheel.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_IEvent.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_IEventConsumer.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_ISystem.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_ISystemPaths.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_ITimerTask.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_IWindow.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_ModifierKeys.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_Path-api.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_Rect.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_System.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_SystemNULL.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_SystemPaths.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_TimerManager.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_TimerTask.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_Types.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_Window.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_WindowManager.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\GHOST_WindowNULL.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\WIN32\GHOST_DisplayManagerWin32.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\WIN32\GHOST_DropTargetWin32.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\WIN32\GHOST_SystemPathsWin32.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\WIN32\GHOST_SystemWin32.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\WIN32\GHOST_TaskbarWin32.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\WIN32\GHOST_WindowWin32.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\WIN32\pktdef.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\WIN32\wintab.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\X11\GHOST_DisplayManagerX11.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\X11\GHOST_SystemPathsX11.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\X11\GHOST_SystemX11.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\ghost\include\X11\GHOST_WindowX11.h" />
+    <ClInclude Include="..\..\..\addons\ofxFenster\libs\string\include\STR_String.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUI.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUI2DPad.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIBiLabelSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIButton.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUICanvas.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUICircleSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUICustomImageButton.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIDropDownList.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIEventArgs.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIFPS.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIFPSSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImage.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImageButton.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImageSampler.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImageSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImageToggle.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUILabel.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUILabelButton.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUILabelToggle.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMinimalSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMovingGraph.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMultiImageButton.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMultiImageSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMultiImageToggle.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUINumberDialer.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIRadio.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIRangeSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIRectangle.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIRotarySlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIScrollableCanvas.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUISlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUISpacer.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUISpectrum.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUITextInput.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIToggle.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIToggleMatrix.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWaveform.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidget.h" />
+    <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidgetWithLabel.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\libs\openFrameworksCompiled\project\vs2010\openframeworksLib.vcxproj">
