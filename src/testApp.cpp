@@ -36,7 +36,8 @@ void ofApp::draw(ofxFenster* window){
 		machine.drawOverlay();    
 //		machine.debug();
 	} else if (window->id==1) {
-		ofBackground(25,125,0);	        	
+		ofBackground(25,125,0);	 
+			machine.drawVideo();
 	}
 }
 
