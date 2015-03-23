@@ -3,18 +3,19 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){		
-	ofSetFullscreen(true);//false?
-	ofSetVerticalSync(true);	
+	ofSetFullscreen(false);//false?
+	ofSetVerticalSync(false);	
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
 	player.loadSounds("genderswapmusic welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en calibrate_en"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
-	
-	//SI ESTA CONECTADA LA PS3 DEBES PONER MONO EN VEZ DE OVRVISION	
-	//machine.setup(TWO_WAY_SWAP, MONO); 
 
-    machine.setup(TWO_WAY_SWAP, OVRVISION); 
+    machine.setup(TWO_WAY_SWAP, MONO); 
 	controller.setup(&machine, &player);
+
+	ofxFenster* win = ofxFensterManager::get()->createFenster(640, 480, OF_WINDOW);
+	win->addListener(this);		
+	
 }
 
 //--------------------------------------------------------------
@@ -26,12 +27,17 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){   
-	ofBackground(0);	        		
-	ofSetHexColor(0xffffff);									    
-	machine.drawVideo();
-	machine.drawOverlay();    
-	machine.debug();
+void ofApp::draw(ofxFenster* window){  
+//void ofApp::draw(){  
+	if (window->id==0) {
+		ofBackground(255,120,0);	        		
+		ofSetHexColor(0xffffff);									    
+		machine.drawVideo();
+		machine.drawOverlay();    
+//		machine.debug();
+	} else if (window->id==1) {
+		ofBackground(25,125,0);	        	
+	}
 }
 
 //--------------------------------------------------------------
