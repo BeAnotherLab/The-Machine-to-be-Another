@@ -17,7 +17,7 @@ class ofApp : public ofxFensterListener{
 	void draw(ofxFenster* window);
 	//void draw();
     
-	void keyPressed(int key);		
+	void keyPressed(int key, ofxFenster* window);		
 	void mousePressed(int x, int y, int button);			
 	void exit();    
 	void clear();		

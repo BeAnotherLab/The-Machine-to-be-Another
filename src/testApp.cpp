@@ -3,7 +3,6 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){		
-	ofSetFullscreen(false);//false?
 	ofSetVerticalSync(false);	
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
@@ -63,7 +62,7 @@ void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){		
+void ofApp::keyPressed(int key, ofxFenster* window){		
 	
 	if (key == OF_KEY_END) {
 		hideGUI != hideGUI; 
@@ -120,6 +119,10 @@ void ofApp::keyPressed(int key){
 
 	if (key == 'm' || key == 'M') {   
 		machine.alignment += 1;
+	}
+	
+	if ((key == 'f' || key == 'F')) {   		
+		window->toggleFullscreen();
 	}
 
 	//playtracks through keys 0-9 
