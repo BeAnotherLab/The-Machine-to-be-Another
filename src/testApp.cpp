@@ -164,7 +164,7 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
 
 void ofApp::setGUI()
 {		
-	gui->loadSettings("GUI/settings.xml"); 
+	//gui->loadSettings("GUI/settings.xml"); 
 
 	float dim = 16; 
 	float xInit = OFX_UI_GLOBAL_WIDGET_SPACING; 

@@ -1,12 +1,12 @@
 #include "oscController.h"
 
 #define PORT 8015 //for all OSC communications	
-#define HOST "192.168.1.100" //other computer to send headtracking to
+#define HOST "192.168.10.103" //other computer to send headtracking to
 
 void oscController::setup(machine* m, soundPlayer* p){
 	myMachine = m;
 	mySoundPlayer = p;	
-	if (myMachine->setup_type == TWO_WAY_SWAP) sender.setup("192.168.4.128", 8015);
+	if (myMachine->setup_type == TWO_WAY_SWAP) sender.setup("192.168.10.103", 8015);
 	else if (myMachine->setup_type == ONE_WAY_SWAP) sender.setup("localhost", PORT);	
 	receiver.setup(8015);    	
 	//tabletOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);    
