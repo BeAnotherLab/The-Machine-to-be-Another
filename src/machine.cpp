@@ -56,9 +56,9 @@ void machine::setup(int s, int c)
 	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 
-	fboLeft.allocate(ofGetWidth()/2, ofGetHeight());
+	fboLeft.allocate(1920/2, 1080);
 	fboLeft.setAnchorPercent(0.5, 0.5);
-	fboRight.allocate(ofGetWidth()/2, ofGetHeight());
+	fboRight.allocate(1920/2, 1080);
 	fboRight.setAnchorPercent(0.5, 0.5);
 
 	//was used for experimenting with torchlight-like overlay, left here as ref for later
