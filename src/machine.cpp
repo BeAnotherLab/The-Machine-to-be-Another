@@ -109,21 +109,12 @@ void machine::update() {
 	fboLeft.begin();					
 		ofBackground(0);				
 		ofPushMatrix();			
-			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center			
-		
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0 ofRotate(180
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-			
-			
-			ofRotate(180, 0, 0, 1); //rotate from centre	
-
-
+			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center					
+			ofRotate(90, 0, 0, 1); //rotate from centre
 				if (camera_type == OVRVISION) {					
 					left.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
-					vidGrabberLeft.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);				
+					vidGrabberLeft.draw(x_offset -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 				}			
 		ofPopMatrix();										
 	fboLeft.end();	
@@ -132,22 +123,13 @@ void machine::update() {
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
-
-			
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0 ofRotate(180
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-
-			ofRotate(180, 0, 0, 1);//rotate from centre		
-
-			
+			ofRotate(90, 0, 0, 1);//rotate from centre					
 				if (camera_type == STEREO) {				
 					vidGrabberRight.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {				
 					right.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else { // mono
-					vidGrabberLeft.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+					vidGrabberLeft.draw(x_offset -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 				}
 		ofPopMatrix();			
 	fboRight.end();	
@@ -155,17 +137,9 @@ void machine::update() {
 
 ofVec2f machine::getDistance() {
 	if (setup_type == TWO_WAY_SWAP) {			
-
-
-//SI ESTA CONECTADA LA PS3 ES ASI:
-		//ofVec2f self = ofVec2f(pitch-pitch_cal, -yaw);
-		//ofVec2f other = ofVec2f(rx_pitch, -rx_yaw);		
-
-		ofVec2f self = ofVec2f(-pitch-pitch_cal, yaw);
-		ofVec2f other = ofVec2f(-rx_pitch, rx_yaw);		
-
-
-		return other - self;
+		ofVec2f self = ofVec2f(pitch, yaw);
+		ofVec2f other = ofVec2f(rx_pitch, rx_yaw);		
+		return self - other;
 	}
 	else if (setup_type == ONE_WAY_SWAP) {
 		return ofVec2f(0,0);
