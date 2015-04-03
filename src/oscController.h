@@ -14,7 +14,7 @@ public:
 
 	void oscController::setup(machine* m, soundPlayer* s);
 	void oscController::loop();
-	void oscController::oscRepeat();
+	void oscController::oscRepeat(ofxOscMessage rx_msg);
 	void oscController::sendSoundPlaying(bool isPlaying, int soundIndex);
 	
 };

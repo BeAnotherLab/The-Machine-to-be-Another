@@ -14,7 +14,6 @@ void oscController::setup(machine* m, soundPlayer* p){
 
 void oscController::loop() { 
 	//receive tablet messages
-	//yaw+=
 	ofxOscMessage rx_msg;	
 	while (receiver.hasWaitingMessages()) {
 		receiver.getNextMessage(&rx_msg);				
@@ -40,6 +39,8 @@ void oscController::loop() {
 				mySoundPlayer->playSound(i); //play sound at i				
 			} 
 		}		
+		
+		if(COMPUTER==1) oscRepeat(rx_msg);
 	}
 	
 	//send headtracking, either other computer or localhost for pd patch that controls servos.
@@ -52,14 +53,12 @@ void oscController::loop() {
 }
 
 
-void oscController::oscRepeat() { //if Computer 1, must repeat tablet OSC control to computer 2 
-	ofxOscMessage rx_msg;
+void oscController::oscRepeat(ofxOscMessage rx_msg) { //if Computer 1, must repeat tablet OSC control to computer 2
 
 	//"lights off" and headtracking data
 	if ((rx_msg.getAddress() == "/dim") || (rx_msg.getAddress() == "/ht")) {								
 		sender.sendMessage(rx_msg);			
 	}			
-
 
 	//sound player control
 	for (int i=0; i<mySoundPlayer->count; i++) {

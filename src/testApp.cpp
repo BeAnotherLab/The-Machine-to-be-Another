@@ -38,7 +38,7 @@ void ofApp::draw(ofxFenster* window){
 	} else if (window->id==1) {
 		ofBackground(0);	 
 		machine.drawVideo();
-		gui->draw();
+		//gui->draw();
 	}
 }
 

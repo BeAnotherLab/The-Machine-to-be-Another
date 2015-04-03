@@ -156,7 +156,7 @@ void machine::drawVideo() {
 	}		
 	ofSetColor(255);
 	//dim();
-	if (dimmed) {
+ 	if (dimmed) {
 		ofSetColor(0);
 		ofRect(0,0,ofGetWidth(), ofGetHeight());
 	}
