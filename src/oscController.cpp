@@ -57,7 +57,7 @@ void oscController::loop() {
 void oscController::oscRepeat(ofxOscMessage rx_msg) { //if Computer 1, must repeat tablet OSC control to computer 2
 
 	//"lights off" and headtracking data
-	if ((rx_msg.getAddress() == "/dim") || (rx_msg.getAddress() == "/ht")) {								
+	if ((rx_msg.getAddress() == "/dimoff") || (rx_msg.getAddress() == "/dim") || (rx_msg.getAddress() == "/ht")) {								
 		sender.sendMessage(rx_msg);			
 	}			
 
