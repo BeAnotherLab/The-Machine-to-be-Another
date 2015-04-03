@@ -10,7 +10,7 @@ void ofApp::setup(){
 	player.loadSounds("genderswapmusic welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en calibrate_en"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
 
     machine.setup(TWO_WAY_SWAP, MONO); 
-	controller.setup(&machine, &player);
+	controller.setup(&machine, &player, COMPUTER);
 
 	ofxFenster* win = ofxFensterManager::get()->createFenster(640, 480, OF_WINDOW);
 	win->addListener(this);		

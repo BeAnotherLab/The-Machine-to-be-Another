@@ -3,9 +3,10 @@
 #define PORT 8015 //for all OSC communications	
 #define HOST "192.168.10.103" //other computer to send headtracking to
 
-void oscController::setup(machine* m, soundPlayer* p){
+void oscController::setup(machine* m, soundPlayer* p, int t){
 	myMachine = m;
 	mySoundPlayer = p;	
+	computerType = t;
 	if (myMachine->setup_type == TWO_WAY_SWAP) sender.setup("192.168.10.103", 8015);
 	else if (myMachine->setup_type == ONE_WAY_SWAP) sender.setup("localhost", PORT);	
 	receiver.setup(8015);    	
@@ -40,7 +41,7 @@ void oscController::loop() {
 			} 
 		}		
 		
-		if(COMPUTER==1) oscRepeat(rx_msg);
+		if(computerType==1) oscRepeat(rx_msg);
 	}
 	
 	//send headtracking, either other computer or localhost for pd patch that controls servos.
