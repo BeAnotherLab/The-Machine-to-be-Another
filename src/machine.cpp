@@ -68,7 +68,7 @@ void machine::setup(int s, int c)
 	zoom = 0.85;
 	speed = 920;
 	alignment = -22;
-	x_offset -16;
+	x_offset = 8;
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
