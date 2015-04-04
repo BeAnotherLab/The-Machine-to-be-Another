@@ -109,8 +109,7 @@ void machine::update() {
 		ofBackground(0);				
 		ofPushMatrix();			
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center					
-			//ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
-			ofRotate(0, 0, 0, 1); //rotate from centre
+			ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
 				if (camera_type == OVRVISION) {										
 					left.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
@@ -124,8 +123,7 @@ void machine::update() {
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
-			//ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1);//rotate from centre	
-			ofRotate(0, 0, 0, 1); //rotate from centre
+			ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1);//rotate from centre				
 				if (camera_type == STEREO) {				
 					vidGrabberRight.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {				

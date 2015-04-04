@@ -35,7 +35,7 @@ void ofApp::draw(ofxFenster* window){
 		machine.drawVideo();
 		machine.drawOverlay();    
 		string framerate = ofToString(ofGetFrameRate());		
-		ofDrawBitmapString(framerate, ofGetWidth()/3, ofGetHeight()/3);
+		ofDrawBitmapString(framerate, 10, 10);
 //		machine.debug();
 	} else if (window->id==1) {
 		ofBackground(0);	 
