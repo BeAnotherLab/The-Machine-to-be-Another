@@ -13,13 +13,7 @@ void machine::setup(int s, int c)
 	
 	if (c == MONO) {
 		vidGrabberLeft.setVerbose(true);
-            		vidGrabberLeft.setDeviceID(1);
-
-
-//AI ESTA CONECTADA LA PS3 DEBEN PONER EL DEVICE ID A 1
-
-		
-					
+        vidGrabberLeft.setDeviceID(0);							
 		vidGrabberLeft.setDesiredFrameRate(120);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
