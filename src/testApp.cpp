@@ -3,15 +3,14 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){		
-	ofSetFullscreen(false);//false?
 	ofSetVerticalSync(false);	
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
-	player.loadSounds("genderswapmusic welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en calibrate_en"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
+	player.loadSounds("genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
 
     machine.setup(TWO_WAY_SWAP, MONO); 
-	controller.setup(&machine, &player);
+	controller.setup(&machine, &player, COMPUTER);
 
 	ofxFenster* win = ofxFensterManager::get()->createFenster(640, 480, OF_WINDOW);
 	win->addListener(this);		
@@ -35,11 +34,13 @@ void ofApp::draw(ofxFenster* window){
 		ofSetHexColor(0xffffff);									    
 		machine.drawVideo();
 		machine.drawOverlay();    
+		string framerate = ofToString(ofGetFrameRate());		
+		ofDrawBitmapString(framerate, 10, 10);
 //		machine.debug();
 	} else if (window->id==1) {
 		ofBackground(0);	 
 		machine.drawVideo();
-		gui->draw();
+		//gui->draw();
 	}
 }
 
@@ -63,7 +64,7 @@ void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){		
+void ofApp::keyPressed(int key, ofxFenster* window){		
 	
 	if (key == OF_KEY_END) {
 		hideGUI != hideGUI; 
@@ -121,6 +122,10 @@ void ofApp::keyPressed(int key){
 	if (key == 'm' || key == 'M') {   
 		machine.alignment += 1;
 	}
+	
+	if ((key == 'f' || key == 'F')) {   		
+		window->toggleFullscreen();
+	}
 
 	//playtracks through keys 0-9 
     if ((key>47) && (key < (48 + player.sounds.size()))) {
@@ -164,7 +169,7 @@ void ofApp::guiEvent(ofxUIEventArgs &e)
 
 void ofApp::setGUI()
 {		
-	gui->loadSettings("GUI/settings.xml"); 
+	//gui->loadSettings("GUI/settings.xml"); 
 
 	float dim = 16; 
 	float xInit = OFX_UI_GLOBAL_WIDGET_SPACING; 

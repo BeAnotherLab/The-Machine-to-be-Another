@@ -8,13 +8,14 @@ class oscController {
 public:
 	machine* myMachine;
 	soundPlayer* mySoundPlayer;
+	int computerType;
 	ofxOscReceiver receiver; //receive from other computer
 	ofxOscSender tabletOscSender; //send to control device
 	ofxOscSender sender; //send to other computer or to servos    
 
-	void oscController::setup(machine* m, soundPlayer* s);
+	void oscController::setup(machine* m, soundPlayer* s, int computerType);
 	void oscController::loop();
-	void oscController::oscRepeat();
+	void oscController::oscRepeat(ofxOscMessage rx_msg);
 	void oscController::sendSoundPlaying(bool isPlaying, int soundIndex);
 	
 };

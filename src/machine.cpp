@@ -1,5 +1,4 @@
 #include "machine.h"
-
 void machine::setup(int s, int c)
 {
 	initOculus();
@@ -56,9 +55,9 @@ void machine::setup(int s, int c)
 	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 
-	fboLeft.allocate(ofGetWidth()/2, ofGetHeight());
+	fboLeft.allocate(1920/2, 1080);
 	fboLeft.setAnchorPercent(0.5, 0.5);
-	fboRight.allocate(ofGetWidth()/2, ofGetHeight());
+	fboRight.allocate(1920/2, 1080);
 	fboRight.setAnchorPercent(0.5, 0.5);
 
 	//was used for experimenting with torchlight-like overlay, left here as ref for later
@@ -66,10 +65,10 @@ void machine::setup(int s, int c)
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);   
 
-	zoom = 1.35;
+	zoom = 0.85;
 	speed = 920;
 	alignment = -22;
-	x_offset -16;
+	x_offset = 8;
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
@@ -109,21 +108,13 @@ void machine::update() {
 	fboLeft.begin();					
 		ofBackground(0);				
 		ofPushMatrix();			
-			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center			
-		
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0 ofRotate(180
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-			
-			
-			ofRotate(180, 0, 0, 1); //rotate from centre	
-
-
-				if (camera_type == OVRVISION) {					
-					left.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
+			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center					
+			ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
+				if (camera_type == OVRVISION) {										
+					left.draw(distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
-					vidGrabberLeft.draw(-x_offset + distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);				
+					//vidGrabberLeft.draw(x_offset -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+					vidGrabberLeft.draw(distance.y*speed , distance.x*speed, camWidth*zoom, camHeight*zoom);	
 				}			
 		ofPopMatrix();										
 	fboLeft.end();	
@@ -132,22 +123,14 @@ void machine::update() {
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
-
-			
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0 ofRotate(180
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-//SI ESTA CONECTADA LA PS3 EN VEZ DE 180 SE PONE 0
-
-			ofRotate(180, 0, 0, 1);//rotate from centre		
-
-			
+			ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1);//rotate from centre				
 				if (camera_type == STEREO) {				
-					vidGrabberRight.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+					vidGrabberRight.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {				
-					right.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+					right.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else { // mono
-					vidGrabberLeft.draw(x_offset + distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+					//vidGrabberLeft.draw(x_offset -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+					vidGrabberLeft.draw(distance.y*speed , distance.x*speed, camWidth*zoom, camHeight*zoom);	
 				}
 		ofPopMatrix();			
 	fboRight.end();	
@@ -155,17 +138,9 @@ void machine::update() {
 
 ofVec2f machine::getDistance() {
 	if (setup_type == TWO_WAY_SWAP) {			
-
-
-//SI ESTA CONECTADA LA PS3 ES ASI:
-		//ofVec2f self = ofVec2f(pitch-pitch_cal, -yaw);
-		//ofVec2f other = ofVec2f(rx_pitch, -rx_yaw);		
-
-		ofVec2f self = ofVec2f(-pitch-pitch_cal, yaw);
-		ofVec2f other = ofVec2f(-rx_pitch, rx_yaw);		
-
-
-		return other - self;
+		ofVec2f self = ofVec2f(pitch, yaw);
+		ofVec2f other = ofVec2f(rx_pitch, rx_yaw);		
+		return self - other;
 	}
 	else if (setup_type == ONE_WAY_SWAP) {
 		return ofVec2f(0,0);
@@ -182,7 +157,7 @@ void machine::drawVideo() {
 	}		
 	ofSetColor(255);
 	//dim();
-	if (dimmed) {
+ 	if (dimmed) {
 		ofSetColor(0);
 		ofRect(0,0,ofGetWidth(), ofGetHeight());
 	}
