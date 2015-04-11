@@ -1,14 +1,11 @@
 #include "oscController.h"
 
-#define PORT 8015 //for all OSC communications	
-#define HOST "192.168.10.103" //other computer to send headtracking to
-
-void oscController::setup(machine* m, soundPlayer* p, int t){
+void oscController::setup(machine* m, soundPlayer* p, ofxXmlSettings* s){
 	myMachine = m;
 	mySoundPlayer = p;	
-	computerType = t;
-	if (myMachine->setup_type == TWO_WAY_SWAP) sender.setup("192.168.10.104", 8015);
-	else if (myMachine->setup_type == ONE_WAY_SWAP) sender.setup("localhost", PORT);	
+	computerType = s->getValue("settings:computer_type", 0);
+	if (myMachine->setup_type == TWO_WAY_SWAP) sender.setup(s->getValue("settings:ip", "localhost"), 8015);
+	else if (myMachine->setup_type == ONE_WAY_SWAP) sender.setup("localhost", 8015);	
 	receiver.setup(8015);    	
 	//tabletOscSender.setup(PHONE_IP, PHONE_SENDER_PORT);    
 }	

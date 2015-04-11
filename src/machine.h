@@ -1,6 +1,7 @@
  #pragma once
 #include "ofxOsc.h"
 #include "OVR.h"
+#include "ofxXmlSettings.h"
 #include <ovrvision.h>		//Ovrvision SDK
 //#include "COculusVR.h" //Oculus SDK
 
@@ -28,7 +29,7 @@ public:
 	int setup_type; //0 = one-way swap, 1 = two-way swap
 	int camera_type; //2 for mono, 3 for stereo camera
 	int camWidth, camHeight; //camera size
-	int x_offset, y_offset;	//used to adjust display position and separation
+	int ipd;	//used to adjust distance between eyes
 	float pitch, yaw, roll; //headtracking received from oculus		
     float pitch_cal, yaw_cal, roll_cal; //used to calibrate headtracking values
 	float rx_pitch, rx_yaw, rx_roll; //received headtracking
@@ -54,7 +55,9 @@ public:
 	//Objects
 	OVR::Ovrvision* g_pOvrvision;
 
-	void machine::setup(int setup_type, int camera_type);	
+	ofxXmlSettings * settings;
+
+	void machine::setup(ofxXmlSettings *settings);	
 	void machine::initOculus();
 	void machine::update();
 	void machine::drawVideo();

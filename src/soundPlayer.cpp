@@ -1,7 +1,8 @@
 #include "soundPlayer.h"
 
-void soundPlayer::loadSounds(string s) //file names passed as parameters will be loaded from sounds folder
+void soundPlayer::loadSounds(ofxXmlSettings * settings) //file names passed as parameters will be loaded from sounds folder
 {
+	string s = settings->getValue("settings:sounds", "");
 	//load sounds
 	cout << "sounds : " << s << endl;
     istringstream iss(s);

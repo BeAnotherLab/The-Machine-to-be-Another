@@ -27,7 +27,9 @@ class ofApp : public ofxFensterListener {
 	
 	ofxImageSequenceRecorder recorder;
 	oscController controller;
-	bool recording;    
-	
+	bool recording;    	
+
 	soundPlayer player;			
+
+	ofxXmlSettings settings;
 };

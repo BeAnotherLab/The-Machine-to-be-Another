@@ -1,28 +1,30 @@
 #include "machine.h"
-void machine::setup(int s, int c)
+
+void machine::setup(ofxXmlSettings * se)
 {
 	initOculus();
 	vidGrabberLeft.listDevices();
-	setup_type = s;
-	camera_type = c;
+	settings = se;
+	setup_type = settings->getValue("settings:setup_type",ONE_WAY_SWAP);
+	camera_type = settings->getValue("settings:camera_type",MONO);
 	//tested with PS3Eye camera.	
-	x_offset = 0;
+	ipd = settings->getValue("settings:ipd", 8);
 	camWidth = 640;
 	camHeight = 480;		
 	
-	if (c == MONO) {
+	if (camera_type == MONO) {
 		vidGrabberLeft.setVerbose(true);
-        vidGrabberLeft.setDeviceID(0);							
+        vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 0));							
 		vidGrabberLeft.setDesiredFrameRate(120);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
-	} else if (c == STEREO) {		
+	} else if (camera_type == STEREO) {		
 	    vidGrabberRight.setVerbose(true);
-		vidGrabberRight.setDeviceID(2);
+		vidGrabberRight.setDeviceID(settings->getValue("settings:camera_id", 1));
 		vidGrabberRight.setDesiredFrameRate(120);
 		vidGrabberRight.initGrabber(camWidth,camHeight);	
 		vidGrabberRight.setAnchorPercent(0.5,0.5);
-	} else if (c == OVRVISION) {
+	} else if (camera_type == OVRVISION) {
 		g_pOvrvision = new OVR::Ovrvision();
 	    g_pOvrvision->Open(0,OVR::OV_CAMVGA_FULL);   
 	    left.allocate(camWidth,camHeight,GL_RGB);
@@ -65,10 +67,10 @@ void machine::setup(int s, int c)
 	overlay.resize(2000*1.25,2000);
 	overlay.setAnchorPercent(0.5, 0.5);   
 
-	zoom = 0.85;
-	speed = 920;
-	alignment = -22;
-	x_offset = 8;
+	zoom = settings->getValue("settings:zoom", 0.85);
+	speed = settings->getValue("settings:speed", 920);
+	alignment = settings->getValue("settings.alignment", 0);
+	ipd = settings->getValue("settings.alignment", 8);
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
@@ -113,9 +115,9 @@ void machine::update() {
 				if (camera_type == OVRVISION) {										
 					left.draw(distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 				} else {
-					//vidGrabberLeft.draw(x_offset -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+					//vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					vidGrabberLeft.draw(distance.y*speed , distance.x*speed, camWidth*zoom, camHeight*zoom);	
-				}			
+				}				
 		ofPopMatrix();										
 	fboLeft.end();	
 			
@@ -129,7 +131,7 @@ void machine::update() {
 				} else if (camera_type == OVRVISION) {				
 					right.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else { // mono
-					//vidGrabberLeft.draw(x_offset -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+					//vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					vidGrabberLeft.draw(distance.y*speed , distance.x*speed, camWidth*zoom, camHeight*zoom);	
 				}
 		ofPopMatrix();			
@@ -149,8 +151,8 @@ ofVec2f machine::getDistance() {
 
 void machine::drawVideo() {				
 	if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice
-		fboLeft.draw(-x_offset + ofGetWidth()/4, ofGetHeight()/2); //draw left	
-		fboLeft.draw(x_offset + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
+		fboLeft.draw(-ipd + ofGetWidth()/4, ofGetHeight()/2); //draw left	
+		fboLeft.draw(ipd + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
 	} else {
 		 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left.		 
 		 fboRight.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
@@ -180,7 +182,7 @@ void machine::debug() {
 	ofDrawBitmapString("dimmed  : " + ofToString(dimmed), 310,460);	
 	//ofDrawBitmapString("transparency  : " + ofToString(dimmed), 10,85);	
 	ofDrawBitmapString("alpha  : ", 10,100);	
-	ofDrawBitmapString("side : " + ofToString(x_offset), 310, 480);
+	ofDrawBitmapString("side : " + ofToString(ipd), 310, 480);
 	*/
 }
 

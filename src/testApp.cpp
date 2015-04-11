@@ -7,21 +7,17 @@ void ofApp::setup(){
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
-	player.loadSounds("genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
+	//player.loadSounds("genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
+	settings.loadFile("settings.xml");			
 
-    machine.setup(TWO_WAY_SWAP, MONO); 
-	controller.setup(&machine, &player, COMPUTER);
+	player.loadSounds(&settings);			
+
+    machine.setup(&settings); 
+	controller.setup(&machine, &player, &settings);
 
 	ofxFenster* win = ofxFensterManager::get()->createFenster(640, 480, OF_WINDOW);
 	win->addListener(this);		
-	
-	//put some some settings into a file
-	ofxXmlSettings settings;
-	settings.setValue("settings:blinkRate", 10);
-	settings.setValue("settings:gravity", 9.8);
-	settings.setValue("settings:sceneName", "field");
-	settings.saveFile("settings.xml"); //puts settings.xml file in the bin/data folder
-	
+
 }
 
 //--------------------------------------------------------------
@@ -69,17 +65,18 @@ void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key, ofxFenster* window){		
-	
+void ofApp::keyPressed(int key, ofxFenster* window){			
 
 	if (key == OF_KEY_LEFT) { //decrease IPD
-		machine.x_offset -= 2;		
-		cout << machine.x_offset;
+		machine.ipd -= 2;		
+		cout << machine.ipd;
+		settings.setValue("settings:ipd", machine.ipd);	
 	}
 
 	if (key == OF_KEY_RIGHT) { //increase IPD
-		machine.x_offset += 2;
-		cout << machine.x_offset;
+		machine.ipd += 2;
+		cout << machine.ipd;
+		settings.setValue("settings:ipd", machine.ipd);	
 	}	    
    
 	if (key == ' ') { 	   
@@ -104,26 +101,32 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 
 	if (key == 'o' || key == 'O') {
 		machine.zoom -= 0.1;
+		settings.setValue("settings:zoom", machine.zoom);	
 	}
 
 	if (key == 'p' || key == 'P') {
 		machine.zoom += 0.1;
+		settings.setValue("settings:zoom", machine.zoom);	
 	}
 
 	if (key == 'k' || key == 'K') {
 		machine.speed -= 10;
+		settings.setValue("settings:speed", machine.speed);	
 	}
 
 	if (key == 'l' || key == 'L') {
 		machine.speed += 10;
+		settings.setValue("settings:speed", machine.speed);	
 	}
 
 	if (key == 'n' || key == 'N') {
 		machine.alignment -= 1;
+		settings.setValue("settings:alignment", machine.alignment);	
 	}
 
 	if (key == 'm' || key == 'M') {   
 		machine.alignment += 1;
+		settings.setValue("settings:alignment", machine.alignment);	
 	}
 	
 	if ((key == 'f' || key == 'F')) {   		
@@ -150,4 +153,5 @@ void ofApp::clear()
 //--------------------------------------------------------------
 void ofApp::exit(){
     recorder.waitForThread();	
+	settings.saveFile("settings.xml");
 }
