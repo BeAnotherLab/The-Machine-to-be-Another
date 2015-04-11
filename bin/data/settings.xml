@@ -1,12 +1,15 @@
 <settings>
-	<ip>"localhost"</ip>
-	<computer_type>0</computer_type>
-	<camera_id>0</camera_id>
-	<camera_type>0</camera_type>
-	<setup_type>0</setup_type>
-	<zoom>0.85</zoom>
-	<ipd>8</ipd>
-	<alignment>0</alignment>
-	<speed>920</speed>
-	<sounds>"genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"</sounds>
+    <ip>&quot;localhost&quot;</ip>
+    <computer_type>1</computer_type>
+    <!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
+    <camera_id>1</camera_id>
+    <camera_type>0</camera_type>
+    <!-- 0 is mono, 1 is stereo, 2 is ovrvision -->
+    <setup_type>0</setup_type>
+    <!-- 0 is one-way swap, 1 is two-way swap -->
+    <zoom>0.899999976</zoom>
+    <ipd>12</ipd>
+    <alignment>-51</alignment>
+    <speed>921</speed>
+    <sounds>genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr</sounds>
 </settings>

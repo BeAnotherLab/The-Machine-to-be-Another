@@ -2,19 +2,18 @@
 
 void soundPlayer::loadSounds(ofxXmlSettings * settings) //file names passed as parameters will be loaded from sounds folder
 {
-	string s = settings->getValue("settings:sounds", "");
-	//load sounds
-	cout << "sounds : " << s << endl;
-    istringstream iss(s);
+	string s = settings->getValue("settings:sounds", ""); //get sound names from XML 	
+	cout << "sounds : " << s << endl; //print sound names
+    istringstream iss(s); //convert s to stringstream
 	count = 0;
     do
     {		
-        string sub;
-        iss >> sub;        
+        string sub;		
+		iss >> sub; //load new file name         		
 		ofSoundPlayer so = *new ofSoundPlayer();
 		sounds.push_back(so);		
 		stringstream load;
-		load << "sounds/" << sub << ".mp3";		
+		load << "sounds/" << sub << ".mp3";	//prepend and append text to create path to file		
 		sounds.at(count).loadSound(load.str());					
 		cout << "loading " << "sounds/"+sub+".mp3" << endl;
 		count++;

@@ -7,9 +7,9 @@
 
 #define ONE_WAY_SWAP 0
 #define TWO_WAY_SWAP 1
-#define MONO 2 //one webcam
-#define STEREO 3 //two webcams
-#define OVRVISION 4 //ovrvision
+#define MONO 0 //one webcam
+#define STEREO 1 //two webcams
+#define OVRVISION 2 //ovrvision
 
 using namespace OVR;
 using namespace std;

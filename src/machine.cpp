@@ -70,7 +70,7 @@ void machine::setup(ofxXmlSettings * se)
 	zoom = settings->getValue("settings:zoom", 0.85);
 	speed = settings->getValue("settings:speed", 920);
 	alignment = settings->getValue("settings.alignment", 0);
-	ipd = settings->getValue("settings.alignment", 8);
+	ipd = settings->getValue("settings.ipd", 8);	
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
@@ -166,24 +166,18 @@ void machine::drawVideo() {
 	ofSetColor(255);
 }
 
-void machine::debug() {
-	/*
-	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 310,300); //10
-	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 310,320);
-	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 310,340);
+void machine::debug() {	
+	
+	string framerate = ofToString(ofGetFrameRate());		
+	ofDrawBitmapString("FPS : " + framerate, 10, 10);
+	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,20); //10
+	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 10,30);
+	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
 
-	ofDrawBitmapString("zoom : " + ofToString(zoom), 310,360);
-	//ofDrawBitmapString("speed   : " + ofToString(pitch), 310,380);
-	ofDrawBitmapString("speed   : " + ofToString(speed), 310,380);
-	ofDrawBitmapString("alignment  : " + ofToString(alignment), 310,400);
-
-	ofDrawBitmapString("dimTimer  : " + ofToString(dimTimer), 310,420);
-	ofDrawBitmapString("timeDim  : " + ofToString(ofGetElapsedTimeMillis() - dimTimer), 310,440);	
-	ofDrawBitmapString("dimmed  : " + ofToString(dimmed), 310,460);	
-	//ofDrawBitmapString("transparency  : " + ofToString(dimmed), 10,85);	
-	ofDrawBitmapString("alpha  : ", 10,100);	
-	ofDrawBitmapString("side : " + ofToString(ipd), 310, 480);
-	*/
+	ofDrawBitmapString("zoom : " + ofToString(zoom), 10, 50);
+	ofDrawBitmapString("speed   : " + ofToString(speed), 10, 60);
+	ofDrawBitmapString("alignment  : " + ofToString(alignment), 10, 70);		
+	ofDrawBitmapString("side : " + ofToString(ipd), 10, 80);	
 }
 
 void machine::drawOverlay() {
