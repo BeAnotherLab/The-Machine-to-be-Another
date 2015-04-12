@@ -14,13 +14,13 @@
 using namespace OVR;
 using namespace std;
 
-//Oculus Rift screen size
-#define RIFTSCREEN_WIDTH	(1920)
-#define RIFTPSCREEN_HEIGHT	(1080)
+//DK2 screen size
+#define DK2_WIDTH	(1920)
+#define DK2_HEIGHT	(1080)
 
-//Application screen size
-#define APPSCREEN_WIDTH		(1280)
-#define APPSCREEN_HEIGHT	(800)
+//DK1 screen size
+#define DK1_WIDTH		(1280)
+#define DK1_HEIGHT	(800)
 
 class machine
 {

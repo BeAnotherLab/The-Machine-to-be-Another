@@ -5,8 +5,8 @@ void machine::setup(ofxXmlSettings * se)
 	initOculus();
 	vidGrabberLeft.listDevices();
 	settings = se;
-	setup_type = settings->getValue("settings:setup_type",ONE_WAY_SWAP);
-	camera_type = settings->getValue("settings:camera_type",MONO);
+	setup_type = settings->getValue("settings:setup_type", ONE_WAY_SWAP);
+	camera_type = settings->getValue("settings:camera_type", MONO);
 	//tested with PS3Eye camera.	
 	ipd = settings->getValue("settings:ipd", 8);
 	camWidth = 640;
@@ -100,8 +100,8 @@ void machine::update() {
 		vidGrabberRight.update();
 	} else if (camera_type == OVRVISION) {		
 		g_pOvrvision->PreStoreCamData();
-		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640,480, GL_RGB);		
-		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640,480, GL_RGB);	
+		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);		
+		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);	
 	}
 	
 	ofVec2f distance = getDistance();	
@@ -113,10 +113,13 @@ void machine::update() {
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center					
 			ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
 				if (camera_type == OVRVISION) {										
-					left.draw(distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
+					ofPushMatrix();
+						ofRotate(180, 0, 0, 1);
+						left.draw(-ipd - distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
+					ofPopMatrix();					
 				} else {
 					//vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
-					vidGrabberLeft.draw(distance.y*speed , distance.x*speed, camWidth*zoom, camHeight*zoom);	
+					vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);	
 				}				
 		ofPopMatrix();										
 	fboLeft.end();	
@@ -128,8 +131,11 @@ void machine::update() {
 			ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1);//rotate from centre				
 				if (camera_type == STEREO) {				
 					vidGrabberRight.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
-				} else if (camera_type == OVRVISION) {				
-					right.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+				} else if (camera_type == OVRVISION) {		
+					ofPushMatrix();
+						ofRotate(180, 0, 0, 1);
+						right.draw(ipd - distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+					ofPopMatrix();					
 				} else { // mono
 					//vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					vidGrabberLeft.draw(distance.y*speed , distance.x*speed, camWidth*zoom, camHeight*zoom);	
@@ -150,7 +156,7 @@ ofVec2f machine::getDistance() {
 }
 
 void machine::drawVideo() {				
-	if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice
+	if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice instead
 		fboLeft.draw(-ipd + ofGetWidth()/4, ofGetHeight()/2); //draw left	
 		fboLeft.draw(ipd + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
 	} else {
@@ -178,6 +184,9 @@ void machine::debug() {
 	ofDrawBitmapString("speed   : " + ofToString(speed), 10, 60);
 	ofDrawBitmapString("alignment  : " + ofToString(alignment), 10, 70);		
 	ofDrawBitmapString("side : " + ofToString(ipd), 10, 80);	
+
+	ofDrawBitmapString("distance.x : " + ofToString(getDistance().x), 10, 90);	
+	ofDrawBitmapString("distance.y : " + ofToString(getDistance().y), 10, 100);	
 }
 
 void machine::drawOverlay() {

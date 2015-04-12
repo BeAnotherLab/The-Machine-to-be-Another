@@ -123,7 +123,7 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		settings.setValue("settings:alignment", machine.alignment);	
 	}
 
-	if (key == 'm' || key == 'M') {   
+	if (key == 'b' || key == 'B') {   
 		machine.alignment += 1;
 		settings.setValue("settings:alignment", machine.alignment);	
 	}
