@@ -69,8 +69,8 @@ void machine::setup(ofxXmlSettings * se)
 
 	zoom = settings->getValue("settings:zoom", 0.85);
 	speed = settings->getValue("settings:speed", 920);
-	alignment = settings->getValue("settings.alignment", 0);
-	ipd = settings->getValue("settings.ipd", 8);	
+	alignment = settings->getValue("settings:alignment", 0);
+	ipd = settings->getValue("settings:ipd", 8);	
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
