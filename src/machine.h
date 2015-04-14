@@ -56,6 +56,7 @@ public:
 	OVR::Ovrvision* g_pOvrvision;
 
 	ofxXmlSettings * settings;
+	int swapLR;
 
 	void machine::setup(ofxXmlSettings *settings);	
 	void machine::initOculus();

@@ -11,5 +11,6 @@
     <ipd>96</ipd>
     <alignment>-12</alignment>
     <speed>921</speed>
+    <swapLR>0</swapLR>
     <sounds>genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr</sounds>
 </settings>

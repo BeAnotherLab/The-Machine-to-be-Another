@@ -7,6 +7,7 @@ void machine::setup(ofxXmlSettings * se)
 	settings = se;
 	setup_type = settings->getValue("settings:setup_type", ONE_WAY_SWAP);
 	camera_type = settings->getValue("settings:camera_type", MONO);
+	swapLR = settings->getValue("settings:swapLR", 0);
 	//tested with PS3Eye camera.	
 	ipd = settings->getValue("settings:ipd", 8);
 	camWidth = 640;
@@ -160,8 +161,14 @@ void machine::drawVideo() {
 		fboLeft.draw(-ipd + ofGetWidth()/4, ofGetHeight()/2); //draw left	
 		fboLeft.draw(ipd + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
 	} else {
-		 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left.		 
-		 fboRight.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
+	     if(swapLR == 0) {
+			 fboLeft.draw(ofGetWidth()/4, ofGetHeight()/2); //draw left.		 
+			 fboRight.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw right	
+		 }
+		  if(swapLR == 1) {
+			 fboRight.draw(ofGetWidth()/4, ofGetHeight()/2); //draw right to the left.		 
+			 fboLeft.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw left to the right	
+		 }
 	}		
 	ofSetColor(255);
 	//dim();
@@ -187,6 +194,9 @@ void machine::debug() {
 
 	ofDrawBitmapString("distance.x : " + ofToString(getDistance().x), 10, 90);	
 	ofDrawBitmapString("distance.y : " + ofToString(getDistance().y), 10, 100);	
+	
+	ofDrawBitmapString("swap L/R: " + ofToString(swapLR), 10, 110);	
+
 }
 
 void machine::drawOverlay() {
