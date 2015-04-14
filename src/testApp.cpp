@@ -4,6 +4,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){		
 	ofSetVerticalSync(false);	
+	ofSetFrameRate(80);
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
     recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			

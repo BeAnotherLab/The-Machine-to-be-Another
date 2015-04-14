@@ -196,3 +196,5 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 bin/data/settings.xml
+bin/data/settings.xml
+bin/data/settings.xml
