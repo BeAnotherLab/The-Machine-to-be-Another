@@ -119,8 +119,11 @@ void machine::update() {
 						left.draw(-ipd - distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 					ofPopMatrix();					
 				} else {
-					//vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
-					vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);	
+					ofPushMatrix();
+						ofRotate(90);
+						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
+					ofPopMatrix();
 				}				
 		ofPopMatrix();										
 	fboLeft.end();	
@@ -138,8 +141,11 @@ void machine::update() {
 						right.draw(ipd - distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 					ofPopMatrix();					
 				} else { // mono
-					//vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
-					vidGrabberLeft.draw(distance.y*speed , distance.x*speed, camWidth*zoom, camHeight*zoom);	
+					ofPushMatrix();
+						ofRotate(90);
+						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
+					ofPopMatrix();
 				}
 		ofPopMatrix();			
 	fboRight.end();	
