@@ -15,7 +15,7 @@ void machine::setup(ofxXmlSettings * se)
 	
 	if (camera_type == MONO) {
 		vidGrabberLeft.setVerbose(true);
-        vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 0));							
+        vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 2));							
 		vidGrabberLeft.setDesiredFrameRate(120);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
