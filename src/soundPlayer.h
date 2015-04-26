@@ -1,5 +1,6 @@
 #pragma once
 #include "ofxOsc.h"
+#include "ofxXmlSettings.h"
 
 //oscMessages from and to Phone
 #define PHONE_SENDER_PORT 8015
@@ -16,7 +17,7 @@ public:
 	float music_volume;	
 
 	bool something_is_playing;
-	void loadSounds(string s); //list sounds in /data/bin/sounds to be loaded 
+	void loadSounds(ofxXmlSettings * settings); //list sounds in /data/bin/sounds to be loaded 
 	void playSound(int id);		
 	void update();	
 	string getCurrentlyPlaying(); //TODO implement
