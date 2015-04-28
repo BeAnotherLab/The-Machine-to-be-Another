@@ -2,7 +2,7 @@
     <ip>192.168.0.102</ip>
     <computer_type>1</computer_type>
     <!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
-    <camera_id>1</camera_id>
+    <camera_id>0</camera_id>
     <camera_type>0</camera_type>
     <!-- 0 is mono, 1 is stereo, 2 is ovrvision -->
     <setup_type>1</setup_type>

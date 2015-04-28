@@ -35,7 +35,7 @@ void ofApp::draw(ofxFenster* window){
 	if (window->id==0) {
 		ofBackground(0);	        		
 		ofSetHexColor(0xffffff);									    
-		machine.drawVideo();
+		machine.drawMonitor();
 		machine.drawOverlay();    
 		machine.debug();		
 //		machine.debug();

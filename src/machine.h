@@ -62,6 +62,7 @@ public:
 	void machine::initOculus();
 	void machine::update();
 	void machine::drawVideo();
+	void machine::drawMonitor();
 	void machine::drawOverlay();	
 	void machine::calibrate();		
 	float* machine::getHeadtracking();

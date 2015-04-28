@@ -185,6 +185,10 @@ void machine::drawVideo() {
 	ofSetColor(255);
 }
 
+void machine::drawMonitor() {	
+	fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2);	
+}
+
 void machine::debug() {	
 	
 	string framerate = ofToString(ofGetFrameRate());		
@@ -205,6 +209,7 @@ void machine::debug() {
 	ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
 	ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);
 	ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps % 2), 10, 140);
+
 }
 
 void machine::drawOverlay() {
