@@ -186,7 +186,13 @@ void machine::drawVideo() {
 }
 
 void machine::drawMonitor() {	
-	fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2);	
+	if (dimmed==true){
+		ofSetColor(75);
+		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2);	
+	} else {
+		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2);	
+	}
+	ofSetColor(255);
 }
 
 void machine::debug() {	
@@ -205,7 +211,13 @@ void machine::debug() {
 	ofDrawBitmapString("distance.x : " + ofToString(getDistance().x), 10, 90);	
 	ofDrawBitmapString("distance.y : " + ofToString(getDistance().y), 10, 100);	
 	
-	ofDrawBitmapString("swap L/R: " + ofToString(swapLR), 10, 110);	
+	ofDrawBitmapString("swap L/R: " + ofToString(swapLR), 10, 110);
+	if (dimmed == true) {
+		ofDrawBitmapString("oculus screen is OFF", 10, 120); 
+	} else if (dimmed == false) {
+		ofDrawBitmapString("oculus screen is ON", 10, 120); 
+	}
+	
 	//ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
 	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);
 	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps % 2), 10, 140);
