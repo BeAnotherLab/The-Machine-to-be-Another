@@ -206,9 +206,9 @@ void machine::debug() {
 	ofDrawBitmapString("distance.y : " + ofToString(getDistance().y), 10, 100);	
 	
 	ofDrawBitmapString("swap L/R: " + ofToString(swapLR), 10, 110);	
-	ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
-	ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);
-	ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps % 2), 10, 140);
+	//ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
+	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);
+	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps % 2), 10, 140);
 
 }
 
