@@ -22,7 +22,8 @@ class ofApp : public ofxFensterListener {
 	void exit();    
 	void clear();		
 	void record();	
-		
+	void recordDebug();
+
 	machine machine;
 	
 	ofxImageSequenceRecorder recorder;

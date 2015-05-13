@@ -7,7 +7,7 @@ void ofApp::setup(){
 	//ofSetFrameRate(80);
 	recording = false;	
 	recorder.setPrefix(ofToDataPath("recordings/frame_")); // this directory must already exist
-    recorder.setFormat("jpg"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
+    recorder.setFormat("bmp"); //png is really slow but high res, bmp is fast but big, jpg is just right    			
 	//player.loadSounds("genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
 	settings.loadFile("settings.xml");			
 
@@ -25,8 +25,8 @@ void ofApp::setup(){
 void ofApp::update(){				    
 	machine.update();
 	player.update();
-	controller.loop();			
-	record();		
+	controller.loop();				
+	record();
 }
 
 //--------------------------------------------------------------
@@ -38,6 +38,7 @@ void ofApp::draw(ofxFenster* window){
 		machine.drawMonitor();
 		machine.drawOverlay();    
 		machine.debug();		
+		recordDebug();
 //		machine.debug();
 	} else if (window->id==1) {
 		ofBackground(0);	 
@@ -46,13 +47,20 @@ void ofApp::draw(ofxFenster* window){
 }
 
 //--------------------------------------------------------------
-void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
-	stringstream c;		
-
+void ofApp::record() { //uses memo akten ofxImageSequenceRecorder	
 	if (machine.vidGrabberLeft.isFrameNew() && recording) {
 		recorder.addFrame(machine.vidGrabberLeft);   
-	}    		
-    
+	}    		    
+
+	if (recorder.q.size() > 1600) { 
+		recording = false; //1600 is maximum queue size for 32-bit program
+		cout << "reached queue max size, stopping recording..." << endl;
+	}
+}
+
+void ofApp::recordDebug() {	
+	stringstream c;		
+
 	if (recording) {
 		c << "Recording" <<  " | Queue Size: " << recorder.q.size() << endl;
 	} else if (!recording && recorder.q.size() > 0) {
@@ -61,7 +69,7 @@ void ofApp::record() { //uses memo akten ofxImageSequenceRecorder
 	else if (recorder.q.size() == 0) {
 		recorder.stopThread();		
 	}
-	ofDrawBitmapString(c.str(), 650, 10);
+	ofDrawBitmapString(c.str(), 10, 130);
 }
 
 //--------------------------------------------------------------
@@ -85,7 +93,7 @@ void ofApp::keyPressed(int key, ofxFenster* window){
    
 	if (key == 'r') {
         recording = !recording;
-        recorder.startThread(false, true);   
+        if (recording) recorder.startThread(false, true);
     }       
 	if (key == OF_KEY_UP) {
 		machine.dimmed = false;
