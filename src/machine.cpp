@@ -8,7 +8,7 @@ void machine::setup(ofxXmlSettings * se)
 		cout << "Unable to detect Rift head tracker" << endl;		
 	}
 
-	ovrHmd_RecenterPose(hmd);
+	ovrHmd_RecenterPose(hmd); 
 	vidGrabberLeft.listDevices();
 	settings = se;
 	setup_type = settings->getValue("settings:setup_type", ONE_WAY_SWAP);
@@ -116,12 +116,12 @@ void machine::update() {
 				if (camera_type == OVRVISION) {										
 					ofPushMatrix();
 						ofRotate(180, 0, 0, 1);
-						left.draw(-ipd - distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
+						left.draw(- distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
 					ofPopMatrix();					
 				} else {
 					ofPushMatrix();
 						ofRotate(90);
-						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+						vidGrabberLeft.draw( -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 					ofPopMatrix();
 				}				
@@ -138,12 +138,12 @@ void machine::update() {
 				} else if (camera_type == OVRVISION) {		
 					ofPushMatrix();
 						ofRotate(180, 0, 0, 1);
-						right.draw(ipd - distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+						right.draw(- distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 					ofPopMatrix();					
 				} else { // mono
 					ofPushMatrix();
 						ofRotate(90);
-						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+						vidGrabberLeft.draw(-(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 					ofPopMatrix();
 				}
