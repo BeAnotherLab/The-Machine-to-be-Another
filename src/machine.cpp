@@ -5,6 +5,7 @@ void machine::setup(ofxXmlSettings * se)
 	initOculus();
 	vidGrabberLeft.listDevices();
 	settings = se;
+	hmd_type = settings->getValue("settings:hmd_type", 2);
 	setup_type = settings->getValue("settings:setup_type", ONE_WAY_SWAP);
 	camera_type = settings->getValue("settings:camera_type", MONO);
 	swapLR = settings->getValue("settings:swapLR", 0);
@@ -15,13 +16,13 @@ void machine::setup(ofxXmlSettings * se)
 	
 	if (camera_type == MONO) {
 		vidGrabberLeft.setVerbose(true);
-        vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 2));							
+        vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 1));							
 		vidGrabberLeft.setDesiredFrameRate(120);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
 	} else if (camera_type == STEREO) {		
 	    vidGrabberRight.setVerbose(true);
-		vidGrabberRight.setDeviceID(settings->getValue("settings:camera_id", 1));
+		vidGrabberRight.setDeviceID(settings->getValue("settings:camera_id", 2));
 		vidGrabberRight.setDesiredFrameRate(120);
 		vidGrabberRight.initGrabber(camWidth,camHeight);	
 		vidGrabberRight.setAnchorPercent(0.5,0.5);
@@ -58,9 +59,15 @@ void machine::setup(ofxXmlSettings * se)
 	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 
-	fboLeft.allocate(1920/2, 1080);
+	if(hmd_type=OCULUS_RIFT_DK2) { 
+		fboLeft.allocate(DK2_WIDTH/2, DK2_HEIGHT);
+		fboRight.allocate(DK2_WIDTH/2, DK2_HEIGHT);
+	}
+	else if(hmd_type=OCULUS_RIFT_DK2) {
+		fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
+		fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
+	}
 	fboLeft.setAnchorPercent(0.5, 0.5);
-	fboRight.allocate(1920/2, 1080);
 	fboRight.setAnchorPercent(0.5, 0.5);
 
 	//was used for experimenting with torchlight-like overlay, left here as ref for later

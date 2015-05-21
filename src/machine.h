@@ -14,13 +14,17 @@
 using namespace OVR;
 using namespace std;
 
+//HMD type
+#define OCULUS_RIFT_DK2 1
+#define OCULUS_RIFT_DK1 2
+
 //DK2 screen size
-#define DK2_WIDTH	(1920)
-#define DK2_HEIGHT	(1080)
+#define DK2_WIDTH	1920
+#define DK2_HEIGHT	1080
 
 //DK1 screen size
-#define DK1_WIDTH		(1280)
-#define DK1_HEIGHT	(800)
+#define DK1_WIDTH	1280
+#define DK1_HEIGHT	800
 
 class machine
 {
@@ -29,6 +33,7 @@ public:
 	int setup_type; //0 = one-way swap, 1 = two-way swap
 	int camera_type; //2 for mono, 3 for stereo camera
 	int camWidth, camHeight; //camera size
+	int hmd_type; //headmounted display type
 	int ipd;	//used to adjust distance between eyes
 	float pitch, yaw, roll; //headtracking received from oculus		
     float pitch_cal, yaw_cal, roll_cal; //used to calibrate headtracking values
