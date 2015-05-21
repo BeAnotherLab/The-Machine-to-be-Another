@@ -2,10 +2,15 @@
 
 void machine::setup(ofxXmlSettings * se)
 {
-	initOculus();
+	ovr_Initialize();		
+	hmd = ovrHmd_Create(0);	
+	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
+		cout << "Unable to detect Rift head tracker" << endl;		
+	}
+
+	ovrHmd_RecenterPose(hmd);
 	vidGrabberLeft.listDevices();
 	settings = se;
-	hmd_type = settings->getValue("settings:hmd_type", 2);
 	setup_type = settings->getValue("settings:setup_type", ONE_WAY_SWAP);
 	camera_type = settings->getValue("settings:camera_type", MONO);
 	swapLR = settings->getValue("settings:swapLR", 0);
@@ -59,11 +64,11 @@ void machine::setup(ofxXmlSettings * se)
 	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 
-	if(hmd_type=OCULUS_RIFT_DK2) { 
+	if (hmd->Type == ovrHmd_DK2) { 
 		fboLeft.allocate(DK2_WIDTH/2, DK2_HEIGHT);
 		fboRight.allocate(DK2_WIDTH/2, DK2_HEIGHT);
 	}
-	else if(hmd_type=OCULUS_RIFT_DK2) {
+	else if(hmd->Type == ovrHmd_DK1) {
 		fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 		fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 	}
@@ -82,18 +87,6 @@ void machine::setup(ofxXmlSettings * se)
 
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
-}
-
-//--------------------------------------------------------------
-void machine::initOculus() {	
-	ovr_Initialize();		
-
-	hmd = ovrHmd_Create(0);	
-	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
-		cout << "Unable to detect Rift head tracker" << endl;		
-	}
-
-	ovrHmd_RecenterPose(hmd);
 }
 
 void machine::update() {
