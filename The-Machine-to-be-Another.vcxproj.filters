@@ -159,6 +159,9 @@
     <Filter Include="addons\ofxUI\ofxXmlSettings">
       <UniqueIdentifier>{c1bf9dda-41ff-4b10-9375-a50bb06d9f0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="settings">
+      <UniqueIdentifier>{e6f22679-45cb-41c7-9b85-5ada35e8531e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\testApp.h">
@@ -530,5 +533,10 @@
     <ClInclude Include="src\soundPlayer.h">
       <Filter>src</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\data\settings.xml">
+      <Filter>settings</Filter>
+    </None>
   </ItemGroup>
 </Project>
