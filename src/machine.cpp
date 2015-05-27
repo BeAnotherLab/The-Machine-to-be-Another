@@ -4,7 +4,8 @@ void machine::setup(ofxXmlSettings * se)
 {
 	ovr_Initialize();		
 	hmd = ovrHmd_Create(0);	
-	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
+	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, 
+											   ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position)) {
 		cout << "Unable to detect Rift head tracker" << endl;		
 	}
 
@@ -72,6 +73,7 @@ void machine::setup(ofxXmlSettings * se)
 		fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 		fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 	}
+	
 	fboLeft.setAnchorPercent(0.5, 0.5);
 	fboRight.setAnchorPercent(0.5, 0.5);
 
@@ -218,9 +220,7 @@ void machine::debug() {
 		ofDrawBitmapString("oculus screen is ON", 10, 120); 
 	}
 	
-	//ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
-	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);
-	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps % 2), 10, 140);
+	ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 130);
 
 }
 
