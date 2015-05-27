@@ -7,10 +7,10 @@
 
 #define ONE_WAY_SWAP 0
 #define TWO_WAY_SWAP 1
-#define PS3_HORIZONT  0
-#define PS3_VERTI  1
-#define CON_SERVO_ROLL 1
-#define SIN_SERVO_ROLL 0
+#define PS3_HORIZONT 0
+#define PS3_VERTI 1
+#define ON_SERVO_ROLL 1
+#define OFF_SERVO_ROLL 0
 
 #define MONO 0 //one webcam
 #define STEREO 1 //two webcams
@@ -24,7 +24,7 @@ using namespace std;
 #define DK2_HEIGHT	(1080)
 
 //DK1 screen size
-#define DK1_WIDTH		(1280)
+#define DK1_WIDTH	(1280)
 #define DK1_HEIGHT	(800)
 
 class machine
@@ -32,8 +32,8 @@ class machine
 public:			
 	ovrHmd hmd;
 	int setup_type; //0 = one-way swap, 1 = two-way swap
-	int ps3_position; //0 = en-vertical, 1 = en-horizontal
-	int servo_roll; //0 = no uso servo, 1 = uso servo
+	int ps3_position; //0 = vertical, 1 horizontal
+	int servo_roll; //0 = no servo, 1 = servo
 	int camera_type; //2 for mono, 3 for stereo camera
 	int camWidth, camHeight; //camera size
 	int ipd;	//used to adjust distance between eyes

@@ -72,7 +72,8 @@ void machine::setup(ofxXmlSettings * se)
 	speed = settings->getValue("settings:speed", 920);
 	alignment = settings->getValue("settings:alignment", 0);
 	ipd = settings->getValue("settings:ipd", 8);	
-
+	ps3_position = settings->getValue("settings:ps3_position", 0);
+	servo_roll = settings->getValue(  "settings:servo_roll", 0);
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
 }
@@ -90,7 +91,6 @@ void machine::initOculus() {
 }
 
 void machine::update() {
-
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.
@@ -112,25 +112,24 @@ void machine::update() {
 		ofBackground(0);				
 		ofPushMatrix();			
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center					
-if (servo_roll == SIN_SERVO_ROLL) {
-		ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
-	} else if (servo_roll == CON_SERVO_ROLL) {
-		}
-				if (camera_type == OVRVISION) {										
-					ofPushMatrix();
-						ofRotate(180, 0, 0, 1);
-						left.draw(-ipd - distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
-					ofPopMatrix();					
-				} else {
-					ofPushMatrix();
-						if (ps3_position == PS3_HORIZONT) {
-		ofRotate(0);
-	} else if (ps3_position == PS3_VERTI) { ofRotate(90);
-		}	
-						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+			if (servo_roll == OFF_SERVO_ROLL) { //dont use roll servo
+				ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
+			} 
+			if (camera_type == OVRVISION) {										
+				ofPushMatrix();
+					ofRotate(180, 0, 0, 1);
+					left.draw(-ipd - distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
+				ofPopMatrix();					
+			}
+			else {
+				ofPushMatrix();
+					if (ps3_position == PS3_VERTI) { 
+						ofRotate(90);
+					}	
+					vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
-					ofPopMatrix();
-				}				
+				ofPopMatrix();
+			}				
 		ofPopMatrix();										
 	fboLeft.end();	
 			
@@ -138,27 +137,27 @@ if (servo_roll == SIN_SERVO_ROLL) {
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
-if (servo_roll == SIN_SERVO_ROLL) {
-		ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
-	} else if (servo_roll == CON_SERVO_ROLL) {
-		}
-				if (camera_type == STEREO) {				
-					vidGrabberRight.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
-				} else if (camera_type == OVRVISION) {		
+			if (servo_roll == OFF_SERVO_ROLL) { //if roll servo disabled
+				ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
+			} 
+			if (camera_type == STEREO) {				
+				vidGrabberRight.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+			}
+			else if (camera_type == OVRVISION) {		
 					ofPushMatrix();
 						ofRotate(180, 0, 0, 1);
 						right.draw(ipd - distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 					ofPopMatrix();					
-				} else { // mono
-					ofPushMatrix();
-								if (ps3_position == PS3_HORIZONT) {
-		ofRotate(0);
-	} else if (ps3_position == PS3_VERTI) { ofRotate(90);
-		}	
-						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+			} 
+			else { // mono
+				ofPushMatrix();
+					if (ps3_position == PS3_VERTI) { 
+						ofRotate(90);
+					}	
+					vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
-					ofPopMatrix();
-				}
+				ofPopMatrix();
+			}
 		ofPopMatrix();			
 	fboRight.end();	
 }

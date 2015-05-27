@@ -531,4 +531,9 @@
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\data\settings.xml">
+      <Filter>src</Filter>
+    </None>
+  </ItemGroup>
 </Project>
