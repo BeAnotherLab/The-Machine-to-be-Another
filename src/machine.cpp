@@ -112,7 +112,10 @@ void machine::update() {
 		ofBackground(0);				
 		ofPushMatrix();			
 			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center					
-			ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
+if (servo_roll == SIN_SERVO_ROLL) {
+		ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
+	} else if (servo_roll == CON_SERVO_ROLL) {
+		}
 				if (camera_type == OVRVISION) {										
 					ofPushMatrix();
 						ofRotate(180, 0, 0, 1);
@@ -120,7 +123,10 @@ void machine::update() {
 					ofPopMatrix();					
 				} else {
 					ofPushMatrix();
-						ofRotate(90);
+						if (ps3_position == PS3_HORIZONT) {
+		ofRotate(0);
+	} else if (ps3_position == PS3_VERTI) { ofRotate(90);
+		}	
 						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 					ofPopMatrix();
@@ -132,7 +138,10 @@ void machine::update() {
 		ofBackground(0);
 		ofPushMatrix();			
 			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
-			ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1);//rotate from centre				
+if (servo_roll == SIN_SERVO_ROLL) {
+		ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
+	} else if (servo_roll == CON_SERVO_ROLL) {
+		}
 				if (camera_type == STEREO) {				
 					vidGrabberRight.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 				} else if (camera_type == OVRVISION) {		
@@ -142,7 +151,10 @@ void machine::update() {
 					ofPopMatrix();					
 				} else { // mono
 					ofPushMatrix();
-						ofRotate(90);
+								if (ps3_position == PS3_HORIZONT) {
+		ofRotate(0);
+	} else if (ps3_position == PS3_VERTI) { ofRotate(90);
+		}	
 						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 					ofPopMatrix();
