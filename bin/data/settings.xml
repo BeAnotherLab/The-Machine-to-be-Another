@@ -4,8 +4,10 @@
     <!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
     <camera_id>0</camera_id>
     <camera_type>0</camera_type>
-    <ps3_position>0</ps3_position><!-- 1 is verti, 0 horiz-->
-    <servo_roll>1</servo_roll><!-- 0 is without servo, 1 is with servo -->
+    <ps3_position>1</ps3_position>
+    <!-- 1 is verti, 0 horiz-->
+    <servo_roll>0</servo_roll>
+    <!-- 0 is without servo, 1 is with servo -->
     <!-- 0 is mono, 1 is stereo, 2 is ovrvision -->
     <setup_type>1</setup_type>
     <!-- 0 is one-way swap, 1 is two-way swap -->
@@ -15,4 +17,5 @@
     <speed>921</speed>
     <swapLR>0</swapLR>
     <sounds>genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr</sounds>
+    <calibration>-37</calibration>
 </settings>

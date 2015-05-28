@@ -11,7 +11,8 @@ void machine::setup(ofxXmlSettings * se)
 	//tested with PS3Eye camera.	
 	ipd = settings->getValue("settings:ipd", 8);
 	camWidth = 640;
-	camHeight = 480;		
+	camHeight = 480;
+	calibration = 0;
 	
 	if (camera_type == MONO) {
 		vidGrabberLeft.setVerbose(true);
@@ -125,8 +126,13 @@ void machine::update() {
 				ofPushMatrix();
 					if (ps3_position == PS3_VERTI) { 
 						ofRotate(90);
-					}	
-					vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);	
+					}else{
+						ofRotate(0);
+						vidGrabberLeft.draw(ipd + distance.y*speed+calibration, distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);						
+					}
+
+					
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 				ofPopMatrix();
 			}				
@@ -153,8 +159,11 @@ void machine::update() {
 				ofPushMatrix();
 					if (ps3_position == PS3_VERTI) { 
 						ofRotate(90);
-					}	
-					vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
+						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);
+					}else{
+						vidGrabberLeft.draw(ipd + distance.y*speed+calibration, distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);	
+					}
+						
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 				ofPopMatrix();
 			}

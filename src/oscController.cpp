@@ -17,6 +17,21 @@ void oscController::loop() {
 		receiver.getNextMessage(&rx_msg);				
 		if (rx_msg.getAddress() == "/dim") {			
 			myMachine->dimmed=true;			
+		}		
+		if (rx_msg.getAddress() == "/driftPlus") {			
+			if(computerType==1){ 
+				myMachine->calibration+=1;
+			} else {
+				myMachine->calibration-=1;
+			}
+		}
+				
+		if (rx_msg.getAddress() == "/driftMinus") {			
+			if(computerType==1){ 
+				myMachine->calibration-=1;
+			} else {
+				myMachine->calibration+=1;
+			}
 		}
 		if (rx_msg.getAddress() == "/dimoff") {			
 			myMachine->dimmed=false;			
@@ -54,7 +69,7 @@ void oscController::loop() {
 void oscController::oscRepeat(ofxOscMessage rx_msg) { //if Computer 1, must repeat tablet OSC control to computer 2
 
 	//"lights off" and headtracking data
-	if ((rx_msg.getAddress() == "/dimoff") || (rx_msg.getAddress() == "/dim") || (rx_msg.getAddress() == "/ht")) {								
+	if ((rx_msg.getAddress() == "/dimoff") || (rx_msg.getAddress() == "/dim") || (rx_msg.getAddress() == "/ht" || (rx_msg.getAddress() == "/driftPlus" || (rx_msg.getAddress() == "/drifMinus" )) {								
 		sender.sendMessage(rx_msg);			
 	}			
 

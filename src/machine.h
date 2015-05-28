@@ -33,6 +33,7 @@ public:
 	ovrHmd hmd;
 	int setup_type; //0 = one-way swap, 1 = two-way swap
 	int ps3_position; //0 = vertical, 1 horizontal
+    int calibration; //to correct user yaw drift
 	int servo_roll; //0 = no servo, 1 = servo
 	int camera_type; //2 for mono, 3 for stereo camera
 	int camWidth, camHeight; //camera size

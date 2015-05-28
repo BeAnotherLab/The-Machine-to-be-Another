@@ -128,6 +128,15 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		machine.alignment += 1;
 		settings.setValue("settings:alignment", machine.alignment);	
 	}
+		if (key == 't' || key == 'T') {
+		machine.calibration -= 1;
+		settings.setValue("settings:calibration", machine.calibration);	
+	}
+
+	if (key == 'y' || key == 'Y') {   
+		machine.calibration += 1;
+		settings.setValue("settings:calibration", machine.calibration);	
+	}
 	
 	if ((key == 'f' || key == 'F')) {   		
 		window->toggleFullscreen();
