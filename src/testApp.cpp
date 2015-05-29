@@ -129,12 +129,12 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		settings.setValue("settings:alignment", machine.alignment);	
 	}
 		if (key == 't' || key == 'T') {
-		machine.calibration -= 1;
+		machine.calibration -= 20;
 		settings.setValue("settings:calibration", machine.calibration);	
 	}
 
 	if (key == 'y' || key == 'Y') {   
-		machine.calibration += 1;
+		machine.calibration += 20;
 		settings.setValue("settings:calibration", machine.calibration);	
 	}
 	
