@@ -5,6 +5,9 @@ ehthumbs.db
 # Folder config file
 Desktop.ini
 
+#settings file
+settings.xml
+
 #screenshots
 .jpg
 
