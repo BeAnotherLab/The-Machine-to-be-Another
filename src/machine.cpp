@@ -2,7 +2,14 @@
 
 void machine::setup(ofxXmlSettings * se)
 {
-	initOculus();
+	ovr_Initialize();		
+	hmd = ovrHmd_Create(0);	
+	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, 
+											   ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position)) {
+		cout << "Unable to detect Rift head tracker" << endl;		
+	}
+
+	ovrHmd_RecenterPose(hmd); 
 	vidGrabberLeft.listDevices();
 	settings = se;
 	setup_type = settings->getValue("settings:setup_type", ONE_WAY_SWAP);
@@ -16,13 +23,13 @@ void machine::setup(ofxXmlSettings * se)
 	
 	if (camera_type == MONO) {
 		vidGrabberLeft.setVerbose(true);
-        vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 2));							
+        vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 1));							
 		vidGrabberLeft.setDesiredFrameRate(120);
 		vidGrabberLeft.initGrabber(camWidth,camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
 	} else if (camera_type == STEREO) {		
 	    vidGrabberRight.setVerbose(true);
-		vidGrabberRight.setDeviceID(settings->getValue("settings:camera_id", 1));
+		vidGrabberRight.setDeviceID(settings->getValue("settings:camera_id", 2));
 		vidGrabberRight.setDesiredFrameRate(120);
 		vidGrabberRight.initGrabber(camWidth,camHeight);	
 		vidGrabberRight.setAnchorPercent(0.5,0.5);
@@ -59,9 +66,16 @@ void machine::setup(ofxXmlSettings * se)
 	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
 
-	fboLeft.allocate(1920/2, 1080);
+	if (hmd->Type == ovrHmd_DK2) { 
+		fboLeft.allocate(DK2_WIDTH/2, DK2_HEIGHT);
+		fboRight.allocate(DK2_WIDTH/2, DK2_HEIGHT);
+	}
+	else if(hmd->Type == ovrHmd_DK1) {
+		fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
+		fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
+	}
+	
 	fboLeft.setAnchorPercent(0.5, 0.5);
-	fboRight.allocate(1920/2, 1080);
 	fboRight.setAnchorPercent(0.5, 0.5);
 
 	//was used for experimenting with torchlight-like overlay, left here as ref for later
@@ -77,18 +91,6 @@ void machine::setup(ofxXmlSettings * se)
 	servo_roll = settings->getValue(  "settings:servo_roll", 0);
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
-}
-
-//--------------------------------------------------------------
-void machine::initOculus() {	
-	ovr_Initialize();		
-
-	hmd = ovrHmd_Create(0);	
-	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation, 0)) {
-		cout << "Unable to detect Rift head tracker" << endl;		
-	}
-
-	ovrHmd_RecenterPose(hmd);
 }
 
 void machine::update() {
@@ -152,7 +154,7 @@ void machine::update() {
 			else if (camera_type == OVRVISION) {		
 					ofPushMatrix();
 						ofRotate(180, 0, 0, 1);
-						right.draw(ipd - distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+						right.draw(- distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
 					ofPopMatrix();					
 			} 
 			else { // mono

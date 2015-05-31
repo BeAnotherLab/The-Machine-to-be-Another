@@ -19,9 +19,13 @@
 using namespace OVR;
 using namespace std;
 
+//HMD type
+#define OCULUS_RIFT_DK2 1
+#define OCULUS_RIFT_DK1 2
+
 //DK2 screen size
-#define DK2_WIDTH	(1920)
-#define DK2_HEIGHT	(1080)
+#define DK2_WIDTH	1920
+#define DK2_HEIGHT	1080
 
 //DK1 screen size
 #define DK1_WIDTH	(1280)
@@ -66,8 +70,7 @@ public:
 	ofxXmlSettings * settings;
 	int swapLR;
 
-	void machine::setup(ofxXmlSettings *settings);	
-	void machine::initOculus();
+	void machine::setup(ofxXmlSettings *settings);
 	void machine::update();
 	void machine::drawVideo();
 	void machine::drawMonitor();

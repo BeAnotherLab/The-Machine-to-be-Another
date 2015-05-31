@@ -1,9 +1,9 @@
  <!-- RENAME THIS FILE TO SETTINGS.XML TO CONFIGURE THE APPLICATION -->
 <settings>
-    <ip>10.0.0.10</ip>
-    <computer_type>2</computer_type>
+    <ip>192.168.0.102</ip>
+    <computer_type>1</computer_type>
     <!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
-    <camera_id>0</camera_id>
+    <camera_id>1</camera_id>
     <camera_type>0</camera_type>
     <ps3_position>1</ps3_position>
     <!-- 1 is verti, 0 horiz-->
@@ -14,9 +14,8 @@
     <!-- 0 is one-way swap, 1 is two-way swap -->
     <zoom>1.100000024</zoom>
     <ipd>24</ipd>
-    <alignment>-11</alignment>
+    <alignment>-12</alignment>
     <speed>921</speed>
     <swapLR>0</swapLR>
-    <sounds>genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr</sounds>
-    <calibration>90</calibration>
+    <sounds>genderswapmusic welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en calibrate_en lookaround_en</sounds>
 </settings>

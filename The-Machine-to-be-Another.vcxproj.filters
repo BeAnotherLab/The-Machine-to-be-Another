@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\testApp.cpp">
@@ -158,6 +158,9 @@
     </Filter>
     <Filter Include="addons\ofxUI\ofxXmlSettings">
       <UniqueIdentifier>{c1bf9dda-41ff-4b10-9375-a50bb06d9f0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="settings">
+      <UniqueIdentifier>{e6f22679-45cb-41c7-9b85-5ada35e8531e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -533,6 +536,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\data\settings.xml">
+      <Filter>settings</Filter>
       <Filter>src</Filter>
     </None>
   </ItemGroup>
