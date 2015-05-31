@@ -235,9 +235,11 @@ void machine::debug() {
 	if (dimmed == true) {
 		ofDrawBitmapString("oculus screen is OFF", 10, 120); 
 	} else if (dimmed == false) {
-		ofDrawBitmapString("oculus screen is ON", 10, 120); 
+		ofDrawBitmapString("oculus screen is ON", 10, 130); 
 	}
 	
+	ofDrawBitmapString("drift correction : " + ofToString(calibration), 10, 140);	
+
 	//ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
 	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);
 	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps % 2), 10, 140);
