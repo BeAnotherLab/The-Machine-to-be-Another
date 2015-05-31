@@ -1,3 +1,4 @@
+ <!-- RENAME THIS FILE TO SETTINGS.XML TO CONFIGURE THE APPLICATION -->
 <settings>
     <ip>10.0.0.10</ip>
     <computer_type>2</computer_type>
