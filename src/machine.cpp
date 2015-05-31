@@ -65,7 +65,7 @@ void machine::setup(ofxXmlSettings * se)
     as = 640.0f/480.0f;
 	DistortionXCenterOffset = 90;	        
     hmdWarpShader.load("shaders/HmdWarpExp");
-
+	
 	if (hmd->Type == ovrHmd_DK2) { 
 		fboLeft.allocate(DK2_WIDTH/2, DK2_HEIGHT);
 		fboRight.allocate(DK2_WIDTH/2, DK2_HEIGHT);
@@ -74,6 +74,7 @@ void machine::setup(ofxXmlSettings * se)
 		fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 		fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 	}
+
 	
 	fboLeft.setAnchorPercent(0.5, 0.5);
 	fboRight.setAnchorPercent(0.5, 0.5);
