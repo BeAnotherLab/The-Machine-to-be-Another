@@ -14,18 +14,14 @@ void oscController::loop() {
 	//receive tablet messages
 	ofxOscMessage rx_msg;	
 	while (receiver.hasWaitingMessages()) {
-		receiver.getNextMessage(&rx_msg);				
-		if (rx_msg.getAddress() == "/dim") {			
-			myMachine->dimmed=true;			
-		}		
+		receiver.getNextMessage(&rx_msg);						
 		if (rx_msg.getAddress() == "/driftPlus") {			
 			if(computerType==1){ 
 				myMachine->calibration+=20;
 			} else {
 				myMachine->calibration-=20;
 			}
-		}
-				
+		}				
 		if (rx_msg.getAddress() == "/driftMinus") {			
 			if(computerType==1){ 
 				myMachine->calibration-=20;
@@ -36,6 +32,9 @@ void oscController::loop() {
 		if (rx_msg.getAddress() == "/dimoff") {			
 			myMachine->dimmed=false;			
 		}
+		if (rx_msg.getAddress() == "/dimon") {			
+			myMachine->dimmed=true;			
+		}		
 		else if (rx_msg.getAddress() == "/ht") {
 			myMachine->calibrate();		
 		}		
