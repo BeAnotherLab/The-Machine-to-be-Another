@@ -1,16 +1,16 @@
 <settings>
-    <ip>192.168.0.102</ip>
-    <computer_type>1</computer_type>
+    <ip>192.168.1.167</ip>
+    <computer_type>2</computer_type>
     <!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
     <camera_id>1</camera_id>
     <camera_type>0</camera_type>
     <!-- 0 is mono, 1 is stereo, 2 is ovrvision -->
-    <setup_type>1</setup_type>
+    <setup_type>0</setup_type>
     <!-- 0 is one-way swap, 1 is two-way swap -->
     <zoom>1.100000024</zoom>
-    <ipd>-38</ipd>
+    <ipd>-40</ipd>
     <alignment>-12</alignment>
     <speed>921</speed>
     <swapLR>0</swapLR>
-    <sounds>genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr</sounds>
+    <sounds>genderswapmusic welcome_en lookaround_en objects_fr shakehands_en bye_fr slowly_en follow_en calibrate_en view_en legs_en</sounds>
 </settings>
