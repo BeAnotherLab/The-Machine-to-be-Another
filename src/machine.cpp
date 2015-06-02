@@ -286,6 +286,7 @@ void machine::triggerDim() {
 
 void machine::calibrate() {	
 	ovrHmd_RecenterPose(hmd);
+	calibration=0;
 	//pitch_cal = pitch;
 }
 
