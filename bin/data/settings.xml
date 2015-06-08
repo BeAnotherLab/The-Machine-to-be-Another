@@ -8,7 +8,7 @@
     <setup_type>0</setup_type>
     <!-- 0 is one-way swap, 1 is two-way swap -->
     <zoom>1.100000024</zoom>
-    <ipd>-40</ipd>
+    <ipd>-42</ipd>
     <alignment>-12</alignment>
     <speed>921</speed>
     <swapLR>0</swapLR>

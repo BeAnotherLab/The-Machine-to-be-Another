@@ -120,7 +120,7 @@ void machine::update() {
 					ofPopMatrix();					
 				} else {
 					ofPushMatrix();
-						ofRotate(90);
+						ofRotate(0);
 						vidGrabberLeft.draw( -(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 					ofPopMatrix();
@@ -142,7 +142,7 @@ void machine::update() {
 					ofPopMatrix();					
 				} else { // mono
 					ofPushMatrix();
-						ofRotate(90);
+						ofRotate(0);
 						vidGrabberLeft.draw(-(-distance.x*speed), -distance.y*speed, camWidth*zoom, camHeight*zoom);	
 					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 					ofPopMatrix();
