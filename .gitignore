@@ -2,6 +2,9 @@
 Thumbs.db
 ehthumbs.db
 
+#video recordings
+bin/data/recordings/*.bmp
+
 # Folder config file
 Desktop.ini
 
