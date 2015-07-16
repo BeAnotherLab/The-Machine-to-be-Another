@@ -4,14 +4,14 @@
     <computer_type>1</computer_type>
     <!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
     <camera_id>1</camera_id>
-    <camera_type>0</camera_type>
-    <ps3_position>1</ps3_position>
-    <!-- 1 is verti, 0 horiz-->
-    <servo_roll>0</servo_roll>
-    <!-- 0 is without servo, 1 is with servo -->
     <!-- 0 is mono, 1 is stereo, 2 is ovrvision -->
-    <setup_type>1</setup_type>
+    <camera_type>0</camera_type>
+    <!-- 1 is vertical, 0 horizontal-->
+    <ps3_position>1</ps3_position>
+    <!-- 0 is without servo, 1 is with servo -->
+    <servo_roll>0</servo_roll>
     <!-- 0 is one-way swap, 1 is two-way swap -->
+    <setup_type>1</setup_type>
     <zoom>1.100000024</zoom>
     <ipd>24</ipd>
     <alignment>-12</alignment>
