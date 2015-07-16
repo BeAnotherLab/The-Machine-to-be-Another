@@ -1,5 +1,6 @@
  <!-- RENAME THIS FILE TO SETTINGS.XML TO CONFIGURE THE APPLICATION -->
 <settings>
+    <setup_type>1</setup_type>
     <ip>192.168.0.102</ip>
     <computer_type>1</computer_type>
     <!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
@@ -11,7 +12,6 @@
     <!-- 0 is without servo, 1 is with servo -->
     <servo_roll>0</servo_roll>
     <!-- 0 is one-way swap, 1 is two-way swap -->
-    <setup_type>1</setup_type>
     <zoom>1.100000024</zoom>
     <ipd>24</ipd>
     <alignment>-12</alignment>
