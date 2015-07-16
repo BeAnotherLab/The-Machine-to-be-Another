@@ -1,29 +1,73 @@
 The-Machine-to-be-Another
 =========================
-Welcome to the the Machine to be Another software repo! It is made with openFrameworks and pure data.
+Welcome to the repository for The Machine to be Another! This is the part built with openFrameworks. To get the (soon to be deprecated) puredata component go to https://github.com/BeAnotherLab/Servos-Control
 
-The software allows you to run two different kind of setups. The gender swap (or two-way swap setup) requires two oculus rift and two usb cameras. In the two-way setup, both video feeds are fed to the other person's head-mounted display. The classic setup requires building your own open-hardware camera vest. The performer carries the vest so that the user can see through his perspective.
+The software allows you to run two different kind of setups. The gender swap (or two-way swap setup) requires two oculus rift and two USB cameras. In the two-way setup, both video feeds are fed to the other person's head-mounted display. The classic setup requires building your own open-hardware camera vest. The performer wears the vest so that the user can see from his perspective.
 
-The communication between computers, between OpenFrameworks and PureData, and between a smartphone controller and OpenFrameworks, is achieved via Open Sound Control. OSC settings may be changed from the testApp.h.
+It can be controlled from the keyboard or through a phone or tablet running TouchOSC.
+The software supports both DK1 and DK2, as well as PS3 cameras (our favorite), ovrvision cameras, and regular USB cameras.
+Only Windows is supported, but the code should easily be ported to OS X.
 
+Setting up the software
+=========================
+Here's an overview of the parameters necessary to setup the application. They should be set in the `settings.xml` file located in bin/data.
+  - setup_type : 0 is one-way swap, 1 is two-way swap
+  - IP : the IP address of the other computer to send the the headtracking data to.
+  - computer_type : in the two way setup, helps differentiating the two computers running the software
+  - camera_id : the id of the camera device you want to use. If you are using a laptop with an integrated webcam, its ID will   usually be 0, so that if you connect another USB camera you should use camera 1.
+  - camera_type : depending on if you're using a regular USB camera or a ovrvision camera. using two USB cameras is not yet     supported  
+  - ps3_position : allows you to choose between vertical or horizontal orientation of the camera
+  - servo_roll : choose whether the roll angle of the point of view should be handled in software or in hardware (using the     rotation of a servo  
+  - zoom : the size at which the video feed will be displayed. Use this to set realistic proportions for the point of view.     Can be set with the `O`and `P` keys.
+  - IPD : the distance at which each eye will be displayed from each other. Tweak to set at a comfortable position. Might be    different for different people. Can be set with `←` and `→` keys.
+  - alignment : the vertical alignment of each eye. When using stereo cameras, might be necessary to adjust for physical        misalignment of the lenses. Can be set via the `N` and `B`keys.
+  - speed : parameter that links the difference between headtrackings to the place the video feed will be displayed. Can be     set via the `K` and `L`keys.
+  - swapLR : swap left and right eyes if they were wrongly assignated.
+  - sounds : here you should put the names of the sound files in mp3 format that you can load from the bin/data/sounds         folder. The first one is the background music that will be looped and sidechained behind the audio instructions. We have     instructions in English, Chinese and French, as well as some recordings from previous performances that you are free to      use.
+
+Running the software
+=========================
+First you need to install the oculus runtime 0.4.4 https://developer.oculus.com/downloads/pc/0.4.4-beta/Oculus_Runtime_for_Windows/
+and if you're using a PS3 camera, you'll need to buy the CLeye PS3 driver 
+https://codelaboratories.com/downloads/
+
+To run the software for the first time, rename the file `settingsexample` in bin/data to `settings.xml` then open it with a text editor.
+Following is a description of the parameters necessary to run each setup.
+For the classic (one-way swap) setup :
+  - setup_type should be set to 0.
+  - The other settings are optional but keep in mind you can choose the orientation of the camera and whether to use a roll servo depending on how you built the ves
+For the gender swap (two-way swap) setup :
+  - setup_type should be set to 1.
+  - IP should be set to the IP of the other computer to send the headtracking data to.
+  - computer_type should be set to a different value on each computer (1 or 2). Computer 1 is the one that will receive         TouchOSC messages and forward them to the other computer.
+  - servo_roll should be set to 0.
+  - The other settings are optional.
+
+Before running the software, make sure the oculus is detected and if you're using a DK2, that it is set in extended display mode. Remember that you must rotate the DK2 display to be in landscape mode using the windows screen resolution menu.
+
+Once you have set the parameters, run `The-Machine-to-be-Another.exe`. Use the console to check for error messages.
+Two windows will show up. One is a debugging view, meant to be displayed on the computer screen, while the other should be dragged onto the Rift display. Press `F` to switch the selected window to fullscreen.
+   
+If you are running the classic setup, check the `Servos Control` part of this readme.
+If you are running the body swap setup, you should be ready to go. Check that moving one Rift moves the display in opposite directions on the other computer. If not, you might need some troubleshooting.
 
 Compiling the software
 =========================
-The project was tested with Openframeworks 0.8.4 on Windows 7&8 + VS Express 2012 and Maverick + XCode
+The project was tested with Openframeworks 0.7.4 on Windows 7&8 + Visual C++ 2010 Express.
 
-1. Download the openframeworks 0.8.4 toolkit and unzip it
+1. Download openframeworks 0.7.4 and unzip it
 2. Using the git console execute```git clone https://github.com/BeAnotherLab/The-Machine-to-be-Another``` inside the ```openframeworks_folder/apps/myapps```. If you download the project as a zip file using the github web interface remove the "-master" extension from the name of the folder.
-3. TODO: Download the required addons inside the folder ```openframeworks_folder/addons``` by running the clone_addons script or manually by.. TODO
-4. Open the project from Visual Studio or XCode and compile.
+3. Clone the modified addons https://github.com/ReallyRad/ofxFenster and https://github.com/ReallyRad/ofxUI into the ```openframeworks_folder/addons``` folder. 
+4. Open the project from Visual Studio and compile.
 
 
-Triggering sounds and TouchOSC control
+TouchOSC control
 =========================
-You can load background music and as many audio samples in mp3 format as you wish with the machine to be another. in https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/src/ofApp.cpp setup() function, calling player.loadSounds("background_music sample_1 sample_2 sample_3"); loads the files named background_music.mp3, sample_1, sample_2, sample_3 and automatically assigns them numpad keys to trigger them. The music will automaticly loop and the next samples can be triggered by pressing keys 1-9 or sending a trigger on /btn*x* through TouchOSC.
+You can load background music and as many audio samples in mp3 format as you wish with the machine to be another. in `settings.xml` putting the file names in the `<sounds>` tag without their extension automatically assigns them numpad keys to trigger them. The music will automaticly loop and the next samples can be triggered by pressing keys 1-9 or sending a trigger on /btn*x* through TouchOSC.
 TouchOSC layouts depend on your devices resolution but you can check in https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/TouchOSC%20layouts
 for examples.
 We also include files we used in different installations or performances made through the years.
-You can also send /dim and /ht to respectively dim the display to black and back and reset the headtracking in case of drift (people must be looking straight for it to work)
+You can also send /dimon /dimoff and /ht to respectively dim the display to black and back and reset the headtracking in case of drift (people must be looking straight for it to work). Also /driftPlus and /driftMinus allow you to nudge drift correction manually.
 
 Building the Vest
 =========================
@@ -42,8 +86,6 @@ https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/3D
 - an LED
 - print or make the circuit that connects to the arduino as a shield https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/files/arduino_shield.zip
 
-we are working on an instructable with detailed fabrication instructions.
-
 Servos control
 ========================
 Servo control pure data patch is here https://github.com/BeAnotherLab/Servos-Control
@@ -56,17 +98,12 @@ TODOs
 ========================	
 If you wish to contribute, then please consider the following :
 
-- Add servomotor control natively in OpenFrameworks. (at the moment it is done with pure data)
-- Use ofxXmlSettings for settings such as experiment type, camera choice, Ip adresses etc.
-- Create a GUI for the corresponding XmlSettings that allows to save them.
+- Add servomotor control with OpenFrameworks. (at the moment it is done with pure data)
+- Create a GUI for the manipulation of xml settings.
 - Detailed documentation of Vest fabrication
-- Map video on a sphere, and use quaternions instead of euler angles for orientation.
-- DK2 display + headtrcking support.
+- Map video on a sphere through a shader, and use quaternions instead of euler angles for orientation.
 - DK2 position tracking support.
 - Camera abstraction to support different devices. (logitech C310, ovrvision, clduo, PS3eye, etc)
-- Create debug view.
 - Barrel Shader class to adapt to different lenses.
 - Creating an abstraction for headtracking to support different kind of devices (GearVR, DK1, DK2, other headsets etc)
 - Your idea here :)
-
-Check the corresponding issues or create one to start exchanging! Thank you so much!
