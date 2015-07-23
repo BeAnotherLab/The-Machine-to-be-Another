@@ -33,9 +33,11 @@ https://codelaboratories.com/downloads/
 
 To run the software for the first time, rename the file `settingsexample` in bin/data to `settings.xml` then open it with a text editor.
 Following is a description of the parameters necessary to run each setup.
+
 For the classic (one-way swap) setup :
   - setup_type should be set to 0.
-  - The other settings are optional but keep in mind you can choose the orientation of the camera and whether to use a roll servo depending on how you built the ves
+  - The other settings are optional but keep in mind you can choose the orientation of the camera and whether to use a roll servo depending on how you built the vest
+  - 
 For the gender swap (two-way swap) setup :
   - setup_type should be set to 1.
   - IP should be set to the IP of the other computer to send the headtracking data to.
