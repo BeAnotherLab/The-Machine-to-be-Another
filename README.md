@@ -78,6 +78,7 @@ We designed a 3D printable vest that you can build yourself. The plastic parts a
 https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/3D
 - this wide FOV lens http://peauproductions.com/store/index.php?main_page=product_info&products_id=76
 - this visible light filter http://peauproductions.com/store/index.php?main_page=product_info&products_id=44
+- an M12 mount with those dimensions (we included a 3D-printable one in the repo but they usually come out with bad quality) http://www.rlx.sk/en/servo-motor/1498-analog-180-micro-servo-arduino-connector-tinkerkit.html
 - a PS3 camera that you open as follows http://www.instructables.com/id/The-EyeWriter/step6/Hack-the-PS3-Eye/ 
 - remember to save the screws from the camera to build the arm
 - 3 of these servos and corresponding connectors http://www.servodatabase.com/servo/springrc/sm-s2309s
