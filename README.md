@@ -23,13 +23,15 @@ Here's an overview of the parameters necessary to setup the application. They sh
   - alignment : the vertical alignment of each eye. When using stereo cameras, might be necessary to adjust for physical        misalignment of the lenses. Can be set via the `N` and `B`keys.
   - speed : parameter that links the difference between headtrackings to the place the video feed will be displayed. Can be     set via the `K` and `L`keys.
   - swapLR : swap left and right eyes if they were wrongly assignated.
-  - sounds : here you should put the names of the sound files in mp3 format that you can load from the bin/data/sounds         folder. The first one is the background music that will be looped and sidechained behind the audio instructions. We have     instructions in English, Chinese and French, as well as some recordings from previous performances that you are free to      use.
+  - sounds : here you should put the names of the sound files in mp3 format that you can load from the bin/data/sounds         folder. The first one is the background music that will be looped and sidechained behind the audio instructions. We have instructions in English, Chinese and French, as well as some recordings from previous performances that you are free to use.
 
 Running the software
 =========================
 First you need to install the oculus runtime 0.4.4 https://developer.oculus.com/downloads/pc/0.4.4-beta/Oculus_Runtime_for_Windows/
 and if you're using a PS3 camera, you'll need to buy the CLeye PS3 driver 
 https://codelaboratories.com/downloads/
+for the classic setup, you need to install the arduino driver if you don't have already
+https://www.arduino.cc/en/guide/windows#toc4
 
 To run the software for the first time, rename the file `settingsexample` in bin/data to `settings.xml` then open it with a text editor.
 Following is a description of the parameters necessary to run each setup.
