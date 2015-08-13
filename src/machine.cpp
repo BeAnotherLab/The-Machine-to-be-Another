@@ -14,8 +14,7 @@ void machine::setup(ofxXmlSettings * se)
 	settings = se;
 	setup_type = settings->getValue("settings:setup_type", ONE_WAY_SWAP);
 	camera_type = settings->getValue("settings:camera_type", MONO);
-	swapLR = settings->getValue("settings:swapLR", 0);
-	//tested with PS3Eye camera.	
+	swapLR = settings->getValue("settings:swapLR", 0);	
 	ipd = settings->getValue("settings:ipd", 8);
 	camWidth = 640;
 	camHeight = 480;
@@ -25,20 +24,20 @@ void machine::setup(ofxXmlSettings * se)
 		vidGrabberLeft.setVerbose(true);
         vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 1));							
 		vidGrabberLeft.setDesiredFrameRate(120);
-		vidGrabberLeft.initGrabber(camWidth,camHeight);			
+		vidGrabberLeft.initGrabber(camWidth, camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
 	} else if (camera_type == STEREO) {		
 	    vidGrabberRight.setVerbose(true);
 		vidGrabberRight.setDeviceID(settings->getValue("settings:camera_id", 2));
 		vidGrabberRight.setDesiredFrameRate(120);
-		vidGrabberRight.initGrabber(camWidth,camHeight);	
-		vidGrabberRight.setAnchorPercent(0.5,0.5);
+		vidGrabberRight.initGrabber(camWidth, camHeight);	
+		vidGrabberRight.setAnchorPercent(0.5, 0.5);
 	} else if (camera_type == OVRVISION) {
 		g_pOvrvision = new OVR::Ovrvision();
-	    g_pOvrvision->Open(0,OVR::OV_CAMVGA_FULL);   
-	    left.allocate(camWidth,camHeight,GL_RGB);
-		left.setAnchorPercent(0.5,0.5);
-	    right.allocate(camWidth,camHeight,GL_RGB);
+	    g_pOvrvision->Open(0, OVR::OV_CAMVGA_FULL);   
+	    left.allocate(camWidth, camHeight,GL_RGB);
+		left.setAnchorPercent(0.5, 0.5);
+	    right.allocate(camWidth, camHeight, GL_RGB);
 		right.setAnchorPercent(0.5,0.5);
 	}
 
@@ -101,77 +100,36 @@ void machine::update() {
 
 	if (camera_type == MONO) {
 		vidGrabberLeft.update();
+		drawTextureInFbo(&vidGrabberLeft.getTextureReference(), &fboLeft);
+		drawTextureInFbo(&vidGrabberLeft.getTextureReference(), &fboRight);		
 	} else if (camera_type == STEREO) {
+		//This is a stub, not yet implemented
+		vidGrabberLeft.update();
 		vidGrabberRight.update();
+		drawTextureInFbo(&vidGrabberLeft.getTextureReference(), &fboLeft);
+		drawTextureInFbo(&vidGrabberRight.getTextureReference(), &fboRight);		
 	} else if (camera_type == OVRVISION) {		
 		g_pOvrvision->PreStoreCamData();
-		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);		
-		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);	
+		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);		
+		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);	
+		drawTextureInFbo(&left, &fboLeft);
+		drawTextureInFbo(&right, &fboRight);		
 	}
 	
-	ofVec2f distance = getDistance();	
 	ofSetColor(255);
+}
 
-	fboLeft.begin();					
-		ofBackground(0);				
-		ofPushMatrix();			
-			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center					
-			if (servo_roll == OFF_SERVO_ROLL) { //dont use roll servo
-				ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
-			} 
-			if (camera_type == OVRVISION) {										
-				ofPushMatrix();
-					ofRotate(180, 0, 0, 1);
-					left.draw(-ipd - distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
-				ofPopMatrix();					
-			}
-			else {
-				ofPushMatrix();
-					if (ps3_position == PS3_VERTI) { 
-						ofRotate(90);
-						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);	
-					}else{
-						ofRotate(0);
-						vidGrabberLeft.draw(ipd + distance.y*speed+calibration, distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);						
-					}
-
-					
-					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
-				ofPopMatrix();
-			}				
-		ofPopMatrix();										
-	fboLeft.end();	
-			
-	fboRight.begin();						
-		ofBackground(0);
-		ofPushMatrix();			
-			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
-			if (servo_roll == OFF_SERVO_ROLL) { //if roll servo disabled
-				ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
-			} 
-			if (camera_type == STEREO) {				
-				vidGrabberRight.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
-			}
-			else if (camera_type == OVRVISION) {		
-					ofPushMatrix();
-						ofRotate(180, 0, 0, 1);
-						right.draw(- distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
-					ofPopMatrix();					
-			} 
-			else { // mono
-				ofPushMatrix();
-					if (ps3_position == PS3_VERTI) { 
-						ofRotate(90);
-						vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);
-					}else{
-						vidGrabberLeft.draw(ipd + distance.y*speed+calibration, distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);	
-					}
-						
-					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
-				ofPopMatrix();
-			}
-		ofPopMatrix();			
-	fboRight.end();	
+void machine::drawTextureInFbo(ofTexture* tex, ofFbo* fbo) {
+	ofVec2f distance = getDistance();
+	fbo->begin();					
+	ofBackground(0);							
+	ofTranslate(fbo->getWidth()/2, fbo->getHeight()/2); //move to fbo center							
+	if (servo_roll == OFF_SERVO_ROLL) ofRotate(ofRadToDeg(roll-rx_roll)); 	
+	ofPushMatrix();			    
+	//tex->draw(ipd + distance.x*speed, -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);	
+	tex->draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
+	ofPopMatrix();										
+	fbo->end();
 }
 
 ofVec2f machine::getDistance() {
@@ -315,6 +273,74 @@ machine::~machine(void)
 {
 	
 }
+
+/*
+
+	fboLeft.begin();					
+		ofBackground(0);				
+		ofPushMatrix();			
+			ofTranslate(fboLeft.getWidth()/2, fboLeft.getHeight()/2); //move to fbo center					
+			if (servo_roll == OFF_SERVO_ROLL) { //dont use roll servo
+				ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
+			} 
+			if (camera_type == OVRVISION) {										
+				ofPushMatrix();
+					ofRotate(180, 0, 0, 1);
+					left.draw(-ipd - distance.y*speed, - distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);					
+				ofPopMatrix();					
+			}
+			else {
+				ofPushMatrix();
+					if (ps3_position == PS3_VERTI) { 
+						ofRotate(90);
+						//vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);	
+						vidGrabberLeft.draw(ipd + distance.y*speed+calibration, distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);						
+					}
+					else {
+						ofRotate(0);
+						vidGrabberLeft.draw(ipd + distance.y*speed+calibration, distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);						
+					}
+					
+					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
+				ofPopMatrix();
+			}				
+		ofPopMatrix();										
+	fboLeft.end();	
+			
+	fboRight.begin();						
+		ofBackground(0);
+		ofPushMatrix();			
+			ofTranslate(fboRight.getWidth()/2, fboRight.getHeight()/2); //move to fbo center	
+			if (servo_roll == OFF_SERVO_ROLL) { //if roll servo disabled
+				ofRotate(ofRadToDeg(roll-rx_roll), 0, 0, 1); //rotate from centre
+			} 
+			if (camera_type == STEREO) {				
+				vidGrabberRight.draw(distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+			}
+			else if (camera_type == OVRVISION) {							
+					ofRotate(180, 0, 0, 1);
+					ofPushMatrix();
+						right.draw(- distance.y*speed, - distance.x*speed - alignment, camWidth*zoom, camHeight*zoom);	
+					ofPopMatrix();	 				
+			} 
+			else { // mono
+				ofPushMatrix();
+					if (ps3_position == PS3_VERTI) { 
+						ofRotate(90);
+						ofPushMatrix();
+							//vidGrabberLeft.draw(ipd -(-distance.x*speed), -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);
+						vidGrabberLeft.draw(ipd + distance.y*speed+calibration, distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);	
+						ofPopMatrix();
+					}else{
+						vidGrabberLeft.draw(ipd + distance.y*speed+calibration, distance.x*speed + alignment, camWidth*zoom, camHeight*zoom);	
+					}
+						
+					//vidGrabberLeft.draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
+				ofPopMatrix();
+			}
+		ofPopMatrix();			
+	fboRight.end();	
+*/
 
 /*
 	// Configure Stereo settings.

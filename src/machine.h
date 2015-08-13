@@ -72,6 +72,7 @@ public:
 
 	void machine::setup(ofxXmlSettings *settings);
 	void machine::update();
+	void machine::drawTextureInFbo(ofTexture * tex, ofFbo * fbo);
 	void machine::drawVideo();
 	void machine::drawMonitor();
 	void machine::drawOverlay();	
