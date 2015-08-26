@@ -70,6 +70,10 @@ public:
 	ofxXmlSettings * settings;
 	int swapLR;
 
+	#define LATENCY 5
+	ofTexture buffer[LATENCY];
+	int frameCount;
+
 	void machine::setup(ofxXmlSettings *settings);
 	void machine::update();
 	void machine::drawTextureInFbo(ofTexture * tex, ofFbo * fbo);

@@ -91,17 +91,25 @@ void machine::setup(ofxXmlSettings * se)
 	servo_roll = settings->getValue(  "settings:servo_roll", 0);
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
+	
+	for (int i = 0; i < LATENCY; i++) {		
+		buffer[i] = *new ofTexture(vidGrabberLeft.getTextureReference());		
+		cout << "filling buffer for first time at element " << i << endl;
+	}
+	frameCount = 0;
+
 }
 
 void machine::update() {
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
-	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.
-
+	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.	
+	
 	if (camera_type == MONO) {
-		vidGrabberLeft.update();
-		drawTextureInFbo(&vidGrabberLeft.getTextureReference(), &fboLeft);
-		drawTextureInFbo(&vidGrabberLeft.getTextureReference(), &fboRight);		
+		cout << "writing in FBO element at  " << frameCount%LATENCY << endl;
+		drawTextureInFbo(&buffer[frameCount%LATENCY], &fboLeft);
+		drawTextureInFbo(&buffer[frameCount%LATENCY], &fboRight);
+		vidGrabberLeft.update();			
 	} else if (camera_type == STEREO) {
 		//This is a stub, not yet implemented
 		vidGrabberLeft.update();
@@ -115,8 +123,13 @@ void machine::update() {
 		drawTextureInFbo(&left, &fboLeft);
 		drawTextureInFbo(&right, &fboRight);		
 	}
-	
-	ofSetColor(255);
+
+	//newest frame is at frameCount%LATENCY
+	cout << "buffering newest frame at element" << frameCount%LATENCY << endl;
+	buffer[frameCount%LATENCY] = *new ofTexture(vidGrabberLeft.getTextureReference());
+	frameCount++;
+
+	ofSetColor(255);	
 }
 
 void machine::drawTextureInFbo(ofTexture* tex, ofFbo* fbo) {
