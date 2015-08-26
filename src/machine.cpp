@@ -23,13 +23,13 @@ void machine::setup(ofxXmlSettings * se)
 	if (camera_type == MONO) {
 		vidGrabberLeft.setVerbose(true);
         vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 1));							
-		vidGrabberLeft.setDesiredFrameRate(120);
+		vidGrabberLeft.setDesiredFrameRate(75);
 		vidGrabberLeft.initGrabber(camWidth, camHeight);			
 		vidGrabberLeft.setAnchorPercent(0.5,0.5);
 	} else if (camera_type == STEREO) {		
 	    vidGrabberRight.setVerbose(true);
 		vidGrabberRight.setDeviceID(settings->getValue("settings:camera_id", 2));
-		vidGrabberRight.setDesiredFrameRate(120);
+		vidGrabberRight.setDesiredFrameRate(75);
 		vidGrabberRight.initGrabber(camWidth, camHeight);	
 		vidGrabberRight.setAnchorPercent(0.5, 0.5);
 	} else if (camera_type == OVRVISION) {
@@ -98,7 +98,7 @@ void machine::setup(ofxXmlSettings * se)
 		buffer.push(new ofImage(vidGrabberLeft.getPixelsRef()));
 		//cout << "filling buffer for first time at element " << i << endl;
 	}
-
+	latency = false;
 }
 
 void machine::update() {
@@ -108,8 +108,13 @@ void machine::update() {
 	
 	if (camera_type == MONO) {
 		//cout << "writing in FBO element at back of queue " << endl;
-		drawTextureInFbo(buffer.front(), &fboLeft);
-		drawTextureInFbo(buffer.front(), &fboRight);
+		if (latency) {
+			drawTextureInFbo(buffer.front(), &fboLeft);
+			drawTextureInFbo(buffer.front(), &fboRight);
+		} else {
+			drawTextureInFbo(buffer.back(), &fboLeft);
+			drawTextureInFbo(buffer.back(), &fboRight);
+		}
 		vidGrabberLeft.update();			
 	} else if (camera_type == STEREO) {
 		//This is a stub, not yet implemented
@@ -129,7 +134,7 @@ void machine::update() {
 	//cout << "buffering newest frame at element" << frameCount%LATENCY << endl;
 	if (vidGrabberLeft.isFrameNew()) {
 		buffer.push(new ofImage(vidGrabberLeft.getPixelsRef()));	
-		delete  buffer.front();
+		delete buffer.front();
 		buffer.pop();
 	}
 	//buffer.pop();
@@ -219,7 +224,8 @@ void machine::debug() {
 	
 	ofDrawBitmapString("drift correction : " + ofToString(calibration), 10, 140);	
 	
-	ofDrawBitmapString("buffering queue size : " + ofToString(buffer.size()), 10, 150);	
+	if (latency) ofDrawBitmapString("latency ON", 10, 150);	
+	if (!latency) ofDrawBitmapString("latency OFF", 10, 150);	
 
 	//ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
 	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);

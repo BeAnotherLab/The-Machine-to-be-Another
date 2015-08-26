@@ -70,10 +70,10 @@ public:
 	ofxXmlSettings * settings;
 	int swapLR;
 
-	#define LATENCY 50
+	#define LATENCY 20
 	//ofTexture buffer[LATENCY];
 	queue <ofImage*> buffer;
-	int frameCount;
+	bool latency;
 
 	void machine::setup(ofxXmlSettings *settings);
 	void machine::update();

@@ -150,6 +150,10 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		window->toggleFullscreen();
 	}
 
+	
+	if ((key == 'l' || key == 'L')) {   		
+		machine.latency = !machine.latency;
+	}
 	//playtracks through keys 0-9 
     if ((key>47) && (key < (48 + player.sounds.size()))) {
 		player.playSound(key-48); //my non programmer solution to using keys 0-9        
