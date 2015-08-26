@@ -92,11 +92,12 @@ void machine::setup(ofxXmlSettings * se)
 	dimTimer = ofGetElapsedTimeMillis();
 	dimmed = false;		
 	
-	for (int i = 0; i < LATENCY; i++) {		
-		buffer[i] = *new ofTexture(vidGrabberLeft.getTextureReference());		
-		cout << "filling buffer for first time at element " << i << endl;
+	for (int i = 0; i < LATENCY; i++) {				
+		vidGrabberLeft.update();
+		//ofImage img = new ofImage(
+		buffer.push(new ofImage(vidGrabberLeft.getPixelsRef()));
+		//cout << "filling buffer for first time at element " << i << endl;
 	}
-	frameCount = 0;
 
 }
 
@@ -106,41 +107,45 @@ void machine::update() {
 	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.	
 	
 	if (camera_type == MONO) {
-		cout << "writing in FBO element at  " << frameCount%LATENCY << endl;
-		drawTextureInFbo(&buffer[frameCount%LATENCY], &fboLeft);
-		drawTextureInFbo(&buffer[frameCount%LATENCY], &fboRight);
+		//cout << "writing in FBO element at back of queue " << endl;
+		drawTextureInFbo(buffer.front(), &fboLeft);
+		drawTextureInFbo(buffer.front(), &fboRight);
 		vidGrabberLeft.update();			
 	} else if (camera_type == STEREO) {
 		//This is a stub, not yet implemented
 		vidGrabberLeft.update();
 		vidGrabberRight.update();
-		drawTextureInFbo(&vidGrabberLeft.getTextureReference(), &fboLeft);
-		drawTextureInFbo(&vidGrabberRight.getTextureReference(), &fboRight);		
+		//drawTextureInFbo(vidGrabberLeft.getTextureReference(), &fboLeft);
+		//drawTextureInFbo(vidGrabberRight.getTextureReference(), &fboRight);		
 	} else if (camera_type == OVRVISION) {		
 		g_pOvrvision->PreStoreCamData();
 		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);		
 		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);	
-		drawTextureInFbo(&left, &fboLeft);
-		drawTextureInFbo(&right, &fboRight);		
+		//drawTextureInFbo(left, &fboLeft);
+		//drawTextureInFbo(right, &fboRight);		
 	}
 
 	//newest frame is at frameCount%LATENCY
-	cout << "buffering newest frame at element" << frameCount%LATENCY << endl;
-	buffer[frameCount%LATENCY] = *new ofTexture(vidGrabberLeft.getTextureReference());
-	frameCount++;
-
+	//cout << "buffering newest frame at element" << frameCount%LATENCY << endl;
+	if (vidGrabberLeft.isFrameNew()) {
+		buffer.push(new ofImage(vidGrabberLeft.getPixelsRef()));	
+		delete  buffer.front();
+		buffer.pop();
+	}
+	//buffer.pop();
 	ofSetColor(255);	
 }
 
-void machine::drawTextureInFbo(ofTexture* tex, ofFbo* fbo) {
+void machine::drawTextureInFbo(ofImage * img, ofFbo* fbo) {
 	ofVec2f distance = getDistance();
+	img->setAnchorPercent(0.5,0.5);
 	fbo->begin();					
 	ofBackground(0);							
 	ofTranslate(fbo->getWidth()/2, fbo->getHeight()/2); //move to fbo center							
 	if (servo_roll == OFF_SERVO_ROLL) ofRotate(ofRadToDeg(roll-rx_roll)); 	
 	ofPushMatrix();			    
 	//tex->draw(ipd + distance.x*speed, -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);	
-	tex->draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
+	img->draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
 	ofPopMatrix();										
 	fbo->end();
 }
@@ -213,6 +218,8 @@ void machine::debug() {
 	}
 	
 	ofDrawBitmapString("drift correction : " + ofToString(calibration), 10, 140);	
+	
+	ofDrawBitmapString("buffering queue size : " + ofToString(buffer.size()), 10, 150);	
 
 	//ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
 	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);
