@@ -46,10 +46,7 @@ void machine::setup(ofxXmlSettings * se)
 	roll = 0;
 	rx_pitch = 0;
 	rx_yaw = 0;
-	rx_roll = 0;
-	pitch_cal = 0;
-	yaw_cal = 0;
-	roll_cal = 0;
+	rx_roll = 0;		
 
 	//These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
     //kept as ref, but they need to be properly calibrated according to camera and lens used.
@@ -89,7 +86,7 @@ void machine::setup(ofxXmlSettings * se)
 	ipd = settings->getValue("settings:ipd", 8);	
 	ps3_position = settings->getValue("settings:ps3_position", 0);
 	servo_roll = settings->getValue(  "settings:servo_roll", 0);
-	dimTimer = ofGetElapsedTimeMillis();
+	
 	dimmed = false;		
 	
 	for (int i = 0; i < LATENCY; i++) {				
@@ -99,6 +96,7 @@ void machine::setup(ofxXmlSettings * se)
 		//cout << "filling buffer for first time at element " << i << endl;
 	}
 	latency = false;
+	dimValue = 255;
 }
 
 void machine::update() {
@@ -137,8 +135,8 @@ void machine::update() {
 		delete buffer.front();
 		buffer.pop();
 	}
-	//buffer.pop();
-	ofSetColor(255);	
+	
+	ofSetColor(255);		
 }
 
 void machine::drawTextureInFbo(ofImage * img, ofFbo* fbo) {
@@ -149,10 +147,11 @@ void machine::drawTextureInFbo(ofImage * img, ofFbo* fbo) {
 	ofTranslate(fbo->getWidth()/2, fbo->getHeight()/2); //move to fbo center							
 	if (servo_roll == OFF_SERVO_ROLL) ofRotate(ofRadToDeg(roll-rx_roll)); 	
 	ofPushMatrix();			    
-	//tex->draw(ipd + distance.x*speed, -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);	
-	img->draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);
-	ofPopMatrix();										
+	//tex->draw(ipd + distance.x*speed, -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);
+	img->draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);		
+	ofPopMatrix();											
 	fbo->end();
+	ofSetColor(255);
 }
 
 ofVec2f machine::getDistance() {
@@ -167,6 +166,7 @@ ofVec2f machine::getDistance() {
 }
 
 void machine::drawVideo() {				
+	dim();
 	if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice instead
 		fboLeft.draw(-ipd + ofGetWidth()/4, ofGetHeight()/2); //draw left	
 		fboLeft.draw(ipd + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
@@ -179,13 +179,7 @@ void machine::drawVideo() {
 			 fboRight.draw(ofGetWidth()/4, ofGetHeight()/2); //draw right to the left.		 
 			 fboLeft.draw(3*ofGetWidth()/4, ofGetHeight()/2); //draw left to the right	
 		 }
-	}		
-	ofSetColor(255);
-	//dim();
- 	if (dimmed) {
-		ofSetColor(0);
-		ofRect(0,0,ofGetWidth(), ofGetHeight());
-	}
+	}			
 	ofSetColor(255);
 }
 
@@ -199,8 +193,7 @@ void machine::drawMonitor() {
 	ofSetColor(255);
 }
 
-void machine::debug() {	
-	
+void machine::debug() {		
 	string framerate = ofToString(ofGetFrameRate());		
 	ofDrawBitmapString("FPS : " + framerate, 10, 10);
 	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,20); //10
@@ -216,62 +209,33 @@ void machine::debug() {
 	ofDrawBitmapString("distance.y : " + ofToString(getDistance().y), 10, 100);	
 	
 	ofDrawBitmapString("swap L/R: " + ofToString(swapLR), 10, 110);
-	if (dimmed == true) {
-		ofDrawBitmapString("oculus screen is OFF", 10, 120); 
-	} else if (dimmed == false) {
-		ofDrawBitmapString("oculus screen is ON", 10, 130); 
-	}
+	
+	if (dimmed) ofDrawBitmapString("oculus screen is OFF", 10, 120); 
+	else		ofDrawBitmapString("oculus screen is ON", 10, 120); 	
 	
 	ofDrawBitmapString("drift correction : " + ofToString(calibration), 10, 140);	
 	
 	if (latency) ofDrawBitmapString("latency ON", 10, 150);	
-	if (!latency) ofDrawBitmapString("latency OFF", 10, 150);	
+	else		 ofDrawBitmapString("latency OFF", 10, 150);	
 
-	//ofDrawBitmapString("tracking caps " + ofToString(hmd->TrackingCaps), 10, 120);
-	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps && 0x001), 10, 130);
-	//ofDrawBitmapString("yaw drift correction : " + ofToString(hmd->TrackingCaps % 2), 10, 140);
-
+	ofDrawBitmapString("dimValue " + ofToString(dimValue), 10, 160);		
 }
 
-void machine::drawOverlay() {
-		
-}
+void machine::dim() {	
+	int next;
 
-void machine::dim() {
-	int timeDim = ofGetElapsedTimeMillis() - dimTimer;
-	//ofDrawBitmapString("alpha  : " + ofToString(ofMap(timeDim,0,2000,0,255)), 10,100);	
-	ofSetColor(0);
-	if (timeDim < 2000) {//if dim/undim was triggered less than 2 seconds ago
-		if (dimmed == true) { //if we must dim the lights			
-			ofSetColor(0,ofMap(timeDim,0,2000,0,255));			
-			ofRect(0,0,ofGetWidth(),ofGetHeight());
-			ofCircle(ofGetMouseX(),ofGetMouseY(),50);
-		}
-		else { //if we must turn the lights back on;
-			ofSetColor(255);
-			ofDrawBitmapString("alpha  : " + ofToString(ofMap(timeDim,0,2000,255,0)), 10,100);	
-			ofSetColor(0,ofMap(timeDim,0,2000,255,0));			
-			ofRect(0,0,ofGetWidth(), ofGetHeight());
-			ofCircle(ofGetMouseX(),ofGetMouseY(),50);
-		}
-	}
-	else if (dimmed == true) { // stay dark
-		ofRect(0,0,ofGetWidth(), ofGetHeight());
-		ofCircle(ofGetMouseX(),ofGetMouseY(),50);
-	}		
-	ofSetColor(255);
-//	ofCircle(ofGetMouseX(),ofGetMouseY(),50);
-}
+	//if headtracking outside of range or dimmed on
+	if (abs(ofRadToDeg(yaw)) > RANGE || dimmed ) next = 0;
 
-void machine::triggerDim() {
-	dimTimer = ofGetElapsedTimeMillis();
-	dimmed = !dimmed;	
+	//if headtracking in range and dimmed off
+	else if (abs(ofRadToDeg(yaw)) < RANGE && !dimmed) next = 255;
+	dimValue = dimValue + 0.03*(next-dimValue);
+	ofSetColor(dimValue);		
 }
 
 void machine::calibrate() {	
 	ovrHmd_RecenterPose(hmd);
-	calibration=0;
-	//pitch_cal = pitch;
+	calibration=0;	
 }
 
 float* machine::getHeadtracking(){

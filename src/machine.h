@@ -70,10 +70,14 @@ public:
 	ofxXmlSettings * settings;
 	int swapLR;
 
-	#define LATENCY 20
-	//ofTexture buffer[LATENCY];
+	//buffering video stream
+	#define LATENCY 20	
 	queue <ofImage*> buffer;
 	bool latency;
+
+	//limiting headtracking range
+	#define RANGE 40
+	float dimValue;
 
 	void machine::setup(ofxXmlSettings *settings);
 	void machine::update();
@@ -89,6 +93,7 @@ public:
 	void machine::clear();
 	void machine::debug();
 	void machine::distortion();
+	void machine::headTrackingRange();
 	machine(void);
 	~machine(void);
 };

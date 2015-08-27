@@ -31,16 +31,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(ofxFenster* window){  
-//void ofApp::draw(){  
-	if (window->id==0) {
-		ofBackground(0);	        		
-		ofSetHexColor(0xffffff);									    
-		machine.drawMonitor();
-		machine.drawOverlay();    
+	if (window->id==0) { //monitor window
+		ofBackground(0);	        				
+		machine.drawMonitor();		
 		machine.debug();		
 		recordDebug();
-//		machine.debug();
-	} else if (window->id==1) {
+	} else if (window->id==1) { //oculus window
 		ofBackground(0);	 
 		machine.drawVideo();		
 	}
