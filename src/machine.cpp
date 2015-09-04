@@ -87,7 +87,7 @@ void machine::setup(ofxXmlSettings * se)
 	ps3_position = settings->getValue("settings:ps3_position", 0);
 	servo_roll = settings->getValue(  "settings:servo_roll", 0);
 	
-	dimmed = false;		
+	dimmed = true;		
 	
 	for (int i = 0; i < LATENCY; i++) {				
 		vidGrabberLeft.update();
@@ -184,12 +184,8 @@ void machine::drawVideo() {
 }
 
 void machine::drawMonitor() {	
-	if (dimmed==true){
-		ofSetColor(75);
-		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2);	
-	} else {
-		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2);	
-	}
+	if (dimmed==true) ofSetColor(75);
+	vidGrabberLeft.draw(ofGetWidth()/2, ofGetHeight()/2);		
 	ofSetColor(255);
 }
 
