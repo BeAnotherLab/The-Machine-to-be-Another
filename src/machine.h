@@ -3,6 +3,7 @@
 #include "OVR.h"
 #include "ofxXmlSettings.h"
 #include <ovrvision.h>		//Ovrvision SDK
+#include "ofxFensterManager.h"
 //#include "COculusVR.h" //Oculus SDK
 
 #define ONE_WAY_SWAP 0
@@ -83,7 +84,7 @@ public:
 	void machine::update();
 	void machine::drawTextureInFbo(ofImage * img, ofFbo * fbo);
 	void machine::drawVideo();
-	void machine::drawMonitor();
+	void machine::drawMonitor(ofxFenster* window);
 	void machine::drawOverlay();	
 	void machine::calibrate();		
 	float* machine::getHeadtracking();

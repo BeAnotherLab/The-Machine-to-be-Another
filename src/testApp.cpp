@@ -33,7 +33,7 @@ void ofApp::update(){
 void ofApp::draw(ofxFenster* window){  
 	if (window->id==0) { //monitor window
 		ofBackground(0);	        				
-		machine.drawMonitor();		
+		machine.drawMonitor(window);		
 		machine.debug();		
 		recordDebug();
 	} else if (window->id==1) { //oculus window

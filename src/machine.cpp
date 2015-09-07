@@ -183,9 +183,9 @@ void machine::drawVideo() {
 	ofSetColor(255);
 }
 
-void machine::drawMonitor() {	
-	if (dimmed==true) ofSetColor(75);
-	vidGrabberLeft.draw(ofGetWidth()/2, ofGetHeight()/2);		
+void machine::drawMonitor(ofxFenster* window) {	
+	if (dimmed==true) ofSetColor(75);			
+	vidGrabberLeft.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth(), window->getHeight());		
 	ofSetColor(255);
 }
 
