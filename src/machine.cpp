@@ -70,7 +70,6 @@ void machine::setup(ofxXmlSettings * se)
 		fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 		fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 	}
-
 	
 	fboLeft.setAnchorPercent(0.5, 0.5);
 	fboRight.setAnchorPercent(0.5, 0.5);
@@ -104,28 +103,23 @@ void machine::update() {
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.	
 	
-	if (camera_type == MONO) {
-		//cout << "writing in FBO element at back of queue " << endl;
+	if (camera_type == MONO) {		
 		if (latency) {
-			drawTextureInFbo(buffer.front(), &fboLeft);
-			drawTextureInFbo(buffer.front(), &fboRight);
+			drawInFbo(buffer.front(), &fboLeft);
+			drawInFbo(buffer.front(), &fboRight);
 		} else {
-			drawTextureInFbo(buffer.back(), &fboLeft);
-			drawTextureInFbo(buffer.back(), &fboRight);
+			drawInFbo(buffer.back(), &fboLeft);
+			drawInFbo(buffer.back(), &fboRight);
 		}
 		vidGrabberLeft.update();			
 	} else if (camera_type == STEREO) {
 		//This is a stub, not yet implemented
 		vidGrabberLeft.update();
 		vidGrabberRight.update();
-		//drawTextureInFbo(vidGrabberLeft.getTextureReference(), &fboLeft);
-		//drawTextureInFbo(vidGrabberRight.getTextureReference(), &fboRight);		
 	} else if (camera_type == OVRVISION) {		
 		g_pOvrvision->PreStoreCamData();
 		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);		
 		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);	
-		//drawTextureInFbo(left, &fboLeft);
-		//drawTextureInFbo(right, &fboRight);		
 	}
 
 	//newest frame is at frameCount%LATENCY
@@ -139,7 +133,7 @@ void machine::update() {
 	ofSetColor(255);		
 }
 
-void machine::drawTextureInFbo(ofImage * img, ofFbo* fbo) {
+void machine::drawInFbo(ofImage * img, ofFbo* fbo) {
 	ofVec2f distance = getDistance();
 	img->setAnchorPercent(0.5,0.5);
 	fbo->begin();					

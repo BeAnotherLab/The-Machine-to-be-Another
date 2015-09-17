@@ -11,10 +11,11 @@ void ofApp::setup(){
 	//player.loadSounds("genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
 	settings.loadFile("settings.xml");			
 
-	player.loadSounds(&settings);			
+	mySoundPlayer.loadSounds(&settings);	
+	myVideoPlayer.loadVideos(&settings);
 
     machine.setup(&settings); 
-	controller.setup(&machine, &player, &settings);
+	controller.setup(&machine, &mySoundPlayer, &myVideoPlayer, &settings);
 
 	ofxFenster* win = ofxFensterManager::get()->createFenster(640, 480, OF_WINDOW);
 	win->addListener(this);		
@@ -24,7 +25,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){				    
 	machine.update();
-	player.update();
+	mySoundPlayer.update();
+	myVideoPlayer.update();
 	controller.loop();				
 	record();
 }

@@ -1,8 +1,9 @@
 #include "oscController.h"
 
-void oscController::setup(machine* m, soundPlayer* p, ofxXmlSettings* s){
+void oscController::setup(machine* m, soundPlayer* p, videoPlayer* v, ofxXmlSettings* s){
 	myMachine = m;
 	mySoundPlayer = p;	
+	myVideoPlayer = v;
 	computerType = s->getValue("settings:computer_type", 0);
 	if (myMachine->setup_type == TWO_WAY_SWAP) sender.setup(s->getValue("settings:ip", "localhost"), 8015);
 	else if (myMachine->setup_type == ONE_WAY_SWAP) sender.setup("localhost", 8015);	
@@ -21,21 +22,17 @@ void oscController::loop() {
 			} else {
 				myMachine->calibration-=20;
 			}
-		}				
-		if (rx_msg.getAddress() == "/driftMinus") {			
+		} else if (rx_msg.getAddress() == "/driftMinus") {			
 			if(computerType==1){ 
 				myMachine->calibration-=20;
 			} else {
 				myMachine->calibration+=20;
 			}
-		}
-		if (rx_msg.getAddress() == "/dimoff") {			
+		} else if (rx_msg.getAddress() == "/dimoff") {			
 			myMachine->dimmed=false;			
-		}
-		if (rx_msg.getAddress() == "/dimon") {			
+		} else if (rx_msg.getAddress() == "/dimon") {			
 			myMachine->dimmed=true;			
-		}		
-		else if (rx_msg.getAddress() == "/ht") {
+		} else if (rx_msg.getAddress() == "/ht") {
 			myMachine->calibrate();		
 		}		
 		//receive headtracking when two-way swap
@@ -43,15 +40,23 @@ void oscController::loop() {
 			myMachine->rx_roll = rx_msg.getArgAsFloat(0);
 			myMachine->rx_pitch = rx_msg.getArgAsFloat(1);
 			myMachine->rx_yaw = rx_msg.getArgAsFloat(2);                  
+		} else {
+			for (int i=0; i<mySoundPlayer->count; i++) {
+				stringstream a;
+				a << "/btn" << i;
+				if (rx_msg.getAddress() == a.str()) {
+					mySoundPlayer->playSound(i); //play sound at i				
+				} 
+			}		
+			for (int i=0; i<myVideoPlayer->count; i++) {
+				stringstream a;
+				a << "/btn" << i;
+				if (rx_msg.getAddress() == a.str()) {
+					mySoundPlayer->playSound(i); //play sound at i				
+				} 
+			}
 		}
-		for (int i=0; i<mySoundPlayer->count; i++) {
-			stringstream a;
-			a << "/btn" << i;
-			if (rx_msg.getAddress() == a.str()) {
-				mySoundPlayer->playSound(i); //play sound at i				
-			} 
-		}		
-		
+
 		if(computerType==1) oscRepeat(rx_msg);
 	}
 	

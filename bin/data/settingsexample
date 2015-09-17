@@ -19,4 +19,5 @@
     <speed>921</speed>
     <swapLR>0</swapLR>
     <sounds>genderswapmusic welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en calibrate_en lookaround_en</sounds>
+    <videos>test</videos>
 </settings>

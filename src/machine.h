@@ -52,6 +52,8 @@ public:
 
     ofVideoGrabber vidGrabberLeft, vidGrabberRight; //for using with webcam or PS3 camera		
 	
+	vector<ofVideoPlayer> videoPlayers; //contains videos to be played back
+
 	ofTexture left, right; //for using with ovrvision cameras    
 
 	ofFbo fboLeft, fboRight; //where we draw image for each different eye
@@ -77,7 +79,7 @@ public:
 
 	void machine::setup(ofxXmlSettings *settings);
 	void machine::update();
-	void machine::drawTextureInFbo(ofImage * img, ofFbo * fbo);
+	void machine::drawInFbo(ofImage * img, ofFbo * fbo);
 	void machine::drawVideo();
 	void machine::drawMonitor(ofxFenster* window);
 	void machine::drawOverlay();	

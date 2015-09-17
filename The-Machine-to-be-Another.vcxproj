@@ -126,6 +126,7 @@
     <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxFenster.cpp" />
     <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxFensterCanvas.cpp" />
     <ClCompile Include="..\..\..\addons\ofxFenster\src\ofxFensterManager.cpp" />
+    <ClCompile Include="src\videoPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
@@ -251,6 +252,7 @@
     <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWaveform.h" />
     <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidget.h" />
     <ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidgetWithLabel.h" />
+    <ClInclude Include="src\videoPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\libs\openFrameworksCompiled\project\vs2010\openframeworksLib.vcxproj">
