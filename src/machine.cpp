@@ -84,7 +84,7 @@ void machine::setup(ofxXmlSettings * se)
 	speed = settings->getValue("settings:speed", 920);
 	alignment = settings->getValue("settings:alignment", 0);
 	ipd = settings->getValue("settings:ipd", 8);	
-	ps3_position = settings->getValue("settings:ps3_position", 0);
+	orientation = settings->getValue("settings:ps3_position", 0);
 	servo_roll = settings->getValue(  "settings:servo_roll", 0);
 	
 	dimmed = true;		
@@ -145,7 +145,7 @@ void machine::drawTextureInFbo(ofImage * img, ofFbo* fbo) {
 	fbo->begin();					
 	ofBackground(0);							
 	ofTranslate(fbo->getWidth()/2, fbo->getHeight()/2); //move to fbo center							
-	if (servo_roll == OFF_SERVO_ROLL) ofRotate(ofRadToDeg(roll-rx_roll)); 	
+	if (servo_roll == SERVO_ROLL_OFF) ofRotate(ofRadToDeg(roll-rx_roll)); 	
 	ofPushMatrix();			    
 	//tex->draw(ipd + distance.x*speed, -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);
 	img->draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);		
