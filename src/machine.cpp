@@ -84,7 +84,7 @@ void machine::setup(ofxXmlSettings * se)
 	speed = settings->getValue("settings:speed", 920);
 	alignment = settings->getValue("settings:alignment", 0);
 	ipd = settings->getValue("settings:ipd", 8);	
-	orientation = settings->getValue("settings:ps3_position", 0);
+	orientation = settings->getValue("settings:camera_orientation", 0);
 	servo_roll = settings->getValue(  "settings:servo_roll", 0);
 	
 	dimmed = true;		

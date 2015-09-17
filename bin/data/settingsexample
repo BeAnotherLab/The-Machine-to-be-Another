@@ -9,8 +9,8 @@
     <camera_id>1</camera_id>
     <!-- 0 is mono, 1 is stereo, 2 is ovrvision -->
     <camera_type>0</camera_type>
-    <!-- 1 is vertical, 0 horizontal-->
-    <ps3_position>1</ps3_position>
+    <!-- 1 is landscape, 0 portrait-->
+    <camera_orientation>1</camera_orientation>
     <!-- 0 is without servo, 1 is with servo -->
     <servo_roll>0</servo_roll>
     <zoom>1.100000024</zoom>
