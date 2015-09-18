@@ -1,7 +1,7 @@
 #include "videoPlayer.h"
 
 void videoPlayer::loadVideos(ofxXmlSettings * settings) {
-	string s = settings->("settings:videos", " "); //get video names from XML
+	string s = settings->getValue("settings:videos", " "); //get video names from XML
 	cout << "videos : " << s << endl; //print video names
 	istringstream iss(s); //convert s to stringstream
 	count = 0;
@@ -11,11 +11,11 @@ void videoPlayer::loadVideos(ofxXmlSettings * settings) {
 		ofVideoPlayer v = *new ofVideoPlayer();
 		videos.push_back(v);
 		stringstream load;
-		load << "videos/" << sub << ".mov"; //prepend adn append text to create path to load video
+		load << "videos/" << sub << ".mov"; //preppend and append text to create path to load video
 		videos.at(count).loadMovie(load.str());
 		cout << "loading " << "videos/"+sub+".mov" << endl;
 		count++;
-	} while (iss); //while there are still sounds to be laded create new ofVideoPlayer
+	} while (iss); //while there are still videos to be loaded create new ofVideoPlayer
 
 	cout << count << " videos loaded" << endl;
 

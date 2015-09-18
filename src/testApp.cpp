@@ -102,7 +102,7 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 	}
 
 	if (key == 'm' || key == 'M') {
-		player.muteUnmute();
+		mySoundPlayer.muteUnmute();
 	}
 
 	if (key == 'o' || key == 'O') {
@@ -135,13 +135,11 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		settings.setValue("settings:alignment", machine.alignment);	
 	}
 		if (key == 't' || key == 'T') {
-		machine.calibration -= 20;
-		settings.setValue("settings:calibration", machine.calibration);	
+		machine.drift_correction -= 20;
 	}
 
 	if (key == 'y' || key == 'Y') {   
-		machine.calibration += 20;
-		settings.setValue("settings:calibration", machine.calibration);	
+		machine.drift_correction += 20;		
 	}
 	
 	if ((key == 'f' || key == 'F')) {   		
@@ -153,8 +151,8 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		machine.latency = !machine.latency;
 	}
 	//playtracks through keys 0-9 
-    if ((key>47) && (key < (48 + player.sounds.size()))) {
-		player.playSound(key-48); //my non programmer solution to using keys 0-9        
+    if ((key>47) && (key < (48 + mySoundPlayer.sounds.size()))) {
+		mySoundPlayer.playSound(key-48); //my non programmer solution to using keys 0-9        
 	}          
 }
 

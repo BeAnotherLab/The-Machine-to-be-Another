@@ -6,7 +6,18 @@ void machine::setup(ofxXmlSettings * se)
 	hmd = ovrHmd_Create(0);	
 	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, 
 											   ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position)) {
-		cout << "Unable to detect Rift head tracker" << endl;		
+		cout << "Unable to detect Rift head tracker" << endl;				
+		fboLeft.allocate(800,600);
+		fboRight.allocate(800,600);
+	} else {
+		if (hmd->Type == ovrHmd_DK2 ) { 
+			fboLeft.allocate(DK2_WIDTH/2, DK2_HEIGHT);
+			fboRight.allocate(DK2_WIDTH/2, DK2_HEIGHT);
+		}
+		else if(hmd->Type == ovrHmd_DK1) {
+			fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
+			fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
+		}
 	}
 
 	ovrHmd_RecenterPose(hmd); 
@@ -18,8 +29,8 @@ void machine::setup(ofxXmlSettings * se)
 	ipd = settings->getValue("settings:ipd", 8);
 	camWidth = 640;
 	camHeight = 480;
-	calibration = 0;
-	
+	drift_correction = 0;
+
 	if (camera_type == MONO) {
 		vidGrabberLeft.setVerbose(true);
         vidGrabberLeft.setDeviceID(settings->getValue("settings:camera_id", 1));							
@@ -73,11 +84,6 @@ void machine::setup(ofxXmlSettings * se)
 	
 	fboLeft.setAnchorPercent(0.5, 0.5);
 	fboRight.setAnchorPercent(0.5, 0.5);
-
-	//was used for experimenting with torchlight-like overlay, left here as ref for later
-	overlay.loadImage("pictures/overlay4.png");
-	overlay.resize(2000*1.25,2000);
-	overlay.setAnchorPercent(0.5, 0.5);   
 
 	zoom = settings->getValue("settings:zoom", 0.85);
 	speed = settings->getValue("settings:speed", 920);
@@ -203,7 +209,7 @@ void machine::debug() {
 	if (dimmed) ofDrawBitmapString("oculus screen is OFF", 10, 120); 
 	else		ofDrawBitmapString("oculus screen is ON", 10, 120); 	
 	
-	ofDrawBitmapString("drift correction : " + ofToString(calibration), 10, 140);	
+	ofDrawBitmapString("drift correction : " + ofToString(drift_correction), 10, 140);	
 	
 	if (latency) ofDrawBitmapString("latency ON", 10, 150);	
 	else		 ofDrawBitmapString("latency OFF", 10, 150);	
@@ -225,7 +231,7 @@ void machine::dim() {
 
 void machine::calibrate() {	
 	ovrHmd_RecenterPose(hmd);
-	calibration=0;	
+	drift_correction=0;	
 }
 
 float* machine::getHeadtracking(){

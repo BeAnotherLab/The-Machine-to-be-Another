@@ -18,15 +18,15 @@ void oscController::loop() {
 		receiver.getNextMessage(&rx_msg);						
 		if (rx_msg.getAddress() == "/driftPlus") {			
 			if(computerType==1){ 
-				myMachine->calibration+=20;
+				myMachine->drift_correction+=20;
 			} else {
-				myMachine->calibration-=20;
+				myMachine->drift_correction-=20;
 			}
 		} else if (rx_msg.getAddress() == "/driftMinus") {			
 			if(computerType==1){ 
-				myMachine->calibration-=20;
+				myMachine->drift_correction-=20;
 			} else {
-				myMachine->calibration+=20;
+				myMachine->drift_correction+=20;
 			}
 		} else if (rx_msg.getAddress() == "/dimoff") {			
 			myMachine->dimmed=false;			
@@ -50,9 +50,9 @@ void oscController::loop() {
 			}		
 			for (int i=0; i<myVideoPlayer->count; i++) {
 				stringstream a;
-				a << "/btn" << i;
+				a << "/vid" << i;
 				if (rx_msg.getAddress() == a.str()) {
-					mySoundPlayer->playSound(i); //play sound at i				
+					myVideoPlayer->playVideo(i); //play video at i				
 				} 
 			}
 		}

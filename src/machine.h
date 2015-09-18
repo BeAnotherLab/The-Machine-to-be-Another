@@ -37,7 +37,7 @@ public:
 	ovrHmd hmd;
 	int setup_type; //0 = one-way swap, 1 = two-way swap
 	int orientation; //0 = portrait, 1 landscape
-    int calibration; //to correct user yaw drift
+    int drift_correction; //to correct user yaw drift
 	int servo_roll; //0 = no servo, 1 = servo
 	int camera_type; 
 	int camWidth, camHeight; //camera size
@@ -48,7 +48,7 @@ public:
 	int speed; //ratio of headtracking angle to image displacement
 	int alignment; //to correct vertical alignment for stereo camera
 	int swapLR; 
-	bool dimmed;
+	bool dimmed;	
 
     ofVideoGrabber vidGrabberLeft, vidGrabberRight; //for using with webcam or PS3 camera		
 	
