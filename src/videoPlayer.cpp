@@ -11,8 +11,9 @@ void videoPlayer::loadVideos(ofxXmlSettings * settings) {
 		ofVideoPlayer v = *new ofVideoPlayer();
 		videos.push_back(v);
 		stringstream load;
-		load << "videos/" << sub << ".mov"; //preppend and append text to create path to load video
-		videos.at(count).loadMovie(load.str());
+		//load << "videos/" << sub << ".mov"; //preppend and append text to create path to load video
+		//videos.at(count).loadMovie(load.str());
+		videos.at(count).loadMovie("videos/test.mov");
 		cout << "loading " << "videos/"+sub+".mov" << endl;
 		count++;
 	} while (iss); //while there are still videos to be loaded create new ofVideoPlayer
