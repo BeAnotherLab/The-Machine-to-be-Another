@@ -6,15 +6,17 @@ void machine::setup(ofxXmlSettings * se)
 	hmd = ovrHmd_Create(0);	
 	if (!hmd || !ovrHmd_ConfigureTracking(hmd, ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position, 
 											   ovrTrackingCap_Orientation |ovrTrackingCap_MagYawCorrection |ovrTrackingCap_Position)) {
-		cout << "Unable to detect Rift head tracker" << endl;				
+		cout << "Unable to detect Oculus Rift" << endl;				
 		fboLeft.allocate(800,600);
 		fboRight.allocate(800,600);
 	} else {
 		if (hmd->Type == ovrHmd_DK2 ) { 
+			cout << "Detected Oculus Rift DK2" << endl;				
 			fboLeft.allocate(DK2_WIDTH/2, DK2_HEIGHT);
 			fboRight.allocate(DK2_WIDTH/2, DK2_HEIGHT);
 		}
 		else if(hmd->Type == ovrHmd_DK1) {
+			cout << "Detected Oculus Rift DK1" << endl;				
 			fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 			fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
 		}
@@ -58,29 +60,6 @@ void machine::setup(ofxXmlSettings * se)
 	rx_pitch = 0;
 	rx_yaw = 0;
 	rx_roll = 0;		
-
-	//These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
-    //kept as ref, but they need to be properly calibrated according to camera and lens used.
-	K0 = 1.0;
-    K1 = 5.74;
-    K2 = 0.27;
-    K3 = 0.0;
-    _x = 0.0f;
-    _y = 0.0f;
-    _w = 1.0f;
-    _h = 1.0f;
-    as = 640.0f/480.0f;
-	DistortionXCenterOffset = 90;	        
-    hmdWarpShader.load("shaders/HmdWarpExp");
-	
-	if (hmd->Type == ovrHmd_DK2) { 
-		fboLeft.allocate(DK2_WIDTH/2, DK2_HEIGHT);
-		fboRight.allocate(DK2_WIDTH/2, DK2_HEIGHT);
-	}
-	else if(hmd->Type == ovrHmd_DK1) {
-		fboLeft.allocate(DK1_WIDTH/2, DK1_HEIGHT);
-		fboRight.allocate(DK1_WIDTH/2, DK1_HEIGHT);
-	}
 	
 	fboLeft.setAnchorPercent(0.5, 0.5);
 	fboRight.setAnchorPercent(0.5, 0.5);
@@ -92,51 +71,18 @@ void machine::setup(ofxXmlSettings * se)
 	orientation = settings->getValue("settings:camera_orientation", 0);
 	servo_roll = settings->getValue(  "settings:servo_roll", 0);
 	
+	//start with screen off
 	dimmed = true;		
-	
-	for (int i = 0; i < LATENCY; i++) {				
-		vidGrabberLeft.update();
-		//ofImage img = new ofImage(
-		buffer.push(new ofImage(vidGrabberLeft.getPixelsRef()));
-		//cout << "filling buffer for first time at element " << i << endl;
-	}
-	latency = false;
-	dimValue = 255;
+	dimValue = 255;		
+
+	videoPlayer.loadVideos(se);
 }
 
 void machine::update() {
-	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
-	Quatf pose = state.HeadPose.ThePose.Orientation;
-	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.	
-	
-	if (camera_type == MONO) {		
-		if (latency) {
-			drawInFbo(buffer.front(), &fboLeft);
-			drawInFbo(buffer.front(), &fboRight);
-		} else {
-			drawInFbo(buffer.back(), &fboLeft);
-			drawInFbo(buffer.back(), &fboRight);
-		}
-		vidGrabberLeft.update();			
-	} else if (camera_type == STEREO) {
-		//This is a stub, not yet implemented
-		vidGrabberLeft.update();
-		vidGrabberRight.update();
-	} else if (camera_type == OVRVISION) {		
-		g_pOvrvision->PreStoreCamData();
-		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);		
-		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);	
-	}
-
-	//newest frame is at frameCount%LATENCY
-	//cout << "buffering newest frame at element" << frameCount%LATENCY << endl;
-	if (vidGrabberLeft.isFrameNew()) {
-		buffer.push(new ofImage(vidGrabberLeft.getPixelsRef()));	
-		delete buffer.front();
-		buffer.pop();
-	}
-	
-	ofSetColor(255);		
+	updateHeadtracking();
+	videoPlayer.update();
+	if (videoPlayer.something_is_playing) drawFromVideo();
+	else drawFromCamera();
 }
 
 void machine::drawInFbo(ofImage * img, ofFbo* fbo) {
@@ -183,6 +129,41 @@ void machine::drawVideo() {
 	ofSetColor(255);
 }
 
+void machine::updateHeadtracking() {
+	//update headtracking
+	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
+	Quatf pose = state.HeadPose.ThePose.Orientation;
+	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.	
+}
+
+void machine::drawFromVideo() {
+	//draw in fbo from preloaded video
+	//ofImage * img = new ofImage(videoPlayer.videos.at(videoPlayer.is_playing).getPixelsRef());
+	ofImage img = videoPlayer.getImage(videoPlayer.is_playing);	
+	drawInFbo(&(videoPlayer.img), &fboLeft);
+	drawInFbo(&(videoPlayer.img), &fboRight);	
+}
+
+void machine::drawFromCamera() {
+	//draw from camera
+	if (camera_type == MONO) {			
+			drawInFbo(new ofImage(vidGrabberLeft.getPixelsRef()), &fboLeft);
+			drawInFbo(new ofImage(vidGrabberLeft.getPixelsRef()), &fboRight);							
+		vidGrabberLeft.update();			
+	} else if (camera_type == STEREO) {
+		//This is a stub, not yet implemented
+		vidGrabberLeft.update();
+		vidGrabberRight.update();
+	} else if (camera_type == OVRVISION) {		
+		g_pOvrvision->PreStoreCamData();
+		right.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_RIGHT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);		
+		left.loadData(g_pOvrvision->GetCamImage(OVR::OV_CAMEYE_LEFT, OVR::OV_PSQT_NONE), 640, 480, GL_RGB);	
+	}
+		
+	ofSetColor(255);		
+}
+
+
 void machine::drawMonitor(ofxFenster* window) {	
 	if (dimmed==true) ofSetColor(75);			
 	vidGrabberLeft.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth(), window->getHeight());		
@@ -209,10 +190,7 @@ void machine::debug() {
 	if (dimmed) ofDrawBitmapString("oculus screen is OFF", 10, 120); 
 	else		ofDrawBitmapString("oculus screen is ON", 10, 120); 	
 	
-	ofDrawBitmapString("drift correction : " + ofToString(drift_correction), 10, 140);	
-	
-	if (latency) ofDrawBitmapString("latency ON", 10, 150);	
-	else		 ofDrawBitmapString("latency OFF", 10, 150);	
+	ofDrawBitmapString("drift correction : " + ofToString(drift_correction), 10, 140);			
 
 	ofDrawBitmapString("dimValue " + ofToString(dimValue), 10, 160);		
 }
@@ -224,8 +202,10 @@ void machine::dim() {
 	if (abs(ofRadToDeg(yaw)) > RANGE || dimmed ) next = 0;
 
 	//if headtracking in range and dimmed off
-	else if (abs(ofRadToDeg(yaw)) < RANGE && !dimmed) next = 255;
-	dimValue = dimValue + 0.03*(next-dimValue);
+	else if (abs(ofRadToDeg(yaw)) < RANGE && !dimmed) next = 255;			
+
+	//smooth transition between current and next
+	dimValue = dimValue + 0.05*(next-dimValue);
 	ofSetColor(dimValue);		
 }
 
@@ -242,6 +222,7 @@ float* machine::getHeadtracking(){
 	c[2] = yaw;
 	return c;
 }
+
 
 void machine::clear() {
 	/*pSensor.Clear();
@@ -260,6 +241,21 @@ machine::~machine(void)
 	
 }
 
+
+	//These are the parameters for the polynomial warp function to correct for the Oculus Rift and Webcam Lenses. Proper values still to be found
+    //kept as ref, but they need to be properly calibrated according to camera and lens used.
+	/*K0 = 1.0;
+    K1 = 5.74;
+    K2 = 0.27;
+    K3 = 0.0;
+    _x = 0.0f;
+    _y = 0.0f;
+    _w = 1.0f;
+    _h = 1.0f;
+    as = 640.0f/480.0f;
+	DistortionXCenterOffset = 90;	        
+    hmdWarpShader.load("shaders/HmdWarpExp");	
+	*/
 /*
 
 	fboLeft.begin();					

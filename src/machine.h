@@ -1,6 +1,7 @@
  #pragma once
 #include "ofxOsc.h"
 #include "OVR.h"
+#include "videoPlayer.h"
 #include "ofxXmlSettings.h"
 #include <ovrvision.h>		//Ovrvision SDK
 #include "ofxFensterManager.h"
@@ -52,7 +53,7 @@ public:
 
     ofVideoGrabber vidGrabberLeft, vidGrabberRight; //for using with webcam or PS3 camera		
 	
-	vector<ofVideoPlayer> videoPlayers; //contains videos to be played back
+	videoPlayer videoPlayer; //contains videos to be played back
 
 	ofTexture left, right; //for using with ovrvision cameras    
 
@@ -66,12 +67,7 @@ public:
 	//ovrvision stuff
 	OVR::Ovrvision* g_pOvrvision;
 
-	ofxXmlSettings * settings;
-
-	//buffering video stream
-	#define LATENCY 20	
-	queue <ofImage*> buffer;
-	bool latency;
+	ofxXmlSettings * settings;	
 
 	//limiting viewing range to [-RANGE, +RANGE]
 	#define RANGE 180
@@ -91,7 +87,11 @@ public:
 	void machine::clear();
 	void machine::debug();
 	void machine::distortion();
-	void machine::headTrackingRange();
+	void machine::headTrackingRange();	
+	void machine::updateHeadtracking();
+	void machine::drawFromCamera();
+	void machine::drawFromVideo();
+
 	machine(void);
 	~machine(void);
 };

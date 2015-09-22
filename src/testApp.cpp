@@ -11,8 +11,7 @@ void ofApp::setup(){
 	//player.loadSounds("genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
 	settings.loadFile("settings.xml");			
 
-	mySoundPlayer.loadSounds(&settings);	
-	myVideoPlayer.loadVideos(&settings);
+	mySoundPlayer.loadSounds(&settings);		
 
     machine.setup(&settings); 
 	controller.setup(&machine, &mySoundPlayer, &myVideoPlayer, &settings);
@@ -25,8 +24,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){				    
 	machine.update();
-	mySoundPlayer.update();
-	myVideoPlayer.update();
+	mySoundPlayer.update();	
 	controller.loop();				
 	record();
 }
@@ -146,11 +144,11 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		window->toggleFullscreen();
 	}
 
-	
-	if ((key == 'l' || key == 'L')) {   		
-		machine.latency = !machine.latency;
+	if ((key == 'v' || key == 'V')) {   		
+		machine.videoPlayer.playVideo(0);
 	}
-	//playtracks through keys 0-9 
+	
+	//play tracks through keys 0-9 
     if ((key>47) && (key < (48 + mySoundPlayer.sounds.size()))) {
 		mySoundPlayer.playSound(key-48); //my non programmer solution to using keys 0-9        
 	}          

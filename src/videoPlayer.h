@@ -13,7 +13,10 @@ public:
 	vector<ofVideoPlayer> videos;
 	stringstream video_names;
 	bool something_is_playing;
+	int is_playing;
 	void loadVideos(ofxXmlSettings * settings);
 	void update();
 	void playVideo(int id);
+	ofImage getImage(int id);
+	ofImage img;
 };
