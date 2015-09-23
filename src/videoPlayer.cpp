@@ -55,5 +55,5 @@ void videoPlayer::update(){
 
 	if (videos.at(is_playing).getIsMovieDone()) something_is_playing = false;
 
-	img = getImage();
+	//img = getImage(is_playing);
 }

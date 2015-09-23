@@ -140,8 +140,8 @@ void machine::drawFromVideo() {
 	//draw in fbo from preloaded video
 	//ofImage * img = new ofImage(videoPlayer.videos.at(videoPlayer.is_playing).getPixelsRef());
 	ofImage img = videoPlayer.getImage(videoPlayer.is_playing);	
-	drawInFbo(&(videoPlayer.img), &fboLeft);
-	drawInFbo(&(videoPlayer.img), &fboRight);	
+	drawInFbo(&img, &fboLeft);
+	drawInFbo(&img, &fboRight);	
 }
 
 void machine::drawFromCamera() {
