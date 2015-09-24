@@ -138,18 +138,19 @@ void machine::updateHeadtracking() {
 
 void machine::drawFromVideo() {
 	//draw in fbo from preloaded video
-	//ofImage * img = new ofImage(videoPlayer.videos.at(videoPlayer.is_playing).getPixelsRef());
-	ofImage img = videoPlayer.getImage(videoPlayer.is_playing);	
-	drawInFbo(&img, &fboLeft);
-	drawInFbo(&img, &fboRight);	
+	
+	drawInFbo(&videoPlayer.img, &fboLeft);
+	drawInFbo(&videoPlayer.img, &fboRight);	
 }
 
 void machine::drawFromCamera() {
 	//draw from camera
 	if (camera_type == MONO) {			
-			drawInFbo(new ofImage(vidGrabberLeft.getPixelsRef()), &fboLeft);
-			drawInFbo(new ofImage(vidGrabberLeft.getPixelsRef()), &fboRight);							
-		vidGrabberLeft.update();			
+			ofImage* img = new ofImage(vidGrabberLeft.getPixelsRef());
+			drawInFbo(img, &fboLeft);
+			drawInFbo(img, &fboRight);										
+			vidGrabberLeft.update();			
+			delete img;
 	} else if (camera_type == STEREO) {
 		//This is a stub, not yet implemented
 		vidGrabberLeft.update();

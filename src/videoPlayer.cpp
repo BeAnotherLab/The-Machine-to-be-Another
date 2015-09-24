@@ -33,10 +33,10 @@ void videoPlayer::playVideo(int id) {
 	}
 }
 
-ofImage videoPlayer::getImage(int id) {
+void videoPlayer::setImage() {
 	if (something_is_playing) {
-		for (int i=0; i<videos.size(); i++) {
-			if (videos.at(id).isPlaying()) return* new ofImage(videos.at(id).getPixelsRef());
+		for (int i=0; i<videos.size(); i++) {			
+			img.setFromPixels(videos.at(is_playing).getPixelsRef());		
 		}
 	}
 }
@@ -48,6 +48,8 @@ void videoPlayer::update(){
 	 if (videos.at(i).isPlaying()) videos.at(i).update();
 	}		
 
+	//set new ofImage
+	setImage();
 	//check if video still playing
 	for (int i=0; i<videos.size(); i++) {
 		if (videos.at(i).isPlaying()) something_is_playing = true;				

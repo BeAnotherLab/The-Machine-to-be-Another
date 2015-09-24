@@ -17,6 +17,6 @@ public:
 	void loadVideos(ofxXmlSettings * settings);
 	void update();
 	void playVideo(int id);
-	ofImage getImage(int id);
+	void setImage();
 	ofImage img;
 };
