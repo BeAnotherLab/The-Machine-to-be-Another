@@ -147,6 +147,10 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 	if ((key == 'v' || key == 'V')) {   		
 		machine.videoPlayer.playVideo(0);
 	}
+
+	if ((key == 'c' || key == 'C')) {   		
+		machine.videoPlayer.stopVideo();
+	}
 	
 	//play tracks through keys 0-9 
     if ((key>47) && (key < (48 + mySoundPlayer.sounds.size()))) {

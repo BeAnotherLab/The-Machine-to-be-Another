@@ -33,6 +33,11 @@ void videoPlayer::playVideo(int id) {
 	}
 }
 
+void videoPlayer::stopVideo() {
+	videos.at(is_playing).stop();
+	something_is_playing = false;
+}
+
 void videoPlayer::setImage() {
 	if (something_is_playing) {
 		for (int i=0; i<videos.size(); i++) {			

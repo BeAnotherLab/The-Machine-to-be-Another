@@ -81,6 +81,7 @@ void machine::setup(ofxXmlSettings * se)
 void machine::update() {
 	updateHeadtracking();
 	videoPlayer.update();
+	vidGrabberLeft.update();
 	if (videoPlayer.something_is_playing) drawFromVideo();
 	else drawFromCamera();
 }
@@ -147,7 +148,7 @@ void machine::drawFromVideo() {
 void machine::drawFromCamera() {
 	//draw from camera
 	if (camera_type == MONO) {			
-		vidGrabberLeft.update();			
+		//vidGrabberLeft.update();			
 		ofImage* img = new ofImage(vidGrabberLeft.getPixelsRef());
 		drawInFbo(img, &fboLeft);
 		drawInFbo(img, &fboRight);													
@@ -167,8 +168,9 @@ void machine::drawFromCamera() {
 
 
 void machine::drawMonitor(ofxFenster* window) {	
-	if (dimmed==true) ofSetColor(75);			
-	vidGrabberLeft.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth(), window->getHeight());		
+	if (dimmed==true) ofSetColor(75);				
+	if (!videoPlayer.something_is_playing) vidGrabberLeft.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth(), window->getHeight());		
+	else videoPlayer.img.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth(), window->getHeight());
 	ofSetColor(255);
 }
 
