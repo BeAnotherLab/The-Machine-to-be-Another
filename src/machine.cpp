@@ -107,7 +107,8 @@ ofVec2f machine::getDistance() {
 		return self - other;
 	}
 	else if (setup_type == ONE_WAY_SWAP) {
-		return ofVec2f(0,0);
+		if(videoPlayer.something_is_playing) return ofVec2f(0,0);
+		else return ofVec2f(pitch,yaw);
 	}	
 }
 
@@ -146,11 +147,11 @@ void machine::drawFromVideo() {
 void machine::drawFromCamera() {
 	//draw from camera
 	if (camera_type == MONO) {			
-			ofImage* img = new ofImage(vidGrabberLeft.getPixelsRef());
-			drawInFbo(img, &fboLeft);
-			drawInFbo(img, &fboRight);										
-			vidGrabberLeft.update();			
-			delete img;
+		vidGrabberLeft.update();			
+		ofImage* img = new ofImage(vidGrabberLeft.getPixelsRef());
+		drawInFbo(img, &fboLeft);
+		drawInFbo(img, &fboRight);													
+		delete img;
 	} else if (camera_type == STEREO) {
 		//This is a stub, not yet implemented
 		vidGrabberLeft.update();
