@@ -42,6 +42,7 @@ void videoPlayer::setImage() {
 	if (something_is_playing) {
 		for (int i=0; i<videos.size(); i++) {			
 			img.setFromPixels(videos.at(is_playing).getPixelsRef());		
+			img.mirror(true,true); //mirror to compensate for flipped camera
 		}
 	}
 }

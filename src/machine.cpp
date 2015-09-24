@@ -29,8 +29,8 @@ void machine::setup(ofxXmlSettings * se)
 	camera_type = settings->getValue("settings:camera_type", MONO);
 	swapLR = settings->getValue("settings:swapLR", 0);	
 	ipd = settings->getValue("settings:ipd", 8);
-	camWidth = 640;
-	camHeight = 480;
+	camWidth = 1280;
+	camHeight = 720;
 	drift_correction = 0;
 
 	if (camera_type == MONO) {
@@ -139,8 +139,7 @@ void machine::updateHeadtracking() {
 }
 
 void machine::drawFromVideo() {
-	//draw in fbo from preloaded video
-	
+	//draw in fbo from preloaded video	
 	drawInFbo(&videoPlayer.img, &fboLeft);
 	drawInFbo(&videoPlayer.img, &fboRight);	
 }
@@ -169,8 +168,10 @@ void machine::drawFromCamera() {
 
 void machine::drawMonitor(ofxFenster* window) {	
 	if (dimmed==true) ofSetColor(75);				
-	if (!videoPlayer.something_is_playing) vidGrabberLeft.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth(), window->getHeight());		
-	else videoPlayer.img.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth(), window->getHeight());
+	//if no video is playing, show camera
+	if (!videoPlayer.something_is_playing) vidGrabberLeft.draw(window->getWidth()/2, window->getHeight()/2, -window->getWidth(), -window->getHeight());		
+	//if a video is playing, show video
+	else videoPlayer.img.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth()*-0.7, window->getHeight()*-0.7);
 	ofSetColor(255);
 }
 
