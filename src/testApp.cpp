@@ -14,7 +14,7 @@ void ofApp::setup(){
 	mySoundPlayer.loadSounds(&settings);		
 
     machine.setup(&settings); 
-	controller.setup(&machine, &mySoundPlayer, &myVideoPlayer, &settings);
+	controller.setup(&machine, &mySoundPlayer, &machine.videoPlayer, &settings);
 
 	ofxFenster* win = ofxFensterManager::get()->createFenster(640, 480, OF_WINDOW);
 	win->addListener(this);		

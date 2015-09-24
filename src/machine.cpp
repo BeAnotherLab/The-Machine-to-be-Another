@@ -108,7 +108,7 @@ ofVec2f machine::getDistance() {
 		return self - other;
 	}
 	else if (setup_type == ONE_WAY_SWAP) {
-		if(videoPlayer.something_is_playing) return ofVec2f(0,0);
+		if(!videoPlayer.something_is_playing) return ofVec2f(0,0);
 		else return ofVec2f(pitch,yaw);
 	}	
 }
