@@ -17,8 +17,8 @@ void machine::setup(ofxXmlSettings * se)
 	swapLR = settings->getValue("settings:swapLR", 0);
 	//tested with PS3Eye camera.	
 	ipd = settings->getValue("settings:ipd", 8);
-	camWidth = 640;
-	camHeight = 480;
+	camWidth = 1280;
+	camHeight = 720;
 	calibration = 0;
 	
 	if (camera_type == MONO) {
@@ -209,12 +209,12 @@ void machine::drawVideo() {
 }
 
 void machine::drawMonitor() {	
-	if (dimmed==true){
-		ofSetColor(75);
-		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2);	
-	} else {
-		fboLeft.draw(ofGetWidth()/2, ofGetHeight()/2);	
-	}
+	if (dimmed==true) ofSetColor(75);
+	ofVec2f distance = getDistance();
+	ofPushMatrix();
+	ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
+	vidGrabberLeft.draw(distance.y*speed+calibration, distance.x*speed + alignment, camWidth*zoom*0.75, camHeight*zoom*0.75);	
+	ofPopMatrix();
 	ofSetColor(255);
 }
 
