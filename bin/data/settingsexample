@@ -1,9 +1,11 @@
  <!-- RENAME THIS FILE TO SETTINGS.XML TO CONFIGURE THE APPLICATION -->
 <settings>
+    <!-- 0 is one-way swap, 1 is two-way swap -->
     <setup_type>1</setup_type>
     <ip>192.168.0.102</ip>
+	<!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
     <computer_type>1</computer_type>
-    <!-- computer 1 receives messages from touchosc app and sends to computer 2 -->
+    <!-- camera_id is usually 1 if you're using a laptop with integrated webcam, otherwise 0-->
     <camera_id>1</camera_id>
     <!-- 0 is mono, 1 is stereo, 2 is ovrvision -->
     <camera_type>0</camera_type>
@@ -11,7 +13,6 @@
     <ps3_position>1</ps3_position>
     <!-- 0 is without servo, 1 is with servo -->
     <servo_roll>0</servo_roll>
-    <!-- 0 is one-way swap, 1 is two-way swap -->
     <zoom>1.100000024</zoom>
     <ipd>24</ipd>
     <alignment>-12</alignment>

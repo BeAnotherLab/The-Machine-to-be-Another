@@ -23,19 +23,24 @@ Here's an overview of the parameters necessary to setup the application. They sh
   - alignment : the vertical alignment of each eye. When using stereo cameras, might be necessary to adjust for physical        misalignment of the lenses. Can be set via the `N` and `B`keys.
   - speed : parameter that links the difference between headtrackings to the place the video feed will be displayed. Can be     set via the `K` and `L`keys.
   - swapLR : swap left and right eyes if they were wrongly assignated.
-  - sounds : here you should put the names of the sound files in mp3 format that you can load from the bin/data/sounds         folder. The first one is the background music that will be looped and sidechained behind the audio instructions. We have     instructions in English, Chinese and French, as well as some recordings from previous performances that you are free to      use.
+  - sounds : here you should put the names of the sound files in mp3 format that you can load from the bin/data/sounds         folder. The first one is the background music that will be looped and sidechained behind the audio instructions. We have instructions in English, Chinese and French, as well as some recordings from previous performances that you are free to use.
 
 Running the software
 =========================
 First you need to install the oculus runtime 0.4.4 https://developer.oculus.com/downloads/pc/0.4.4-beta/Oculus_Runtime_for_Windows/
 and if you're using a PS3 camera, you'll need to buy the CLeye PS3 driver 
 https://codelaboratories.com/downloads/
+for the classic setup, you need to install the arduino driver if you don't have already
+https://www.arduino.cc/en/guide/windows#toc4
 
 To run the software for the first time, rename the file `settingsexample` in bin/data to `settings.xml` then open it with a text editor.
 Following is a description of the parameters necessary to run each setup.
+
 For the classic (one-way swap) setup :
   - setup_type should be set to 0.
-  - The other settings are optional but keep in mind you can choose the orientation of the camera and whether to use a roll servo depending on how you built the ves
+  - The other settings are optional but keep in mind you can choose the orientation of the camera and whether to use a roll servo depending on how you built the vest
+
+
 For the gender swap (two-way swap) setup :
   - setup_type should be set to 1.
   - IP should be set to the IP of the other computer to send the headtracking data to.
@@ -76,6 +81,7 @@ We designed a 3D printable vest that you can build yourself. The plastic parts a
 https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/3D
 - this wide FOV lens http://peauproductions.com/store/index.php?main_page=product_info&products_id=76
 - this visible light filter http://peauproductions.com/store/index.php?main_page=product_info&products_id=44
+- an M12 mount with those dimensions (we included a 3D-printable one in the repo but they usually come out with bad quality) http://www.rlx.sk/en/servo-motor/1498-analog-180-micro-servo-arduino-connector-tinkerkit.html
 - a PS3 camera that you open as follows http://www.instructables.com/id/The-EyeWriter/step6/Hack-the-PS3-Eye/ 
 - remember to save the screws from the camera to build the arm
 - 3 of these servos and corresponding connectors http://www.servodatabase.com/servo/springrc/sm-s2309s
