@@ -18,7 +18,7 @@ void machine::setup(ofxXmlSettings * se)
 	//tested with PS3Eye camera.	
 	ipd = settings->getValue("settings:ipd", 8);
 	camWidth = 1280;
-	camHeight = 720;
+	camHeight = 1024;
 	calibration = 0;
 	
 	if (camera_type == MONO) {
