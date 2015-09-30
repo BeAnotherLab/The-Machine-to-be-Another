@@ -260,7 +260,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\data\settings.xml" />
+    <None Include="bin\data\settings.xml">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

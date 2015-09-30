@@ -30,7 +30,7 @@ void machine::setup(ofxXmlSettings * se)
 	swapLR = settings->getValue("settings:swapLR", 0);	
 	ipd = settings->getValue("settings:ipd", 8);
 	camWidth = 1280;
-	camHeight = 720;
+	camHeight =1024;
 	drift_correction = 0;
 
 	if (camera_type == MONO) {
