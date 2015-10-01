@@ -11,10 +11,10 @@ void ofApp::setup(){
 	//player.loadSounds("genderswapmusic welcome_fr lookaround_fr objects_fr shakehands_fr bye_fr slowly_fr follow_fr calibrate_fr view_fr legs_fr"); //genderswapmusic welcome_ch standby_ch shakehands_ch goodbye_ch moveslowly_ch lookathands_ch movefingers_ch lookaround_ch welcome_en standby_en shakehands_en goodbye_en moveslowly_en lookathands_en movefingers_en lookaround_en"
 	settings.loadFile("settings.xml");			
 
-	player.loadSounds(&settings);			
+	mySoundPlayer.loadSounds(&settings);		
 
     machine.setup(&settings); 
-	controller.setup(&machine, &player, &settings);
+	controller.setup(&machine, &mySoundPlayer, &machine.videoPlayer, &settings);
 
 	ofxFenster* win = ofxFensterManager::get()->createFenster(640, 480, OF_WINDOW);
 	win->addListener(this);		
@@ -24,23 +24,19 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){				    
 	machine.update();
-	player.update();
+	mySoundPlayer.update();	
 	controller.loop();				
 	record();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(ofxFenster* window){  
-//void ofApp::draw(){  
-	if (window->id==0) {
-		ofBackground(0);	        		
-		ofSetHexColor(0xffffff);									    
-		machine.drawMonitor();
-		machine.drawOverlay();    
+	if (window->id==0) { //monitor window
+		ofBackground(0);	        				
+		machine.drawMonitor(window);		
 		machine.debug();		
 		recordDebug();
-//		machine.debug();
-	} else if (window->id==1) {
+	} else if (window->id==1) { //oculus window
 		ofBackground(0);	 
 		machine.drawVideo();		
 	}
@@ -104,7 +100,7 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 	}
 
 	if (key == 'm' || key == 'M') {
-		player.muteUnmute();
+		mySoundPlayer.muteUnmute();
 	}
 
 	if (key == 'o' || key == 'O') {
@@ -137,22 +133,28 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		settings.setValue("settings:alignment", machine.alignment);	
 	}
 		if (key == 't' || key == 'T') {
-		machine.calibration -= 20;
-		settings.setValue("settings:calibration", machine.calibration);	
+		machine.drift_correction -= 20;
 	}
 
 	if (key == 'y' || key == 'Y') {   
-		machine.calibration += 20;
-		settings.setValue("settings:calibration", machine.calibration);	
+		machine.drift_correction += 20;		
 	}
 	
 	if ((key == 'f' || key == 'F')) {   		
 		window->toggleFullscreen();
 	}
 
-	//playtracks through keys 0-9 
-    if ((key>47) && (key < (48 + player.sounds.size()))) {
-		player.playSound(key-48); //my non programmer solution to using keys 0-9        
+	if ((key == 'v' || key == 'V')) {   		
+		machine.videoPlayer.playVideo(0);
+	}
+
+	if ((key == 'c' || key == 'C')) {   		
+		machine.videoPlayer.stopVideo();
+	}
+	
+	//play tracks through keys 0-9 
+    if ((key>47) && (key < (48 + mySoundPlayer.sounds.size()))) {
+		mySoundPlayer.playSound(key-48); //my non programmer solution to using keys 0-9        
 	}          
 }
 
