@@ -104,6 +104,8 @@ TODOs
 ========================	
 If you wish to contribute, then please consider the following :
 
+- porting to oF 0.9.0 rc and get rid of ofxFenster and ofxUI to use built-in addons.
+- integrate https://github.com/obviousjim/ofxOculusDK2 or update to 0.8.0 Oculus SDK
 - Add servomotor control with OpenFrameworks. (at the moment it is done with pure data)
 - Create a GUI for the manipulation of xml settings.
 - Detailed documentation of Vest fabrication
