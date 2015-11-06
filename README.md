@@ -64,7 +64,7 @@ The project was tested with Openframeworks 0.7.4 on Windows 7&8 + Visual C++ 201
 
 1. Download openframeworks 0.7.4 and unzip it
 2. Using the git console execute```git clone https://github.com/BeAnotherLab/The-Machine-to-be-Another``` inside the ```openframeworks_folder/apps/myapps```. If you download the project as a zip file using the github web interface remove the "-master" extension from the name of the folder.
-3. Clone the modified addons https://github.com/ReallyRad/ofxFenster and https://github.com/ReallyRad/ofxUI into the ```openframeworks_folder/addons``` folder. 
+3. Clone the modified [ofxFenster](https://github.com/ReallyRad/ofxFenster) and [ofxUI](https://github.com/ReallyRad/ofxUI) into the ```openframeworks_folder/addons``` folder. 
 4. Open the project from Visual Studio and compile.
 
 
