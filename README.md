@@ -8,7 +8,7 @@ It can be controlled from the keyboard or through a phone or tablet running Touc
 The software supports both DK1 and DK2, as well as PS3 cameras (our favorite), ovrvision cameras, and regular USB cameras.
 Only Windows is supported, but the code should easily be ported to OS X.
 
-[!alt tag](https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/files/body%20swap%20rider.png?raw=true)
+![alt tag](https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/files/body%20swap%20rider.png?raw=true)
 Two-way swap setup
 
 Setting up the software
@@ -70,7 +70,7 @@ The project was tested with Openframeworks 0.7.4 on Windows 7&8 + Visual C++ 201
 
 TouchOSC control
 =========================
-[!alt tag](https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/files/body%20swap%20controller.png?raw=true)
+![alt tag](https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/files/body%20swap%20controller.png?raw=true)
 
 You can load background music and as many audio samples in mp3 format as you wish with the machine to be another. in `settings.xml` putting the file names in the `<sounds>` tag without their extension automatically assigns them numpad keys to trigger them. The music will automaticly loop and the next samples can be triggered by pressing keys 1-9 or sending a trigger on /btn*x* through TouchOSC.
 TouchOSC layouts depend on your devices resolution but you can check in [this folder](https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/TouchOSC%20layouts)
