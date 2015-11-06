@@ -1,6 +1,6 @@
 The-Machine-to-be-Another
 =========================
-Welcome to the repository for The Machine to be Another! This is the part built with openFrameworks. To get the (soon to be deprecated) puredata component go to https://github.com/BeAnotherLab/Servos-Control
+Welcome to the repository for The Machine to be Another! This is the part built with openFrameworks. To get the (soon to be deprecated) puredata component go [there](https://github.com/BeAnotherLab/Servos-Control)
 
 The software allows you to run two different kind of setups. The gender swap (or two-way swap setup) requires two oculus rift and two USB cameras. In the two-way setup, both video feeds are fed to the other person's head-mounted display. The classic setup requires building your own open-hardware camera vest. The performer wears the vest so that the user can see from his perspective.
 
@@ -30,9 +30,9 @@ Here's an overview of the parameters necessary to setup the application. They sh
 
 Running the software
 =========================
-First you need to install the [!oculus runtime 0.4.4](https://developer.oculus.com/downloads/pc/0.4.4-beta/Oculus_Runtime_for_Windows/)
-and if you're using a PS3 camera, you'll need to buy the [!CLeye PS3 driver](https://codelaboratories.com/downloads/)
-for the classic setup, you need to install the [!arduino driver](https://www.arduino.cc/en/guide/windows#toc4) if you don't have already
+First you need to install the [oculus runtime 0.4.4](https://developer.oculus.com/downloads/pc/0.4.4-beta/Oculus_Runtime_for_Windows/)
+and if you're using a PS3 camera, you'll need to buy the [CLeye PS3 driver](https://codelaboratories.com/downloads/)
+for the classic setup, you need to install the [arduino driver](https://www.arduino.cc/en/guide/windows#toc4) if you don't have already
 
 
 To run the software for the first time, rename the file `settingsexample` in bin/data to `settings.xml` then open it with a text editor.
@@ -71,7 +71,7 @@ The project was tested with Openframeworks 0.7.4 on Windows 7&8 + Visual C++ 201
 TouchOSC control
 =========================
 You can load background music and as many audio samples in mp3 format as you wish with the machine to be another. in `settings.xml` putting the file names in the `<sounds>` tag without their extension automatically assigns them numpad keys to trigger them. The music will automaticly loop and the next samples can be triggered by pressing keys 1-9 or sending a trigger on /btn*x* through TouchOSC.
-TouchOSC layouts depend on your devices resolution but you can check in [!this folder](https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/TouchOSC%20layouts)
+TouchOSC layouts depend on your devices resolution but you can check in [this folder](https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/TouchOSC%20layouts)
 for examples.
 We also include files we used in different installations or performances made through the years.
 You can also send /dimon /dimoff and /ht to respectively dim the display to black and back and reset the headtracking in case of drift (people must be looking straight for it to work). Also /driftPlus and /driftMinus allow you to nudge drift correction manually.
@@ -81,22 +81,22 @@ Building the Vest
 We designed a 3D printable vest that you can build yourself. The plastic parts are combined with off-the shelf components so that it is very easy and cheap to replicate. Instructions on how to build it are coming, but here is what you need to get 
 - stl files printable by any modern 3D printer. 
 https://github.com/BeAnotherLab/The-Machine-to-be-Another/tree/master/files/3D
-- this [!wide FOV lens](http://peauproductions.com/store/index.php?main_page=product_info&products_id=76)
-- this [!visible light filter](http://peauproductions.com/store/index.php?main_page=product_info&products_id=44)
-- an [!M12 mount with those dimensions](http://www.rlx.sk/en/servo-motor/1498-analog-180-micro-servo-arduino-connector-tinkerkit.html) (we included a 3D-printable one in the repo but they usually come out with bad quality) 
+- this [wide FOV lens](http://peauproductions.com/store/index.php?main_page=product_info&products_id=76)
+- this [visible light filter](http://peauproductions.com/store/index.php?main_page=product_info&products_id=44)
+- an [M12 mount with those dimensions](http://www.rlx.sk/en/servo-motor/1498-analog-180-micro-servo-arduino-connector-tinkerkit.html) (we included a 3D-printable one in the repo but they usually come out with bad quality) 
 - a PS3 camera that you open as follows http://www.instructables.com/id/The-EyeWriter/step6/Hack-the-PS3-Eye/ 
 - remember to save the screws from the camera to build the arm
-- [!3 of these servos](http://www.servodatabase.com/servo/springrc/sm-s2309s) and corresponding connectors 
+- [3 of these servos](http://www.servodatabase.com/servo/springrc/sm-s2309s) and corresponding connectors 
 - arduino uno
 - some elastic fabric to sew on the harness pieces
 - 4 AA batteries and a battery box
 - small interruptor
 - an LED
-- print or make the circuit that connects to the arduino as a [!shield](https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/files/arduino_shield.zip)
+- print or make the circuit that connects to the arduino as a [shield](https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/files/arduino_shield.zip)
 
 Servos control
 ========================
-Servo control pure data patch is [!here](https://github.com/BeAnotherLab/Servos-Control)
+Servo control pure data patch is [here](https://github.com/BeAnotherLab/Servos-Control)
 run the patch and start the openFrameworks app. check the pitch, yaw, roll faders are moving when you move the oculus
 plug-in your arduino with firmata servo control example loaded on it https://github.com/firmata/arduino/blob/master/examples/ServoFirmata/ServoFirmata.ino
 and click on "devices" to see on with serial port your arduino is plugged in. Edit the box that says "open x" to replace x with the COMport and click it to activate it. Check the console for errors.
@@ -107,7 +107,7 @@ TODOs
 If you wish to contribute, then please consider the following :
 
 - porting to oF 0.9.0 rc and get rid of ofxFenster and ofxUI to use built-in addons.
-- integrate [!ofxOculusDK2](https://github.com/obviousjim/ofxOculusDK2) or update to 0.8.0 Oculus SDK
+- integrate [ofxOculusDK2](https://github.com/obviousjim/ofxOculusDK2) or update to 0.8.0 Oculus SDK
 - Add servomotor control with OpenFrameworks. (at the moment it is done with pure data)
 - Create a GUI for the manipulation of xml settings.
 - Detailed documentation of Vest fabrication
