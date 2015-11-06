@@ -8,6 +8,9 @@ It can be controlled from the keyboard or through a phone or tablet running Touc
 The software supports both DK1 and DK2, as well as PS3 cameras (our favorite), ovrvision cameras, and regular USB cameras.
 Only Windows is supported, but the code should easily be ported to OS X.
 
+![alt tag](https://github.com/BeAnotherLab/The-Machine-to-be-Another/blob/master/files/body%20swap%20rider.png?raw=true)
+Two-way swap setup
+
 Setting up the software
 =========================
 Here's an overview of the parameters necessary to setup the application. They should be set in the `settings.xml` file located in bin/data.
