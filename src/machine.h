@@ -82,7 +82,7 @@ public:
 	void machine::calibrate();		
 	float* machine::getHeadtracking();
 	void machine::triggerDim();
-	void machine::dim();		
+	void machine::dim(int screen);		
 	ofVec2f machine::getDistance();
 	void machine::clear();
 	void machine::debug();

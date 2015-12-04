@@ -112,8 +112,8 @@ ofVec2f machine::getDistance() {
 	}	
 }
 
-void machine::drawVideo() {				
-	dim();
+void machine::drawVideo() { //draw oculus display				
+	dim(0);
 	if (camera_type == MONO) { //drawing the videograbber once in each fbo doesn't work, drawing the left fbo twice instead
 		fboLeft.draw(-ipd + ofGetWidth()/4, ofGetHeight()/2); //draw left	
 		fboLeft.draw(ipd + 3*ofGetWidth()/4, ofGetHeight()/2); //draw right
@@ -165,13 +165,16 @@ void machine::drawFromCamera() {
 }
 
 
-void machine::drawMonitor(ofxFenster* window) {	
-	if (dimmed==true) ofSetColor(75);				
+void machine::drawMonitor(ofxFenster* window) {		
+	ofVec2f distance = getDistance();		
+	dim(1);		
 	//if no video is playing, show camera
-	if (!videoPlayer.something_is_playing) vidGrabberLeft.draw(window->getWidth()/2, window->getHeight()/2, -window->getWidth(), -window->getHeight());		
+	if (!videoPlayer.something_is_playing) vidGrabberLeft.draw(window->getWidth()/2+distance.y*speed, window->getHeight()/2+distance.x*speed, -window->getWidth(), -window->getHeight());		
 	//if a video is playing, show video
-	else videoPlayer.img.draw(window->getWidth()/2, window->getHeight()/2, window->getWidth()*-0.7, window->getHeight()*-0.7);
+	else videoPlayer.img.draw(window->getWidth()/2+distance.y*speed, window->getHeight()/2+distance.x*speed, window->getWidth()*-0.7, window->getHeight()*-0.7);
 	ofSetColor(255);
+	
+		
 }
 
 void machine::debug() {		
@@ -199,7 +202,7 @@ void machine::debug() {
 	ofDrawBitmapString("dimValue " + ofToString(dimValue), 10, 160);		
 }
 
-void machine::dim() {	
+void machine::dim(int screen) {	
 	int next;
 
 	//if headtracking outside of range or dimmed on
@@ -210,7 +213,8 @@ void machine::dim() {
 
 	//smooth transition between current and next
 	dimValue = dimValue + 0.05*(next-dimValue);
-	ofSetColor(dimValue);		
+	if (screen == 0) ofSetColor(dimValue); //oculus screen
+	else ofSetColor(dimValue+80); //monitor screen
 }
 
 void machine::calibrate() {	
