@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "soundPlayer.h"
+#include "videoPlayer.h"
 #include "machine.h"
 #include "oscController.h"
 #include "ofxImageSequenceRecorder.h"
@@ -30,7 +31,8 @@ class ofApp : public ofxFensterListener {
 	oscController controller;
 	bool recording;    	
 
-	soundPlayer player;			
+	soundPlayer mySoundPlayer;			
+	videoPlayer myVideoPlayer;
 
 	ofxXmlSettings settings;
 };

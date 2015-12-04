@@ -1,5 +1,4 @@
 #pragma once
-#include "ofxOsc.h"
 #include "ofxXmlSettings.h"
 
 //oscMessages from and to Phone
@@ -12,8 +11,7 @@ public:
 	int count; //the number of sounds deduced by the input string		
 
 	vector<ofSoundPlayer> sounds; 
-	stringstream sound_names;	
-	vector<int> rxButtons;	
+	stringstream sound_names;		
 	float music_volume;	
 
 	bool something_is_playing;
