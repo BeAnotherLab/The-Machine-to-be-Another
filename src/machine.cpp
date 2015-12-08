@@ -214,7 +214,7 @@ void machine::dim(int screen) {
 	//smooth transition between current and next
 	dimValue = dimValue + 0.05*(next-dimValue);
 	if (screen == 0) ofSetColor(dimValue); //oculus screen
-	else ofSetColor(dimValue+80); //monitor screen
+	else ofSetColor(ofMap(dimValue,0,255,80,255)); //monitor screen
 }
 
 void machine::calibrate() {	
