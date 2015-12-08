@@ -50,7 +50,7 @@ public:
 	int alignment; //to correct vertical alignment for stereo camera
 	int swapLR; 
 	bool dimmed;	
-
+	bool deb; 
     ofVideoGrabber vidGrabberLeft, vidGrabberRight; //for using with webcam or PS3 camera		
 	
 	videoPlayer videoPlayer; //contains videos to be played back
@@ -91,6 +91,7 @@ public:
 	void machine::updateHeadtracking();
 	void machine::drawFromCamera();
 	void machine::drawFromVideo();
+	void machine::setDebug();
 
 	machine(void);
 	~machine(void);

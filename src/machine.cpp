@@ -74,6 +74,9 @@ void machine::setup(ofxXmlSettings * se)
 	dimmed = true;		
 	dimValue = 255;		
 
+	//set debug to false by default
+	deb = false;
+
 	videoPlayer.loadVideos(se);
 }
 
@@ -178,28 +181,34 @@ void machine::drawMonitor(ofxFenster* window) {
 }
 
 void machine::debug() {		
-	string framerate = ofToString(ofGetFrameRate());		
-	ofDrawBitmapString("FPS : " + framerate, 10, 10);
-	ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,20); //10
-	ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 10,30);
-	ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
+	if (deb) {
+		string framerate = ofToString(ofGetFrameRate());		
+		ofDrawBitmapString("FPS : " + framerate, 10, 10);
+		ofDrawBitmapString("pitch : " + ofToString(ofRadToDeg(pitch)), 10,20); //10
+		ofDrawBitmapString("yaw   : " + ofToString(ofRadToDeg(yaw)), 10,30);
+		ofDrawBitmapString("roll  : " + ofToString(ofRadToDeg(roll)), 10,40);
 
-	ofDrawBitmapString("zoom : " + ofToString(zoom), 10, 50);
-	ofDrawBitmapString("speed   : " + ofToString(speed), 10, 60);
-	ofDrawBitmapString("alignment  : " + ofToString(alignment), 10, 70);		
-	ofDrawBitmapString("side : " + ofToString(ipd), 10, 80);	
+		ofDrawBitmapString("zoom : " + ofToString(zoom), 10, 50);
+		ofDrawBitmapString("speed   : " + ofToString(speed), 10, 60);
+		ofDrawBitmapString("alignment  : " + ofToString(alignment), 10, 70);		
+		ofDrawBitmapString("side : " + ofToString(ipd), 10, 80);	
 
-	ofDrawBitmapString("distance.x : " + ofToString(getDistance().x), 10, 90);	
-	ofDrawBitmapString("distance.y : " + ofToString(getDistance().y), 10, 100);	
+		ofDrawBitmapString("distance.x : " + ofToString(getDistance().x), 10, 90);	
+		ofDrawBitmapString("distance.y : " + ofToString(getDistance().y), 10, 100);	
 	
-	ofDrawBitmapString("swap L/R: " + ofToString(swapLR), 10, 110);
+		ofDrawBitmapString("swap L/R: " + ofToString(swapLR), 10, 110);
 	
-	if (dimmed) ofDrawBitmapString("oculus screen is OFF", 10, 120); 
-	else		ofDrawBitmapString("oculus screen is ON", 10, 120); 	
+		if (dimmed) ofDrawBitmapString("oculus screen is OFF", 10, 120); 
+		else		ofDrawBitmapString("oculus screen is ON", 10, 120); 	
 	
-	ofDrawBitmapString("drift correction : " + ofToString(drift_correction), 10, 140);			
+		ofDrawBitmapString("drift correction : " + ofToString(drift_correction), 10, 140);			
 
-	ofDrawBitmapString("dimValue " + ofToString(dimValue), 10, 160);		
+		ofDrawBitmapString("dimValue " + ofToString(dimValue), 10, 160);		
+	}
+}
+
+void machine::setDebug(){
+	deb = !deb;
 }
 
 void machine::dim(int screen) {	

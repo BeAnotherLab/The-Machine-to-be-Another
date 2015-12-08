@@ -87,6 +87,10 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		machine.calibrate();
 	}
    
+	if (key == 'd' || key == 'D') { 	   
+		machine.setDebug();
+	}
+
 	if (key == 'r') {
         recording = !recording;
         if (recording) recorder.startThread(false, true);
