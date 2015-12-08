@@ -75,7 +75,7 @@ void machine::setup(ofxXmlSettings * se)
 	dimValue = 255;		
 
 	//set debug to false by default
-	deb = false;
+	deb = true;
 
 	videoPlayer.loadVideos(se);
 }
