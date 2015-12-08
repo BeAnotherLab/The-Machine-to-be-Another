@@ -144,8 +144,8 @@ void ofApp::keyPressed(int key, ofxFenster* window){
 		window->toggleFullscreen();
 	}
 
-	if ((key == 'v' || key == 'V')) {   		
-		machine.videoPlayer.playVideo(0);
+	if ((key == 'v' || key == 'V')) {   
+		if(machine.videoPlayer.videos.size()>0) machine.videoPlayer.playVideo(0);
 	}
 
 	if ((key == 'c' || key == 'C')) {   		
