@@ -97,7 +97,7 @@ void machine::drawInFbo(ofImage * img, ofFbo* fbo) {
 	if (servo_roll == SERVO_ROLL_OFF) ofRotate(ofRadToDeg(roll-rx_roll)); 	
 	ofPushMatrix();			    
 	//tex->draw(ipd + distance.x*speed, -distance.y*speed-calibration, camWidth*zoom, camHeight*zoom);
-	img->draw(distance.y*speed, distance.x*speed, camWidth*zoom, camHeight*zoom);		
+	img->draw(distance.y*speed+drift_correction, distance.x*speed, camWidth*zoom, camHeight*zoom);		
 	ofPopMatrix();											
 	fbo->end();
 	ofSetColor(255);
@@ -172,7 +172,7 @@ void machine::drawMonitor(ofxFenster* window) {
 	ofVec2f distance = getDistance();		
 	dim(1);		
 	//if no video is playing, show camera
-	if (!videoPlayer.something_is_playing) vidGrabberLeft.draw(window->getWidth()/2+distance.y*speed, window->getHeight()/2+distance.x*speed, -window->getWidth(), -window->getHeight());		
+	if (!videoPlayer.something_is_playing) vidGrabberLeft.draw(window->getWidth()/2+distance.y*speed+drift_correction, window->getHeight()/2+distance.x*speed, -window->getWidth(), -window->getHeight());		
 	//if a video is playing, show video
 	else videoPlayer.img.draw(window->getWidth()/2+distance.y*speed, window->getHeight()/2+distance.x*speed, window->getWidth()*-0.7, window->getHeight()*-0.7);
 	ofSetColor(255);
