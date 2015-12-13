@@ -4,7 +4,7 @@ Filename    :   OVR.h
 Content     :   The main public interface to Oculus for C++ Developers.
                 Includes C API and helper classes.
 
-Copyright   :   Copyright 2014 Oculus VR, Inc. All Rights reserved.
+Copyright   :   Copyright 2014 Oculus VR, LLC. All Rights reserved.
 
 Licensed under the Oculus VR Rift SDK License Version 3.2 (the "License"); 
 you may not use the Oculus VR Rift SDK except in compliance with the License, 
@@ -27,10 +27,14 @@ limitations under the License.
 #define OVR_h
 
 #include "OVR_Version.h"
+#include "OVR_CAPI.h"
 
-#include "../Src/Kernel/OVR_Math.h"
-
-#include "../Src/OVR_CAPI.h"
+/* The following includes are deprecated from this location and will be removed from a future version of this library. */
+#include "Kernel/OVR_Types.h"
+#include "Kernel/OVR_RefCount.h"
+#include "Kernel/OVR_Std.h"
+#include "Kernel/OVR_Alg.h"
+#include "Extras/OVR_Math.h"
 
 #endif
 
