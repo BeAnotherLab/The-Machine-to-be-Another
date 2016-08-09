@@ -98,7 +98,7 @@ void machine::update() {
 	ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
 	Quatf pose = state.HeadPose.ThePose.Orientation;
 	pose.GetEulerAngles<Axis_Y, Axis_Z, Axis_X>(&yaw, &roll, &pitch); //rotation order affects gimbal lock.
-
+	roll = -roll;
 	if (camera_type == MONO) {
 		vidGrabberLeft.update();
 	} else if (camera_type == STEREO) {
